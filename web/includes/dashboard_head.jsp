@@ -11,21 +11,34 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
             <%-- Dashboard Common (variables, base, cards, forms...) --%>
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/dashboard-common.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard-common.css">
 
-            <%-- Dashboard layout (từ SCSS: wrapper, sidebar, main, header, responsive) --%>
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/dashboard.css">
+                <%-- Dashboard layout (từ SCSS: wrapper, sidebar, main, header, responsive) --%>
+                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 
-                <style>
-                    /* Font chữ cho dashboard (không áp dụng lên icon) */
-                    body, body * {
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                    }
-                    /* Giữ font Font Awesome cho icon - tránh lỗi icon bị mất */
-                    .fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands,
-                    [class^="fa-"], [class*=" fa-"] {
-                        font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
-                        font-weight: 900;
-                    }
-                    .fa-regular, .far { font-weight: 400; }
-                </style>
+                    <style>
+                        /* Font chữ cho dashboard (không áp dụng lên icon) */
+                        body,
+                        body * {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                        }
+
+                        /* Giữ font Font Awesome cho icon - tránh lỗi icon bị mất */
+                        .fa,
+                        .fas,
+                        .far,
+                        .fab,
+                        .fa-solid,
+                        .fa-regular,
+                        .fa-brands,
+                        [class^="fa-"],
+                        [class*=" fa-"] {
+                            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+                            font-weight: 900;
+                        }
+
+                        .fa-regular,
+                        .far {
+                            font-weight: 400;
+                        }
+                    </style>

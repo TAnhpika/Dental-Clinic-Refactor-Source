@@ -6,9 +6,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>HAPPY Smile - Phòng khám nha khoa tư nhân chuyên nghiệp</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/home.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home.css">
     </head>
+
     <body>
         <%@ include file="/includes/header.jsp" %>
 
@@ -47,37 +49,45 @@
                 <div class="service-container">
                     <div class="service-row">
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon1.jpg" alt="Khám tổng quát" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon1.jpg" alt="Khám tổng quát"
+                                class="service-icon">
                             <p data-lang="service-general-checkup">Khám tổng quát</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon2.jpg" alt="Trám răng" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon2.jpg" alt="Trám răng"
+                                class="service-icon">
                             <p data-lang="service-filling">Trám răng</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon3.jpg" alt="Tẩy trắng răng" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon3.jpg" alt="Tẩy trắng răng"
+                                class="service-icon">
                             <p data-lang="service-whitening">Tẩy trắng răng</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon4.jpg" alt="Bọc răng sứ" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon4.jpg" alt="Bọc răng sứ"
+                                class="service-icon">
                             <p data-lang="service-veneers">Bọc răng sứ</p>
                         </div>
                     </div>
                     <div class="service-row">
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon5.jpg" alt="Niềng răng" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon5.jpg" alt="Niềng răng"
+                                class="service-icon">
                             <p data-lang="service-braces">Niềng răng</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon6.jpg" alt="Nhổ răng" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon6.jpg" alt="Nhổ răng"
+                                class="service-icon">
                             <p data-lang="service-extraction">Nhổ răng</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon7.jpg" alt="Cấy ghép implant" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon7.jpg" alt="Cấy ghép implant"
+                                class="service-icon">
                             <p data-lang="service-implant">Cấy ghép implant</p>
                         </div>
                         <div class="service-item">
-                            <img src="${pageContext.request.contextPath}/img/icon8.jpg" alt="Điều trị nha chu" class="service-icon">
+                            <img src="${pageContext.request.contextPath}/img/icon8.jpg" alt="Điều trị nha chu"
+                                class="service-icon">
                             <p data-lang="service-periodontal">Điều trị nha chu</p>
                         </div>
                     </div>
@@ -170,7 +180,8 @@
                 <div class="news-grid">
                     <div class="news-card">
                         <div class="news-image">
-                            <img src="${pageContext.request.contextPath}/img/tintuc1.png" alt="Cách chăm sóc răng miệng">
+                            <img src="${pageContext.request.contextPath}/img/tintuc1.png"
+                                alt="Cách chăm sóc răng miệng">
                         </div>
                         <div class="news-content">
                             <div class="news-date">17/05/2025</div>
@@ -227,7 +238,8 @@
                         <p class="highlight-hours" data-lang="contact-hours-open">Thời gian <span class="open-text">Mở
                                 cửa</span>: Từ thứ 2 đến thứ 7, 7:00 AM - 6:00 PM</p>
                         <p class="highlight-hours" data-lang="contact-hours-closed">Thời gian nghỉ trong tuần: Chủ nhật
-                            <span class="closed-text">Đóng cửa</span></p>
+                            <span class="closed-text">Đóng cửa</span>
+                        </p>
                         <hr>
                         <a href="#" class="contact-btn" data-lang="contact-btn">Chốt lịch Đồng giá</a>
                     </div>
@@ -264,12 +276,9 @@
             </section>
 
             <%@ include file="/includes/footer.jsp" %>
-                <%
-                    String _lang = (String) session.getAttribute("language");
-                    if (_lang == null) _lang = "vi";
-                %>
-                <script>window.__INIT_LANG__ = '<%= _lang %>';</script>
-                <script src="${pageContext.request.contextPath}/js/home.js"></script>
+                <% String _lang=(String) session.getAttribute("language"); if (_lang==null) _lang="vi" ; %>
+                    <script>window.__INIT_LANG__ = '<%= _lang %>';</script>
+                    <script src="${pageContext.request.contextPath}/js/home.js"></script>
     </body>
 
     </html>

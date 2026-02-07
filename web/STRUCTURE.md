@@ -29,8 +29,8 @@ web/
 │   └── success.jsp
 ├── img/                     # Hình ảnh, video
 ├── js/                      # Script (home.js, calendar, dashboard...)
-├── styles/                  # CSS (home.css, dashboard...)
-├── scss/                    # Nguồn SCSS
+├── css/                     # CSS (home.css, dashboard...)
+
 ├── fonts/
 ├── includes/                 # Header, footer, components
 ├── jsp/                     # JSP theo role
@@ -58,7 +58,7 @@ web/
 
 ## Quy ước
 
-- **Tài nguyên tĩnh**: dùng `${pageContext.request.contextPath}/img/...`, `.../styles/...`, `.../js/...` trong JSP nằm trong thư mục con (auth, payment, blog, public).
+- **Tài nguyên tĩnh**: dùng `${pageContext.request.contextPath}/img/...`, `.../css/...`, `.../js/...` trong JSP nằm trong thư mục con (auth, payment, blog, public).
 - **Form action / link**: dùng context path khi ở trong thư mục con (vd: `${pageContext.request.contextPath}/ResetPasswordServlet`).
 - **Servlet redirect**: dùng `auth/login.jsp`, `public/home.jsp`, `payment/payment-success.jsp` (relative) hoặc `request.getContextPath() + "/auth/login.jsp"`.
 

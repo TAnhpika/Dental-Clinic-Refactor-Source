@@ -10,17 +10,32 @@ import java.util.logging.Logger;
 
 public class DBContext {
     public static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    public static String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=BenhVien;encrypt=false;trustServerCertificate=true;";
-//    public static String dbURL = "jdbc:sqlserver://myserver.database.windows.net:1433;databaseName=lab4;encrypt=true;trustServerCertificate=false;";
+
+    /** URL: ưu tiên từ .env (DB_HOST, DB_PORT, DB_NAME, DB_ENCRYPT, DB_TRUST_SERVER_CERTIFICATE), không có thì dùng mặc định local. */
+    private static String getDbURL() {
+        String host = Env.get("DB_HOST", "localhost");
+        String port = Env.get("DB_PORT", "1433");
+        String dbName = Env.get("DB_NAME", "BenhVien");
+        boolean encrypt = "true".equalsIgnoreCase(Env.get("DB_ENCRYPT", "false"));
+        boolean trustCert = "true".equalsIgnoreCase(Env.get("DB_TRUST_SERVER_CERTIFICATE", "true"));
+        return "jdbc:sqlserver://" + host + ":" + port + ";databaseName=" + dbName
+                + ";encrypt=" + encrypt + ";trustServerCertificate=" + trustCert + ";loginTimeout=30;";
+    }
+
+    public static String getDbURLStatic() { return getDbURL(); }
 
     public static String userDB = "sa";
     public static String passDB = "Phuoc12345@";
 
     public static Connection getConnection() {
         Connection con = null;
-        try{
+        try {
+            String user = Env.get("DB_USERNAME");
+            String pass = Env.get("DB_PASSWORD");
+            if (user.isEmpty()) user = userDB;
+            if (pass.isEmpty()) pass = passDB;
             Class.forName(driverName);
-            con = DriverManager.getConnection(dbURL, userDB, passDB);
+            con = DriverManager.getConnection(getDbURL(), user, pass);
             return con;
         } catch (Exception ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
