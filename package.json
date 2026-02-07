@@ -1,0 +1,11 @@
+{
+  "name": "testfull-dashboard",
+  "private": true,
+  "scripts": {
+    "build:scss": "sass web/scss/dashboard.scss web/styles/dashboard.css --no-source-map",
+    "watch:scss": "sass web/scss/dashboard.scss web/styles/dashboard.css --watch"
+  },
+  "devDependencies": {
+    "sass": "^1.69.0"
+  }
+}
