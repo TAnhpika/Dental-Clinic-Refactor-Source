@@ -83,7 +83,7 @@
                         <span>Đăng kí lịch làm việc</span>
                     </a>
 
-                    <a href="${pageContext.request.contextPath}/blog.jsp" class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/blog/blog.jsp" class="sidebar-item">
                         <i class="fas fa-newspaper"></i>
                         <span>Tin tức y tế</span>
                     </a>

@@ -339,8 +339,8 @@
                 <h1>HAPPY <span>Smile</span></h1>
             </div>
             <div class="auth-buttons">
-                <a href="login.jsp" class="auth-btn login" data-lang="login">Đăng nhập</a>
-                <a href="signup.jsp" class="auth-btn register" data-lang="register">Đăng ký</a>
+                <a href="${pageContext.request.contextPath}/auth/login.jsp" class="auth-btn login" data-lang="login">Đăng nhập</a>
+                <a href="${pageContext.request.contextPath}/auth/signup.jsp" class="auth-btn register" data-lang="register">Đăng ký</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <div class="language-selector">
                     <select id="language-switcher">

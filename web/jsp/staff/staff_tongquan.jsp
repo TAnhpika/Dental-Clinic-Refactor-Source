@@ -6,7 +6,7 @@
     User user = (User) session.getAttribute("user");
     Staff staff = (Staff) session.getAttribute("staff");
     if (user == null || !"STAFF".equals(user.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
     String staffName = staff != null ? staff.getFullName() : (user != null ? user.getUsername() : "Nhân viên");

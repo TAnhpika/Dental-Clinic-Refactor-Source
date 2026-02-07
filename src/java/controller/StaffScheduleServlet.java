@@ -46,7 +46,7 @@ public class StaffScheduleServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
         Staff staff = null;
@@ -104,7 +104,7 @@ public class StaffScheduleServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
         

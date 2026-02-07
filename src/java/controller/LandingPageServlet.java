@@ -64,7 +64,7 @@ public class LandingPageServlet extends HttpServlet {
     List<BlogPost> latestBlogs = blogDao.getLatestBlogs(3); // Lấy 3 bài mới nhất
 
     request.setAttribute("latestBlogs", latestBlogs);
-    request.getRequestDispatcher("home.jsp").forward(request, response);
+    request.getRequestDispatcher("/public/home.jsp").forward(request, response);
 }
 
     /**

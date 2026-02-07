@@ -81,10 +81,10 @@
                             <span>Tư vấn</span>
                         </div>
                         <div class="sidebar-dropdown-menu">
-                            <a href="${pageContext.request.contextPath}/chat.jsp" class="sidebar-dropdown-item">
+                            <a href="${pageContext.request.contextPath}/public/chat.jsp" class="sidebar-dropdown-item">
                                 Phòng chờ
                             </a>
-                            <a href="${pageContext.request.contextPath}/chat.jsp" class="sidebar-dropdown-item">
+                            <a href="${pageContext.request.contextPath}/public/chat.jsp" class="sidebar-dropdown-item">
                                 Trò chuyện
                             </a>
                         </div>

@@ -30,7 +30,7 @@ public class UserHompageServlet extends HttpServlet {
 
         // ❌ Nếu chưa có session → về trang login
         if (session == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
 

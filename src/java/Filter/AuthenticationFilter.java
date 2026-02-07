@@ -29,10 +29,13 @@ public class AuthenticationFilter implements Filter {
     
     // 🔓 DANH SÁCH TRANG KHÔNG CẦN ĐĂNG NHẬP
     private static final Set<String> NO_AUTH_REQUIRED = new HashSet<>(Arrays.asList(
-        "/login.jsp",
-        "/signup.jsp",
-        "/home.jsp", 
-        "/information.jsp",
+        "/auth/login.jsp",
+        "/auth/signup.jsp",
+        "/auth/information.jsp",
+        "/public/home.jsp",
+        "/payment/payment-success.jsp",
+        "/payment/payment-cancel.jsp",
+        "/blog/",
         "/test-encoding.jsp",
         "/LoginServlet",
         "/SignUpServlet",
@@ -105,7 +108,7 @@ public class AuthenticationFilter implements Filter {
             HttpSession newSession = request.getSession(true);
             newSession.setAttribute("originalUrl", originalUrl);
             
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
         

@@ -57,7 +57,7 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
         
         if (user == null) {
             ColoredLogger.logWarning("StaffRegisterSecheduleServlet", "User not logged in, redirecting to login page");
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
         
@@ -68,7 +68,7 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
             if (staff == null) {
                 ColoredLogger.logError("StaffRegisterSecheduleServlet", "Staff not found for user ID: " + user.getId());
                 request.setAttribute("error", "Không tìm thấy thông tin nhân viên!");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
             

@@ -42,7 +42,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
         
         // Nếu vẫn không có, chuyển về login
         if (userId == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
 
@@ -71,7 +71,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
             response.sendRedirect("BookingPage");
         } else {
             request.setAttribute("error", "Không thể lưu thông tin. Vui lòng thử lại!");
-            request.getRequestDispatcher("information.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/information.jsp").forward(request, response);
         }    
     }
 
@@ -91,7 +91,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
                 
                 // Chuyển hướng đến trang điền thông tin với thông báo
                 request.setAttribute("message", "Vui lòng điền thông tin cá nhân để tiếp tục đặt lịch");
-                response.sendRedirect("information.jsp");
+                response.sendRedirect("auth/information.jsp");
                 return true; // Đã chuyển hướng
             }
             return false; // Không cần chuyển hướng

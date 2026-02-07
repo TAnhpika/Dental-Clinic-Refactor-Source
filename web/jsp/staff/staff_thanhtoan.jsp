@@ -1702,7 +1702,7 @@
                                                     console.warn('[DEBUG][staff_thanhtoan.jsp] Không có billDetails trong JSON trả về!');
                                                 }
                                                 console.log('[DEBUG][staff_thanhtoan.jsp] Redirecting to payment.jsp...');
-                                                window.location.href = 'payment.jsp?billId=' + encodeURIComponent(billId) + '&isStaff=true';
+                                                window.location.href = '${pageContext.request.contextPath}/payment/payment.jsp?billId=' + encodeURIComponent(billId) + '&isStaff=true';
                                             } else {
                                                 alert('Lỗi tạo hóa đơn: ' + (json.message || 'Không rõ nguyên nhân'));
                                             }

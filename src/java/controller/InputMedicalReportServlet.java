@@ -110,7 +110,7 @@ public class InputMedicalReportServlet extends HttpServlet {
                 }
             }
 
-            response.sendRedirect("success.jsp");
+            response.sendRedirect("public/success.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();

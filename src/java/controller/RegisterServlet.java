@@ -77,7 +77,7 @@ public class RegisterServlet extends HttpServlet {
         Integer id = (session != null) ? (Integer) session.getAttribute("id") : null;
 
         if (id == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
 
@@ -91,9 +91,9 @@ public class RegisterServlet extends HttpServlet {
         boolean success = UserDAO.savePatientInfo(id, fullName, phone, dateOfBirth, gender);
 
         if (success) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
         } else {
-            response.sendRedirect("information.jsp?error=true");
+            response.sendRedirect("auth/information.jsp?error=true");
         }    
     }
 

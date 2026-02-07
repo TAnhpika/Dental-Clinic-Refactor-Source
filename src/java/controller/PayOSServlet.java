@@ -133,7 +133,7 @@ public class PayOSServlet extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             if (user == null) {
-                response.sendRedirect("login.jsp");
+                response.sendRedirect("auth/login.jsp");
                 return;
             }
 
@@ -141,7 +141,7 @@ public class PayOSServlet extends HttpServlet {
             Patients patient = patientDAO.getPatientByUserId(user.getId());
             if (patient == null) {
                 // Chuyển hướng đến trang điền thông tin
-                response.sendRedirect("information.jsp");
+                response.sendRedirect("auth/information.jsp");
                 return;
             }
 
@@ -393,7 +393,7 @@ public class PayOSServlet extends HttpServlet {
             request.setAttribute("paymentInfo", paymentInfo);
             request.setAttribute("service", service);
             request.setAttribute("patient", patient);
-            request.getRequestDispatcher("/payment.jsp").forward(request, response);
+            request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Tham số không hợp lệ: " + e.getMessage());
@@ -682,7 +682,7 @@ public class PayOSServlet extends HttpServlet {
             session.removeAttribute("selectedService");
             System.out.println("🔄 Đã xóa selectedService khỏi session sau thanh toán thành công");
             
-            request.getRequestDispatcher("/payment-success.jsp").forward(request, response);
+            request.getRequestDispatcher("/payment/payment-success.jsp").forward(request, response);
             
             // ✅ Xóa session KHÔNG CẦN THIẾT vì user có thể F5 trang success
             // session.removeAttribute("paymentInfo");
@@ -696,7 +696,7 @@ public class PayOSServlet extends HttpServlet {
             // Vẫn hiển thị success page nhưng log lỗi
             request.setAttribute("paymentInfo", paymentInfo);
             request.setAttribute("appointmentCreated", false);
-            request.getRequestDispatcher("/payment-success.jsp").forward(request, response);
+            request.getRequestDispatcher("/payment/payment-success.jsp").forward(request, response);
         }
     }
 
@@ -826,7 +826,7 @@ public class PayOSServlet extends HttpServlet {
         // 5. Forward tới trang cancel với thông báo slot đã được trả về
         request.setAttribute("slotReleased", activeReservation != null);
         request.setAttribute("reservationInfo", activeReservation);
-        request.getRequestDispatcher("/payment-cancel.jsp").forward(request, response);
+        request.getRequestDispatcher("/payment/payment-cancel.jsp").forward(request, response);
     }
     
     /**

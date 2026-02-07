@@ -6,7 +6,7 @@
                     <%@ page import="java.util.List" %>
 
                         <% User user=(User) session.getAttribute("user"); if (user==null ||
-                            !"MANAGER".equals(user.getRole())) { response.sendRedirect("login.jsp"); return; }
+                            !"MANAGER".equals(user.getRole())) { response.sendRedirect(request.getContextPath() + "/auth/login.jsp"); return; }
                             List<Medicine> medicines = MedicineDAO.getAllMedicines();
                             %>
 

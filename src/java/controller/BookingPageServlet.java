@@ -100,14 +100,14 @@ public class BookingPageServlet extends HttpServlet {
         
         // Kiểm tra session và role
         if (session == null || patient == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
         
         // Kiểm tra role PATIENT
         if (!"PATIENT".equalsIgnoreCase(patient.getRole())) {
             request.setAttribute("error", "Bạn không có quyền truy cập trang này!");
-            request.getRequestDispatcher("/jsp/error/404.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/error/404.jsp").forward(request, response);
             return;
         }
         

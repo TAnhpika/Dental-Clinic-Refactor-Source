@@ -33,18 +33,20 @@ public class RoleFilter implements Filter {
     
     // 🔓 DANH SÁCH TRANG CÔNG KHAI (không cần đăng nhập)
     private static final Set<String> PUBLIC_PAGES = new HashSet<>(Arrays.asList(
-        "/login.jsp",
-        "/signup.jsp", 
-        "/home.jsp",
-        "/information.jsp",
+        "/auth/login.jsp",
+        "/auth/signup.jsp",
+        "/auth/information.jsp",
+        "/public/home.jsp",
+        "/payment/",
+        "/blog/",
         "/test-encoding.jsp",
         "/LoginServlet",
         "/SignUpServlet",
         "/RegisterServlet",
         "/GoogleCallbackServlet",
-        "/services", // Trang dịch vụ công khai
-        "/payment-success.jsp",
-        "/payment-cancel.jsp"
+        "/services",
+        "/payment/payment-success.jsp",
+        "/payment/payment-cancel.jsp"
     ));
     
     // 🔓 DANH SÁCH ĐƯỜNG DẪN CÔNG KHAI (pattern)
@@ -243,7 +245,7 @@ public class RoleFilter implements Filter {
      */
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) 
             throws IOException {
-        String loginUrl = request.getContextPath() + "/login.jsp";
+        String loginUrl = request.getContextPath() + "/auth/login.jsp";
         response.sendRedirect(loginUrl);
     }
     
@@ -278,7 +280,7 @@ public class RoleFilter implements Filter {
             case "MANAGER":
                 return "/manager_tongquan.jsp";
             default:
-                return "/login.jsp";
+                return "/auth/login.jsp";
         }
     }
 

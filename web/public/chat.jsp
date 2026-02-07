@@ -17,7 +17,7 @@
     // --- Logic kiểm tra và chuyển hướng nếu chưa đăng nhập ---
     if (currentUserId == null || currentUsername == null || currentUsername.isEmpty() || currentUserRole == null || currentUserRole.isEmpty()) {
         System.out.println("DEBUG (chat.jsp): Thông tin người dùng không đầy đủ trong session. Chuyển hướng về login.jsp.");
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
 %>

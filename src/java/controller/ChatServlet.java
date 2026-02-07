@@ -65,12 +65,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     // Kiểm tra nếu người dùng chưa đăng nhập
     User user = (session != null) ? (User) session.getAttribute("user") : null;
     if (user == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("auth/login.jsp");
         return;
     }
 
     // Nếu đã đăng nhập, chuyển đến chat.jsp
-    request.getRequestDispatcher("/chat.jsp").forward(request, response);
+    request.getRequestDispatcher("/public/chat.jsp").forward(request, response);
 }
 
 

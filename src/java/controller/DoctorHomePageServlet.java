@@ -54,7 +54,7 @@ public class DoctorHomePageServlet extends HttpServlet {
         User loggedInUser = (User) session.getAttribute("user");
         
         if (loggedInDoctor == null || loggedInUser == null) {
-            response.sendRedirect("login.jsp?error=session_expired");
+            response.sendRedirect("auth/login.jsp?error=session_expired");
             return;
         }
         

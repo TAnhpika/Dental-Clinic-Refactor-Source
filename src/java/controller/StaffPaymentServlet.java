@@ -286,7 +286,7 @@ public class StaffPaymentServlet extends HttpServlet {
             // Kiểm tra session timeout
             HttpSession session = request.getSession(false);
             if (session == null) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
                 return;
             }
 

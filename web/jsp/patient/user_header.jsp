@@ -68,11 +68,11 @@
                                 </div>
                                 <% } else { %>
                                     <div class="d-flex gap-2">
-                                        <a href="${pageContext.request.contextPath}/login.jsp"
+                                        <a href="${pageContext.request.contextPath}/auth/login.jsp"
                                             class="btn-dashboard btn-dashboard-secondary">
                                             Đăng nhập
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/signup.jsp"
+                                        <a href="${pageContext.request.contextPath}/auth/signup.jsp"
                                             class="btn-dashboard btn-dashboard-primary">
                                             Đăng ký
                                         </a>

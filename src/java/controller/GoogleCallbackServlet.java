@@ -93,10 +93,10 @@ public class GoogleCallbackServlet extends HttpServlet {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect(request.getContextPath() + "/login.jsp?error=google_auth_failed");
+                response.sendRedirect(request.getContextPath() + "/auth/login.jsp?error=google_auth_failed");
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/login.jsp?error=no_auth_code");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp?error=no_auth_code");
         }
     }
 } 

@@ -11,7 +11,7 @@
         <style>
             body {
                 /* Ghi chú: Đặt nền ảnh, căn giữa, cố định và phủ toàn màn hình */
-                background: url('img/nen1.jpg') no-repeat center center fixed;
+                background: url('${pageContext.request.contextPath}/img/nen1.jpg') no-repeat center center fixed;
                 background-size: cover;
                 margin: 0;
                 padding: 0;
@@ -161,13 +161,13 @@
                     <% if (request.getParameter("success") !=null) { %>
                         <div class="alert alert-success">
                             Đăng ký thành công!
-                            <form action="information.jsp" method="post" class="mt-2">
+                            <form action="${pageContext.request.contextPath}/auth/information.jsp" method="post" class="mt-2">
                                 <button type="submit" class="btn btn-success w-100">Tiếp tục hoàn tất thông tin</button>
                             </form>
                         </div>
                         <% }%>
 
-                            <form action="SignUpServlet" method="post">
+                            <form action="${pageContext.request.contextPath}/SignUpServlet" method="post">
                                 <div class="mb-3">
                                     <label class="form-label">Tên đăng nhập</label>
                                     <input type="text" name="username" class="form-control" required>
@@ -193,9 +193,9 @@
                                 </a>
                             </div>
 
-                            <p class="text-center mt-3">Đã có tài khoản? <a href="login.jsp">Đăng nhập</a></p>
+                            <p class="text-center mt-3">Đã có tài khoản? <a href="${pageContext.request.contextPath}/auth/login.jsp">Đăng nhập</a></p>
                             <p class="text-center mt-4">
-                                <a href="<%= request.getContextPath()%>/home.jsp" style="color: blue;">Trang Chủ</a>
+                                <a href="<%= request.getContextPath()%>/public/home.jsp" style="color: blue;">Trang Chủ</a>
                             </p>
         </div>
     </body>

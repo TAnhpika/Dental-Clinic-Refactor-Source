@@ -372,7 +372,7 @@
                 <% } %>
                 
                 <!-- Form OTP -->
-                <form method="post" action="ResetPasswordServlet" novalidate>
+                <form method="post" action="${pageContext.request.contextPath}/ResetPasswordServlet" novalidate>
                     <input type="hidden" name="action" value="verify-otp">
                     
                     <div class="mb-3">
@@ -431,7 +431,7 @@
                         clearInterval(timer);
                         countdownElement.textContent = '0';
                         setTimeout(function() {
-                            window.location.href = 'ResetPasswordServlet?action=forgot-password';
+                            window.location.href = '<%= request.getContextPath() %>/ResetPasswordServlet?action=forgot-password';
                         }, 2000);
                     } else {
                         countdownElement.textContent = timeLeft;

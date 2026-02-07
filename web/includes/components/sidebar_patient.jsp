@@ -69,7 +69,7 @@
                                 <i class="fas fa-robot me-2"></i>
                                 Tư vấn với AI
                             </a>
-                            <a href="${pageContext.request.contextPath}/chat.jsp" class="sidebar-dropdown-item"
+                            <a href="${pageContext.request.contextPath}/public/chat.jsp" class="sidebar-dropdown-item"
                                 id="sidebar-doctor-chat">
                                 <i class="fas fa-user-md me-2"></i>
                                 Nhắn tin với bác sĩ

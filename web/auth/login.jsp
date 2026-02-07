@@ -11,7 +11,7 @@
         <style>
             body {
                 /* Ghi chú: Đặt nền ảnh, căn giữa, cố định và phủ toàn màn hình trên màn hình lớn */
-                background: url('img/nen1.jpg') no-repeat center center fixed;
+                background: url('${pageContext.request.contextPath}/img/nen1.jpg') no-repeat center center fixed;
                 background-size: cover; /* Nền phủ toàn màn hình trên màn hình lớn */
                 margin: 0;
                 padding: 0;
@@ -322,7 +322,7 @@
                                 </a>
                             </div>
                 <p class="text-center mt-3">
-                    <a href="<%= request.getContextPath()%>/signup.jsp">Sign up</a> |  <a href="ResetPasswordServlet?action=forgot-password">Quên mật khẩu?</a>
+                    <a href="<%= request.getContextPath()%>/auth/signup.jsp">Sign up</a> |  <a href="${pageContext.request.contextPath}/ResetPasswordServlet?action=forgot-password">Quên mật khẩu?</a>
                 </p>
 
                 <div class="text-center mt-3">

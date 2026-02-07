@@ -195,7 +195,7 @@
                 </div>
             <% } %>
             
-            <form method="post" action="UpdatePasswordServlet">
+            <form method="post" action="${pageContext.request.contextPath}/UpdatePasswordServlet">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="newPassword" class="form-label">
@@ -242,7 +242,7 @@
                         </button>
                     </div>
                     <div class="col-md-6 mb-2">
-                        <a href="login.jsp" class="btn btn-outline-secondary w-100">
+                        <a href="${pageContext.request.contextPath}/auth/login.jsp" class="btn btn-outline-secondary w-100">
                             <i class="fas fa-arrow-left me-2"></i>Quay lại đăng nhập
                         </a>
                     </div>

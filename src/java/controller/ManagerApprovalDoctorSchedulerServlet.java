@@ -41,7 +41,7 @@ public class ManagerApprovalDoctorSchedulerServlet extends HttpServlet {
         
         // Kiểm tra quyền truy cập - chỉ manager
         if (user == null || !"MANAGER".equals(user.getRole())) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
             return;
         }
         

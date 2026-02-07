@@ -53,7 +53,7 @@ public class ChangePasswordServlet extends HttpServlet {
             
             response.sendRedirect("staff_taikhoan.jsp?otp_sent=true");
         } else {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("auth/login.jsp");
         }
     }
     

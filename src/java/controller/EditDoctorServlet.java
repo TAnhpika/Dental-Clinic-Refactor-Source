@@ -26,7 +26,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (session == null) {
                 System.out.println("DEBUG: Session is null");
                 request.setAttribute("errorMessage", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -35,7 +35,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user == null) {
                 System.out.println("DEBUG: User is null in session");
                 request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -43,7 +43,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user.getId() <= 0) {
                 System.out.println("DEBUG: User ID is invalid: " + user.getId());
                 request.setAttribute("errorMessage", "Thông tin người dùng không hợp lệ");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -92,7 +92,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (session == null) {
                 System.out.println("DEBUG POST: Session is null");
                 request.setAttribute("errorMessage", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -101,7 +101,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user == null) {
                 System.out.println("DEBUG POST: User is null in session");
                 request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -109,7 +109,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user.getId() <= 0) {
                 System.out.println("DEBUG: User ID is invalid: " + user.getId());
                 request.setAttribute("errorMessage", "Thông tin người dùng không hợp lệ");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
 

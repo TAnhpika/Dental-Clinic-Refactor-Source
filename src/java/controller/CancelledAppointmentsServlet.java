@@ -28,7 +28,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null) {
             System.out.println("No session found, redirecting to login");
-            response.sendRedirect("/RoleStaff/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
         
@@ -38,7 +38,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
         
         if (user == null || doctor == null) {
             System.out.println("User or Doctor object not found in session");
-            response.sendRedirect("/RoleStaff/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
         

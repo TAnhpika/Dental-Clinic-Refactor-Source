@@ -66,7 +66,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
         System.out.println("DEBUG: doctor in session = " + doctor);
         if (doctor == null) {
             request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
             return;
         }
 
@@ -92,7 +92,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
         Doctors doctor = (Doctors) request.getSession().getAttribute("doctor");
         if (doctor == null) {
             request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
             return;
         }
 

@@ -34,7 +34,7 @@ public class DeleteStaffServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         if (!"MANAGER".equals(role)) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
 

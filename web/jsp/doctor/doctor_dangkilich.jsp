@@ -4,7 +4,7 @@
 <%
     model.User user = (model.User) session.getAttribute("user");
     if (user == null || !"DOCTOR".equals(user.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
 %>

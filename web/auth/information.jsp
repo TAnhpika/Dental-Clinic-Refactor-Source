@@ -19,7 +19,7 @@
                     </div>
                     <% } %>
 
-                        <form action="UserRegisterWhenTheyNotRegisterInformation" method="POST">
+                        <form action="${pageContext.request.contextPath}/UserRegisterWhenTheyNotRegisterInformation" method="POST">
                             <%-- Thêm hidden field cho user_id --%>
                                 <input type="hidden" name="user_id" value="<%= session.getAttribute("user_id_for_patient") %>">
 

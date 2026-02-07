@@ -214,7 +214,7 @@
     <div class="main-container">
         <!-- Phần form quên mật khẩu -->
         <div class="form-section">
-            <a href="login.jsp" class="back-link">
+            <a href="${pageContext.request.contextPath}/auth/login.jsp" class="back-link">
                 <i class="fas fa-arrow-left me-2"></i>Quay lại đăng nhập
             </a>
             
@@ -242,7 +242,7 @@
                 </div>
             <% } %>
             
-            <form method="post" action="ResetPasswordServlet" novalidate>
+            <form method="post" action="${pageContext.request.contextPath}/ResetPasswordServlet" novalidate>
                 <input type="hidden" name="action" value="send-otp">
                 
                 <div class="mb-4">

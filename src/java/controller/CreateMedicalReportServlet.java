@@ -33,7 +33,7 @@ public class CreateMedicalReportServlet extends HttpServlet {
         Doctors doctor = (Doctors) session.getAttribute("doctor");
         
         if (doctor == null) {
-            response.sendRedirect("login.jsp?error=session_expired");
+            response.sendRedirect("auth/login.jsp?error=session_expired");
             return;
         }
 
@@ -116,7 +116,7 @@ public class CreateMedicalReportServlet extends HttpServlet {
             request.setAttribute("patient", patient);
             
             // Forward đến trang phiếu khám
-            request.getRequestDispatcher("phieukham.jsp").forward(request, response);
+            request.getRequestDispatcher("/public/phieukham.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             request.setAttribute("error", "ID cuộc hẹn không hợp lệ");
