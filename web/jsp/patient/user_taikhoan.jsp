@@ -9,7 +9,7 @@
     Patients patient = (Patients) session.getAttribute("patient");
     
     if (users == null) {
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
         return;
     }
 %>

@@ -45,7 +45,7 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         
         if (!"MANAGER".equals(role)) {
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
         try {
@@ -87,7 +87,7 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
                                                                                                                                                                                                         // check phân quyền 
         if (!"MANAGER".equals(role) || managerId == null) {
             System.out.println("[ERROR] Không có quyền hoặc chưa đăng nhập, chuyển về login.jsp");
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
         

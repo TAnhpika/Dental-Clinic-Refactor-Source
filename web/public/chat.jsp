@@ -1,26 +1,20 @@
 <%@page import="java.util.Map" %>
-<%@page import="model.User" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    // --- Lấy thông tin người dùng đã đăng nhập từ session ---
-    model.User user = (model.User) session.getAttribute("user");
-    Integer currentUserId = (user != null) ? user.getId() : null;
-    String currentUsername = (user != null) ? user.getEmail() : null;
-    String currentUserRole = (user != null) ? user.getRole() : null;
-    
-    // DEBUG: In ra console của server để kiểm tra
-    System.out.println("DEBUG (chat.jsp): Đã lấy từ Session:");
-    System.out.println("userId: " + currentUserId + " (Kiểu: " + (currentUserId != null ? currentUserId.getClass().getName() : "null") + ")");
-    System.out.println("username: " + currentUsername + " (Kiểu: " + (currentUsername != null ? currentUsername.getClass().getName() : "null") + ")");
-    System.out.println("role: " + currentUserRole + " (Kiểu: " + (currentUserRole != null ? currentUserRole.getClass().getName() : "null") + ")");
-    
-    // --- Logic kiểm tra và chuyển hướng nếu chưa đăng nhập ---
-    if (currentUserId == null || currentUsername == null || currentUsername.isEmpty() || currentUserRole == null || currentUserRole.isEmpty()) {
-        System.out.println("DEBUG (chat.jsp): Thông tin người dùng không đầy đủ trong session. Chuyển hướng về login.jsp.");
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
-        return;
-    }
-%>
+    <%@page import="model.User" %>
+        <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+            <% // --- Lấy thông tin người dùng đã đăng nhập từ session --- model.User user=(model.User)
+                session.getAttribute("user"); Integer currentUserId=(user !=null) ? user.getId() : null; String
+                currentUsername=(user !=null) ? user.getEmail() : null; String currentUserRole=(user !=null) ?
+                user.getRole() : null; // DEBUG: In ra console của server để kiểm tra System.out.println("DEBUG
+                (chat.jsp): Đã lấy từ Session:"); System.out.println("userId: " + currentUserId + "
+                (Kiểu: " + (currentUserId != null ? currentUserId.getClass().getName() : " null") + ")" );
+                System.out.println("username: " + currentUsername + "
+                (Kiểu: " + (currentUsername != null ? currentUsername.getClass().getName() : " null") + ")" );
+                System.out.println("role: " + currentUserRole + "
+                (Kiểu: " + (currentUserRole != null ? currentUserRole.getClass().getName() : " null") + ")" ); // ---
+                Logic kiểm tra và chuyển hướng nếu chưa đăng nhập --- if (currentUserId==null || currentUsername==null
+                || currentUsername.isEmpty() || currentUserRole==null || currentUserRole.isEmpty()) {
+                System.out.println("DEBUG (chat.jsp): Thông tin người dùng không đầy đủ trong session. Chuyển hướng về
+                login.jsp."); response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp" ); return; } %>
                 <!DOCTYPE html>
                 <html>
 

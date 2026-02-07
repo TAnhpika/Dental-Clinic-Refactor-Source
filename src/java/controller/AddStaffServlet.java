@@ -35,7 +35,7 @@ public class AddStaffServlet extends HttpServlet {
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         if (!"MANAGER".equals(role)) {
             LOGGER.warning("Unauthorized access attempt by role: " + role);
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
 

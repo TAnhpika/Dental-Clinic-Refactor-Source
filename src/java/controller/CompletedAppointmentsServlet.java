@@ -30,14 +30,14 @@ public class CompletedAppointmentsServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null) {
             System.out.println("No session found, redirecting to login");
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
         // Lấy thông tin user từ session
         User user = (User) session.getAttribute("user");
         if (user == null) {
             System.out.println("User object not found in session");
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
         System.out.println("Found user: " + user.getEmail());

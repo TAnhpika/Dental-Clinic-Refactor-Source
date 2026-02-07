@@ -6,7 +6,7 @@
 <%
     User currentUser = (User) session.getAttribute("user");
     if (currentUser == null || !"MANAGER".equals(currentUser.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
         return;
     }
     List<User> users = UserDAO.getAllUsers();

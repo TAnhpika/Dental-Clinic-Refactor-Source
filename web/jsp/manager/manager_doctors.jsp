@@ -6,7 +6,7 @@
 
                     <% User user=(User) session.getAttribute("user"); if (user==null ||
                         !"MANAGER".equals(user.getRole())) { response.sendRedirect(request.getContextPath()
-                        + "/auth/login.jsp" ); return; } List<Doctor> doctors = DoctorDAO.getAllDoctors();
+                        + "/jsp/auth/login.jsp" ); return; } List<Doctor> doctors = DoctorDAO.getAllDoctors();
 
                         int activeCount = 0;
                         int leaveCount = 0;

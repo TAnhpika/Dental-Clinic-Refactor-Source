@@ -6,21 +6,28 @@ Tổ chức theo **nghiệp vụ (auth, payment, blog, public)** để dễ qu�
 
 ```
 web/
-├── auth/                    # Đăng nhập, đăng ký, quên MK, OTP, thông tin cá nhân
-│   ├── login.jsp
-│   ├── signup.jsp
-│   ├── forgot-password.jsp
-│   ├── reset-password.jsp
-│   ├── verify-otp.jsp
-│   ├── change-password-profile.jsp
-│   └── information.jsp
+├── jsp/
+│   ├── auth/                    # Đăng nhập, đăng ký, quên MK, OTP, thông tin cá nhân
+│   │   ├── login.jsp
+│   │   ├── signup.jsp
+│   │   ├── forgot-password.jsp
+│   │   ├── reset-password.jsp
+│   │   ├── verify-otp.jsp
+│   │   ├── change-password-profile.jsp
+│   │   └── information.jsp
+│   ├── blog/                    # Tin tức, bài viết
+│   │   ├── blog.jsp
+│   │   └── blog_detail.jsp
+│   ├── doctor/
+│   ├── manager/
+│   ├── patient/
+│   ├── staff/
+│   ├── admin/
+│   └── email_templates/
 ├── payment/                 # Thanh toán PayOS
 │   ├── payment.jsp
 │   ├── payment-success.jsp
 │   └── payment-cancel.jsp
-├── blog/                    # Tin tức, bài viết
-│   ├── blog.jsp
-│   └── blog_detail.jsp
 ├── public/                  # Trang công khai
 │   ├── home.jsp             # Landing
 │   ├── chat.jsp
@@ -33,13 +40,6 @@ web/
 
 ├── fonts/
 ├── includes/                 # Header, footer, components
-├── jsp/                     # JSP theo role
-│   ├── doctor/
-│   ├── manager/
-│   ├── patient/
-│   ├── staff/
-│   ├── admin/
-│   └── email_templates/
 ├── META-INF/
 └── WEB-INF/                 # web.xml, taglib, error 404, lib
 ```
@@ -48,19 +48,19 @@ web/
 
 | Nghiệp vụ | URL (context root) |
 |-----------|--------------------|
-| Đăng nhập | `/auth/login.jsp` |
-| Đăng ký | `/auth/signup.jsp` |
-| Quên mật khẩu | `/auth/forgot-password.jsp` |
+| Đăng nhập | `/jsp/auth/login.jsp` |
+| Đăng ký | `/jsp/auth/signup.jsp` |
+| Quên mật khẩu | `/jsp/auth/forgot-password.jsp` |
 | Trang chủ (landing) | `/public/home.jsp` (welcome: `LandingPageServlet` → forward đây) |
 | Thanh toán | `/payment/payment.jsp`, `/payment/payment-success.jsp`, `/payment/payment-cancel.jsp` |
-| Blog | `/blog/blog.jsp`, `/blog/blog_detail.jsp` |
+| Blog | `/jsp/blog/blog.jsp`, `/jsp/blog/blog_detail.jsp` |
 | Chat | `/public/chat.jsp` |
 
 ## Quy ước
 
 - **Tài nguyên tĩnh**: dùng `${pageContext.request.contextPath}/img/...`, `.../css/...`, `.../js/...` trong JSP nằm trong thư mục con (auth, payment, blog, public).
 - **Form action / link**: dùng context path khi ở trong thư mục con (vd: `${pageContext.request.contextPath}/ResetPasswordServlet`).
-- **Servlet redirect**: dùng `auth/login.jsp`, `public/home.jsp`, `payment/payment-success.jsp` (relative) hoặc `request.getContextPath() + "/auth/login.jsp"`.
+- **Servlet redirect**: dùng `jsp/auth/login.jsp`, `public/home.jsp`, `payment/payment-success.jsp` (relative) hoặc `request.getContextPath() + "/jsp/auth/login.jsp"`.
 
 ## Lưu ý
 

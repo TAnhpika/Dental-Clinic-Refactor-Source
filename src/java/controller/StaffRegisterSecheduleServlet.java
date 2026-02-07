@@ -68,7 +68,7 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
             if (staff == null) {
                 ColoredLogger.logError("StaffRegisterSecheduleServlet", "Staff not found for user ID: " + user.getId());
                 request.setAttribute("error", "Không tìm thấy thông tin nhân viên!");
-                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
             

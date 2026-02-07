@@ -21,105 +21,107 @@ import jakarta.servlet.http.HttpSession;
  * 
  * @author TranHongPhuoc
  */
-// @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {"/*"})  // Tạm thời disable để test
+// @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {"/*"}) // Tạm
+// thời disable để test
 public class AuthenticationFilter implements Filter {
-    
+
     private static final boolean DEBUG = true;
     private FilterConfig filterConfig = null;
-    
+
     // 🔓 DANH SÁCH TRANG KHÔNG CẦN ĐĂNG NHẬP
     private static final Set<String> NO_AUTH_REQUIRED = new HashSet<>(Arrays.asList(
-        "/auth/login.jsp",
-        "/auth/signup.jsp",
-        "/auth/information.jsp",
-        "/public/home.jsp",
-        "/payment/payment-success.jsp",
-        "/payment/payment-cancel.jsp",
-        "/blog/",
-        "/test-encoding.jsp",
-        "/LoginServlet",
-        "/SignUpServlet",
-        "/RegisterServlet",
-        "/GoogleCallbackServlet",
-        "/LogoutServlet"
-    ));
-    
+            "/jsp/auth/login.jsp",
+            "/jsp/auth/signup.jsp",
+            "/jsp/auth/information.jsp",
+            "/public/home.jsp",
+            "/payment/payment-success.jsp",
+            "/payment/payment-cancel.jsp",
+            "/jsp/blog/",
+            "/test-encoding.jsp",
+            "/LoginServlet",
+            "/SignUpServlet",
+            "/RegisterServlet",
+            "/GoogleCallbackServlet",
+            "/LogoutServlet"));
+
     // 🔓 DANH SÁCH PATTERN KHÔNG CẦN ĐĂNG NHẬP
     private static final Set<String> NO_AUTH_PATTERNS = new HashSet<>(Arrays.asList(
-        "/images/",
-        "/styles/",
-        "/js/", 
-        "/css/",
-        "/META-INF/",
-        "/WEB-INF/",
-        "/includes/",
-        "/common/",
-        "/favicon.ico",
-        ".css",
-        ".js",
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".gif",
-        ".ico"
-    ));
-    
-    public AuthenticationFilter() {}
+            "/images/",
+            "/styles/",
+            "/js/",
+            "/css/",
+            "/META-INF/",
+            "/WEB-INF/",
+            "/includes/",
+            "/common/",
+            "/favicon.ico",
+            ".css",
+            ".js",
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".gif",
+            ".ico"));
+
+    public AuthenticationFilter() {
+    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-        
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        
+
         String uri = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = uri.substring(contextPath.length());
-        
+
         if (DEBUG) {
             System.out.println("🔐 AuthFilter: " + request.getMethod() + " " + path);
         }
-        
+
         // ✅ 1. KIỂM TRA TRANG KHÔNG CẦN ĐĂNG NHẬP
         if (isNoAuthRequired(path)) {
-            if (DEBUG) System.out.println("✅ No auth required: " + path);
+            if (DEBUG)
+                System.out.println("✅ No auth required: " + path);
             chain.doFilter(req, res);
             return;
         }
-        
+
         // ✅ 2. KIỂM TRA SESSION VÀ USER
         HttpSession session = request.getSession(false);
         User user = null;
-        
+
         if (session != null) {
             user = (User) session.getAttribute("user");
         }
-        
+
         if (user == null) {
-            if (DEBUG) System.out.println("❌ User not authenticated, redirect to login");
-            
+            if (DEBUG)
+                System.out.println("❌ User not authenticated, redirect to login");
+
             // Lưu URL hiện tại để redirect sau khi login
             String originalUrl = request.getRequestURL().toString();
             if (request.getQueryString() != null) {
                 originalUrl += "?" + request.getQueryString();
             }
-            
+
             HttpSession newSession = request.getSession(true);
             newSession.setAttribute("originalUrl", originalUrl);
-            
-            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
-        
+
         if (DEBUG) {
             System.out.println("✅ User authenticated: " + user.getUsername() + " (" + user.getRole() + ")");
         }
-        
+
         // ✅ 3. USER ĐÃ ĐĂNG NHẬP - CHO PHÉP TIẾP TỤC
         chain.doFilter(req, res);
     }
-    
+
     /**
      * 🔓 Kiểm tra trang có cần đăng nhập không
      */
@@ -128,14 +130,14 @@ public class AuthenticationFilter implements Filter {
         if (NO_AUTH_REQUIRED.contains(path)) {
             return true;
         }
-        
+
         // Kiểm tra pattern match
         for (String pattern : NO_AUTH_PATTERNS) {
             if (path.startsWith(pattern) || path.endsWith(pattern) || path.contains(pattern)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -155,7 +157,7 @@ public class AuthenticationFilter implements Filter {
             System.out.println("🔐 Authentication Filter destroyed");
         }
     }
-    
+
     /**
      * 📝 Log message
      */
@@ -167,4 +169,4 @@ public class AuthenticationFilter implements Filter {
             System.out.println("[AuthFilter] " + msg);
         }
     }
-} 
+}

@@ -4,7 +4,7 @@
             <%@ page import="model.User" %>
 
                 <% User user=(User) session.getAttribute("user"); if (user==null || !"STAFF".equals(user.getRole())) {
-                    response.sendRedirect(request.getContextPath() + "/auth/login.jsp" ); return; } %>
+                    response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp" ); return; } %>
 
                     <!DOCTYPE html>
                     <html lang="vi">

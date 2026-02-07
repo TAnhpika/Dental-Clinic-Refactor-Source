@@ -71,7 +71,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
             response.sendRedirect("BookingPage");
         } else {
             request.setAttribute("error", "Không thể lưu thông tin. Vui lòng thử lại!");
-            request.getRequestDispatcher("/auth/information.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/information.jsp").forward(request, response);
         }    
     }
 

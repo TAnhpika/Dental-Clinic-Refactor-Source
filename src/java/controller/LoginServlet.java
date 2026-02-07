@@ -46,13 +46,18 @@ import org.json.JSONObject;
 public class LoginServlet extends HttpServlet {
 
     /*
-    Tóm lại: Nếu email Google chưa có trong database, hãy tự động tạo tài khoản mới rồi đăng nhập luôn. Nếu đã có thì đăng nhập như bình thường.
-    */
+     * Tóm lại: Nếu email Google chưa có trong database, hãy tự động tạo tài khoản
+     * mới rồi đăng nhập luôn. Nếu đã có thì đăng nhập như bình thường.
+     */
 
-    private static String getGoogleClientId() { return utils.Env.get("GOOGLE_CLIENT_ID"); }
-    private static String getGoogleClientSecret() { return utils.Env.get("GOOGLE_CLIENT_SECRET"); }
+    private static String getGoogleClientId() {
+        return utils.Env.get("GOOGLE_CLIENT_ID");
+    }
 
- 
+    private static String getGoogleClientSecret() {
+        return utils.Env.get("GOOGLE_CLIENT_SECRET");
+    }
+
     private String REDIRECT_URI;
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -61,23 +66,23 @@ public class LoginServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         // Get the context path dynamically
-        String contextPath = "/TestFull";  // Hardcode context path
+        String contextPath = "/TestFull"; // Hardcode context path
         REDIRECT_URI = "http://localhost:8080" + contextPath + "/LoginGG/LoginGoogleHandler";
         System.out.println("[DEBUG] REDIRECT_URI initialized: " + REDIRECT_URI);
         System.out.println("[DEBUG] CLIENT_ID: " + getGoogleClientId());
         String secret = getGoogleClientSecret();
-        System.out.println("[DEBUG] CLIENT_SECRET (first 4 chars): " + 
-            (secret != null && secret.length() >= 4 ? secret.substring(0, 4) + "****" : "****"));
+        System.out.println("[DEBUG] CLIENT_SECRET (first 4 chars): " +
+                (secret != null && secret.length() >= 4 ? secret.substring(0, 4) + "****" : "****"));
     }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -96,19 +101,21 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Đảm bảo tất cả trang sau login dùng đúng UTF-8 (fix lỗi font sidebar, menu, tiếng Việt)
+        // Đảm bảo tất cả trang sau login dùng đúng UTF-8 (fix lỗi font sidebar, menu,
+        // tiếng Việt)
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -127,7 +134,7 @@ public class LoginServlet extends HttpServlet {
                     PatientDAO.addPatientFromGoogle(userId, userName);
                     user = UserDAO.getUserByEmail(userEmail);
                 } else {
-                    response.sendRedirect("auth/login.jsp?error=system_error");
+                    response.sendRedirect("jsp/jsp/auth/login.jsp?error=system_error");
                     return;
                 }
             }
@@ -142,7 +149,7 @@ public class LoginServlet extends HttpServlet {
 
             List<Doctors> doctors = DoctorDAO.getAllDoctorsOnline();
             request.setAttribute("doctors", doctors);
-            
+
             String role = user.getRole();
 
             if ("DOCTOR".equalsIgnoreCase(role)) {
@@ -174,34 +181,34 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/jsp/manager/manager_tongquan.jsp").forward(request, response);
             } else {
                 System.out.println("Invalid role: " + role);
-                response.sendRedirect("auth/login.jsp?error=invalid_role");
+                response.sendRedirect("jsp/jsp/auth/login.jsp?error=invalid_role");
             }
         } else {
             // Xử lý OAuth callback từ Google
             String code = request.getParameter("code");
             String error = request.getParameter("error");
-            
+
             System.out.println("[DEBUG] Google OAuth callback - code: " + code);
             System.out.println("[DEBUG] Google OAuth callback - error: " + error);
-            
+
             if (error != null) {
                 System.out.println("[ERROR] Google OAuth error: " + error);
-                response.sendRedirect(request.getContextPath() + "/auth/login.jsp?error=google_oauth_error");
+                response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp?error=google_oauth_error");
                 return;
             }
-            
+
             if (code != null) {
                 try {
                     System.out.println("[DEBUG] Starting token request...");
                     // Lấy access token từ code
                     GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
-                        HTTP_TRANSPORT,
-                        JSON_FACTORY,
-                        getGoogleClientId(),
-                        getGoogleClientSecret(),
-                        code,
-                        REDIRECT_URI)
-                        .execute();
+                            HTTP_TRANSPORT,
+                            JSON_FACTORY,
+                            getGoogleClientId(),
+                            getGoogleClientSecret(),
+                            code,
+                            REDIRECT_URI)
+                            .execute();
 
                     String accessToken = tokenResponse.getAccessToken();
                     System.out.println("Got access token: " + accessToken);
@@ -225,25 +232,26 @@ public class LoginServlet extends HttpServlet {
                             }
                         }
 
-                        String jsonResponse = result.toString();                                                                                                            // chuyển chuỗi JSON thành đối tượng JSONOBJECT hợp lệ  -> lấy ra user và email
+                        String jsonResponse = result.toString(); // chuyển chuỗi JSON thành đối tượng JSONOBJECT hợp lệ
+                                                                 // -> lấy ra user và email
                         System.out.println("Google API Response: " + jsonResponse);
 
                         // Parse thông tin người dùng từ JSON
                         JSONObject userInfo = new JSONObject(jsonResponse);
                         String email = userInfo.getString("email");
                         String name = userInfo.getString("name");
-                        
+
                         System.out.println("User info from Google - Email: " + email + ", Name: " + name);
-                        
+
                         // Lưu thông tin vào session và redirect lại để xử lý
                         session.setAttribute("userEmail", email);
                         session.setAttribute("userName", name);
                         response.sendRedirect(request.getContextPath() + "/LoginServlet");
                     }
-                    
+
                 } catch (Exception e) {
                     e.printStackTrace();
-                    response.sendRedirect(request.getContextPath() + "/auth/login.jsp?error=google_auth_failed");                       
+                    response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp?error=google_auth_failed");
                 }
             }
         }
@@ -259,26 +267,26 @@ public class LoginServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password_hash"); // Actually plain text from form
-        
+
         System.out.println("=== LOGIN ATTEMPT ===");
         System.out.println("Email: " + email);
         System.out.println("Password (plain): " + password);
         System.out.println("Password (hashed): " + UserDAO.hashPassword(password));
-        
+
         // Use loginUser which handles hashing internally
         User user = UserDAO.loginUser(email, password);
         System.out.println("User found: " + (user != null));
-        
+
         if (user != null) {
             System.out.println("User role: " + user.getRole());
             HttpSession session = request.getSession();
@@ -292,23 +300,24 @@ public class LoginServlet extends HttpServlet {
 
             List<Doctors> doctors = DoctorDAO.getAllDoctorsOnline();
             request.setAttribute("doctors", doctors);
-            
-            String role = user.getRole();  // Lấy role từ user
+
+            String role = user.getRole(); // Lấy role từ user
 
             if ("DOCTOR".equalsIgnoreCase(role)) {
-    // Lấy doctor từ DB bằng user_id
-    Doctors doctor = DoctorDAO.getDoctorByUserId(user.getId());
-    if (doctor != null) {
-        session.setAttribute("doctor_id", doctor.getDoctor_id());
-        session.setAttribute("doctor", doctor); // ✅ THÊM DÒNG NÀY
-        System.out.println("Form login - doctor_id set in session: " + doctor.getDoctor_id());
-    } else {
-        System.out.println("Form login - Không tìm thấy doctor theo user_id: " + user.getId());
-    }
-    response.sendRedirect(request.getContextPath() + "/DoctorHomePageServlet");
+                // Lấy doctor từ DB bằng user_id
+                Doctors doctor = DoctorDAO.getDoctorByUserId(user.getId());
+                if (doctor != null) {
+                    session.setAttribute("doctor_id", doctor.getDoctor_id());
+                    session.setAttribute("doctor", doctor); // ✅ THÊM DÒNG NÀY
+                    System.out.println("Form login - doctor_id set in session: " + doctor.getDoctor_id());
+                } else {
+                    System.out.println("Form login - Không tìm thấy doctor theo user_id: " + user.getId());
+                }
+                response.sendRedirect(request.getContextPath() + "/DoctorHomePageServlet");
 
             } else if ("PATIENT".equalsIgnoreCase(role)) {
-                 List<Appointment> upcomingAppointments = AppointmentDAO.getUpcomingAppointmentsByPatientId(patient.getPatientId());
+                List<Appointment> upcomingAppointments = AppointmentDAO
+                        .getUpcomingAppointmentsByPatientId(patient.getPatientId());
                 request.setAttribute("upcomingAppointments", upcomingAppointments);
 
                 int totalVisits = PatientDAO.getTotalVisitsByPatientId(patient.getPatientId());
@@ -316,13 +325,12 @@ public class LoginServlet extends HttpServlet {
 
                 System.out.println("Patient ID: " + patient.getPatientId());
                 System.out.println("Total visits: " + totalVisits);
-                
-                   BlogDAO BlogDAO = new BlogDAO();
+
+                BlogDAO BlogDAO = new BlogDAO();
 
                 List<BlogPost> latestBlogs = BlogDAO.getLatest(2); // hoặc tất cả nếu cần
                 request.setAttribute("latestBlogs", latestBlogs);
-                
-                
+
                 request.getRequestDispatcher("jsp/patient/user_homepage.jsp").forward(request, response);
             } else if ("STAFF".equalsIgnoreCase(role)) {
                 try {
@@ -343,11 +351,12 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/jsp/manager/manager_tongquan.jsp").forward(request, response);
             } else {
                 System.out.println("Invalid role: " + role);
-                response.sendRedirect("auth/login.jsp?error=" + java.net.URLEncoder.encode("invalid_role", "UTF-8"));
+                response.sendRedirect(
+                        "jsp/jsp/auth/login.jsp?error=" + java.net.URLEncoder.encode("invalid_role", "UTF-8"));
             }
         } else {
             System.out.println("Login failed - User not found");
-            response.sendRedirect("auth/login.jsp?error=1");
+            response.sendRedirect("jsp/jsp/auth/login.jsp?error=1");
         }
     }
 

@@ -6,7 +6,7 @@
 <%
     User user = (User) session.getAttribute("user");
     if (user == null || !"STAFF".equals(user.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
         return;
     }
     List<Appointment> appointments = (List<Appointment>) request.getAttribute("appointments");

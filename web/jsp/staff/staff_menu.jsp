@@ -5,7 +5,8 @@
         <nav class="dashboard-sidebar" id="sideMenu">
             <!-- Sidebar Header / Logo -->
             <div class="sidebar-header">
-                <a href="${pageContext.request.contextPath}/jsp/staff/staff_tongquan.jsp" class="sidebar-logo" title="Về trang chủ">
+                <a href="${pageContext.request.contextPath}/jsp/staff/staff_tongquan.jsp" class="sidebar-logo"
+                    title="Về trang chủ">
                     <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo Happy Smile">
                     <span class="sidebar-logo-text">HAPPY <em>Smile</em></span>
                 </a>
@@ -83,7 +84,7 @@
                         <span>Đăng kí lịch làm việc</span>
                     </a>
 
-                    <a href="${pageContext.request.contextPath}/blog/blog.jsp" class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/jsp/blog/blog.jsp" class="sidebar-item">
                         <i class="fas fa-newspaper"></i>
                         <span>Tin tức y tế</span>
                     </a>
@@ -104,7 +105,7 @@
                         <span>Tài khoản của tôi</span>
                     </a>
 
-        
+
                 </div>
             </div>
         </nav>

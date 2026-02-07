@@ -322,7 +322,7 @@
                                 </a>
                             </div>
                 <p class="text-center mt-3">
-                    <a href="<%= request.getContextPath()%>/auth/signup.jsp">Sign up</a> |  <a href="${pageContext.request.contextPath}/ResetPasswordServlet?action=forgot-password">Quên mật khẩu?</a>
+                    <a href="<%= request.getContextPath()%>/jsp/auth/signup.jsp">Sign up</a> |  <a href="${pageContext.request.contextPath}/ResetPasswordServlet?action=forgot-password">Quên mật khẩu?</a>
                 </p>
 
                 <div class="text-center mt-3">
