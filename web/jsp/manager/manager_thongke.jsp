@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="dao.PatientDAO,dao.BillDAO,dao.MedicineDAO,model.Patients,model.Bill,model.Medicine,java.util.List,model.User" %>
+<%@ page import="dao.PatientDAO,dao.BillDAO,dao.MedicineDAO,model.entity.Patients,model.entity.Bill,model.entity.Medicine,java.util.List,model.entity.User" %>
 
 <%
     User user = (User) session.getAttribute("user");

@@ -59,15 +59,33 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Highlight active menu item theo URL hiện tại
+// Highlight active menu item theo URL hiện tại (giữ đúng thẻ li khi click)
 (function() {
     const currentPath = window.location.pathname;
+
+    // Direct sidebar-item links
     document.querySelectorAll('#sideMenu .sidebar-item[href]').forEach(function(item) {
         const href = item.getAttribute('href');
         if (!href) return;
         const linkPath = href.indexOf('http') === 0 ? new URL(href).pathname : href.split('?')[0];
         if (currentPath === linkPath || (linkPath.length > 1 && currentPath.indexOf(linkPath) !== -1)) {
             item.classList.add('active');
+        }
+    });
+
+    // Dropdown items (Lịch làm, Trong ngày, ...) - highlight + mở dropdown cha
+    document.querySelectorAll('#sideMenu .sidebar-dropdown-item').forEach(function(item) {
+        const href = item.getAttribute('href');
+        if (!href) return;
+        const linkPath = href.indexOf('http') === 0 ? new URL(href).pathname : href.split('?')[0];
+        if (currentPath === linkPath || (linkPath.length > 1 && currentPath.indexOf(linkPath) !== -1)) {
+            item.classList.add('active');
+            var dropdown = item.closest('.sidebar-dropdown');
+            if (dropdown) {
+                dropdown.classList.add('open');
+                var menu = dropdown.querySelector('.sidebar-dropdown-menu');
+                if (menu) menu.style.display = 'block';
+            }
         }
     });
 })();

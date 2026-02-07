@@ -1,7 +1,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/staff.css">
-    <%@page import="model.User" %>
-        <%@page import="model.Staff" %>
+    <%@page import="model.entity.User" %>
+        <%@page import="model.entity.Staff" %>
             <%-- Staff Header Component - Bootstrap Version Unified UI/UX Dashboard Header --%>
 
                 <% User currentUser=(User) session.getAttribute("user"); Staff currentStaff=(Staff)

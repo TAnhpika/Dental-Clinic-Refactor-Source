@@ -1,7 +1,7 @@
 package dao;
 
-import model.PaymentInstallment;
-import utils.DBContext;
+import model.entity.PaymentInstallment;
+import util.DBContext;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,12 +23,13 @@ public class PaymentInstallmentDAO {
     /**
      * Get database connection with retry logic
      */
-    private Connection getConnectionWithRetry() throws SQLException {
+    private static Connection getConnectionWithRetry() throws SQLException {
+        Connection conn = null;
         SQLException lastException = null;
         
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
-                Connection conn = new DBContext().getConnection();
+                conn = new DBContext().getConnection();
                 if (conn != null && !conn.isClosed()) {
                     return conn;
                 }
@@ -53,7 +54,7 @@ public class PaymentInstallmentDAO {
     /**
      * Execute query with monitoring and error handling
      */
-    private <T> T executeQuery(String operation, java.util.function.Function<Connection, T> queryFunction) {
+    private static <T> T executeQuery(String operation, java.util.function.Function<Connection, T> queryFunction) {
         totalQueries.incrementAndGet();
         long startTime = System.currentTimeMillis();
         
@@ -90,7 +91,7 @@ public class PaymentInstallmentDAO {
     /**
      * Tạo kế hoạch trả góp cho hóa đơn
      */
-    public boolean createInstallmentPlan(String billId, double totalAmount, double downPayment, int installmentCount) {
+    public static boolean createInstallmentPlan(String billId, double totalAmount, double downPayment, int installmentCount) {
         System.out.println("💳 Creating installment plan for bill: " + billId);
         System.out.println("   - Total Amount: " + totalAmount);
         System.out.println("   - Down Payment: " + downPayment);
@@ -178,7 +179,7 @@ public class PaymentInstallmentDAO {
     /**
      * Thanh toán một kỳ trả góp
      */
-    public boolean payInstallment(int installmentId, double amountPaid, String paymentMethod, String transactionId) {
+    public static boolean payInstallment(int installmentId, double amountPaid, String paymentMethod, String transactionId) {
         System.out.println("💰 Processing installment payment:");
         System.out.println("   - Installment ID: " + installmentId);
         System.out.println("   - Amount Paid: " + amountPaid);
@@ -290,7 +291,7 @@ public class PaymentInstallmentDAO {
     /**
      * Cập nhật trạng thái reminder cho kỳ trả góp
      */
-    private void updateReminderStatus(Connection conn, int installmentId, boolean needsReminder) {
+    private static void updateReminderStatus(Connection conn, int installmentId, boolean needsReminder) {
         String sql = """
             UPDATE dbo.PaymentInstallments 
             SET next_reminder_date = CASE WHEN ? = 1 THEN DATEADD(day, 3, CAST(GETDATE() AS DATE)) ELSE NULL END
@@ -309,7 +310,7 @@ public class PaymentInstallmentDAO {
     /**
      * Lấy danh sách kỳ trả góp theo bill_id
      */
-    public List<PaymentInstallment> getInstallmentsByBillId(String billId) {
+    public static List<PaymentInstallment> getInstallmentsByBillId(String billId) {
         List<PaymentInstallment> installments = new ArrayList<>();
         String sql = """
             SELECT installment_id, bill_id, total_amount, down_payment, installment_count, 
@@ -395,7 +396,7 @@ public class PaymentInstallmentDAO {
     /**
      * Lấy tất cả kỳ trả góp cần nhắc nợ
      */
-    public List<PaymentInstallment> getRemindersNeeded() {
+    public static List<PaymentInstallment> getRemindersNeeded() {
         List<PaymentInstallment> reminders = new ArrayList<>();
         
         String sql = """
@@ -483,7 +484,7 @@ public class PaymentInstallmentDAO {
     /**
      * Cập nhật trạng thái quá hạn
      */
-    public int updateOverdueInstallments() {
+    public static int updateOverdueInstallments() {
         System.out.println("📅 Checking for overdue installments...");
         
         String sql = """
@@ -547,7 +548,7 @@ public class PaymentInstallmentDAO {
     /**
      * Lấy tóm tắt kế hoạch trả góp
      */
-    public PaymentInstallment getInstallmentSummary(String billId) {
+    public static PaymentInstallment getInstallmentSummary(String billId) {
         String sql = """
             SELECT 
                 bill_id,
@@ -637,7 +638,7 @@ public class PaymentInstallmentDAO {
     /**
      * Thanh toán toàn bộ hóa đơn trả góp (trả nợ tất cả)
      */
-    public boolean payOffFullInstallment(String billId, String paymentMethod, String transactionId) {
+    public static boolean payOffFullInstallment(String billId, String paymentMethod, String transactionId) {
         System.out.println("💰 Processing full installment payoff for bill: " + billId);
         
         String sql = """
@@ -703,7 +704,7 @@ public class PaymentInstallmentDAO {
     /**
      * Tính toán tổng số tiền còn nợ của một hóa đơn trả góp
      */
-    public double getTotalRemainingAmount(String billId) {
+    public static double getTotalRemainingAmount(String billId) {
         String sql = """
             SELECT SUM(amount_due - ISNULL(amount_paid, 0)) as total_remaining
             FROM dbo.PaymentInstallments 
@@ -734,7 +735,7 @@ public class PaymentInstallmentDAO {
     /**
      * Lấy bill ID từ installment ID
      */
-    public String getBillIdByInstallmentId(int installmentId) {
+    public static String getBillIdByInstallmentId(int installmentId) {
         String sql = """
             SELECT bill_id 
             FROM dbo.PaymentInstallments 
@@ -766,7 +767,7 @@ public class PaymentInstallmentDAO {
     /**
      * Thanh toán kỳ trả góp theo bill ID và period number
      */
-    public boolean payInstallmentByBillAndPeriod(String billId, int period, double amount, 
+    public static boolean payInstallmentByBillAndPeriod(String billId, int period, double amount, 
                                                  String paymentMethod, String transactionId, String notes) {
         System.out.println("💰 Paying installment - Bill: " + billId + ", Period: " + period + ", Amount: " + amount);
         

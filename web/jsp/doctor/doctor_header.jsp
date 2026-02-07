@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@page import="model.User" %>
-        <%@page import="model.Doctors" %>
+    <%@page import="model.entity.User" %>
+        <%@page import="model.entity.Doctors" %>
             <%-- Doctor Header Component - Bootstrap Version Unified UI/UX Dashboard Header --%>
 
                 <% User currentUser=(User) session.getAttribute("user"); Doctors currentDoctor=(Doctors)
@@ -16,15 +16,7 @@
 
                     <!-- Dashboard Header -->
                     <header class="dashboard-header d-flex justify-content-between align-items-center">
-                        <div class="flex-grow-1">
-                            <div class="input-group" style="max-width: 400px;">
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0"
-                                    placeholder="Tìm kiếm bệnh nhân...">
-                            </div>
-                        </div>
+                        <div class="flex-grow-1"></div>
 
                         <div class="d-flex align-items-center gap-3">
                             <!-- Notifications -->
@@ -71,15 +63,16 @@
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"
                                             href="${pageContext.request.contextPath}/doctor_trangcanhan">
-                                            <i class="fas fa-user me-2"></i> Trang cá nhân
+                                            <i class="fas fa-user me-2"></i>Trang cá nhân
                                         </a></li>
                                     <li><a class="dropdown-item"
                                             href="${pageContext.request.contextPath}/EditDoctorServlet">
                                             <i class="fas fa-cog me-2"></i> Cài đặt
                                         </a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/LogoutServlet">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                        </a></li>
                                 </ul>
                             </div>
                         </div>

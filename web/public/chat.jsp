@@ -1,7 +1,7 @@
 <%@page import="java.util.Map" %>
-    <%@page import="model.User" %>
+    <%@page import="model.entity.User" %>
         <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-            <% // --- Lấy thông tin người dùng đã đăng nhập từ session --- model.User user=(model.User)
+            <% // --- Lấy thông tin người dùng đã đăng nhập từ session --- User user=(User)
                 session.getAttribute("user"); Integer currentUserId=(user !=null) ? user.getId() : null; String
                 currentUsername=(user !=null) ? user.getEmail() : null; String currentUserRole=(user !=null) ?
                 user.getRole() : null; // DEBUG: In ra console của server để kiểm tra System.out.println("DEBUG

@@ -6,9 +6,9 @@ package dao;
 
 import java.security.MessageDigest;
 import java.sql.*;
-import utils.DBContext;
-import model.Staff;
-import model.User;
+import util.DBContext;
+import model.entity.Staff;
+import model.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,6 +252,7 @@ public class StaffDAO {
      * Cập nhật thông tin nhân viên
      */
     public static boolean updateStaff(Staff staff) throws SQLException {
+        ResultSet rs = null;
         Connection conn = null;
         PreparedStatement ptm = null;
         try {
@@ -395,7 +396,8 @@ public class StaffDAO {
         }
     }
     
-    public void addStaff(Staff staff, String password) throws SQLException {
+    public static void addStaff(Staff staff, String password) throws SQLException {
+        PreparedStatement ps = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -486,7 +488,7 @@ public class StaffDAO {
      
    
 
-    public void close() {
+    public static void close() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

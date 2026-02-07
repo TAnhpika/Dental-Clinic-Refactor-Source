@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import model.Patients;
-import utils.DBContext;
-import model.User;
+import model.entity.Patients;
+import util.DBContext;
+import model.entity.User;
 
 public class PatientDAO {
 
@@ -21,7 +21,7 @@ public class PatientDAO {
     private static final String DELETE = "DELETE FROM Patients WHERE patient_id = ?";
     private static final String COUNT_BY_NAME = "SELECT COUNT(*) as total FROM Patients WHERE full_name = ?";
 
-    public List<Patients> getAll() throws SQLException {
+    public static List<Patients> getAll() throws SQLException {
         List<Patients> patients = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -130,7 +130,7 @@ public class PatientDAO {
         return patient;
     }
 
-    public boolean insert(int userId, String fullName, String phone, String dateOfBirth, String gender) {
+    public static boolean insert(int userId, String fullName, String phone, String dateOfBirth, String gender) {
         Connection conn = null;
         PreparedStatement ptm = null;
         try {
@@ -158,7 +158,7 @@ public class PatientDAO {
         return false;
     }
 
-    public boolean update(int patientId, String fullName, String phone, String dateOfBirth, String gender) throws SQLException {
+    public static boolean update(int patientId, String fullName, String phone, String dateOfBirth, String gender) throws SQLException {
         Connection conn = null;
         PreparedStatement ptm = null;
         try {
@@ -182,7 +182,7 @@ public class PatientDAO {
         return false;
     }
 
-    public boolean delete(int patientId) throws SQLException {
+    public static boolean delete(int patientId) throws SQLException {
         Connection conn = null;
         PreparedStatement ptm = null;
         try {
@@ -202,7 +202,7 @@ public class PatientDAO {
         return false;
     }
 
-    public int countByName(String name) throws SQLException {
+    public static int countByName(String name) throws SQLException {
         int count = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -261,11 +261,9 @@ public class PatientDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private Connection conn = null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
 
-    public List<Patients> getAllPatients() {
+    public static List<Patients> getAllPatients() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Patients> list = new ArrayList<>();
         String query = "SELECT * FROM Patients";
         try {
@@ -291,7 +289,8 @@ public class PatientDAO {
         return list;
     }
 
-    public List<Patients> searchPatients(String keyword) {
+    public static List<Patients> searchPatients(String keyword) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Patients> list = new ArrayList<>();
         String query = "SELECT * FROM Patients WHERE full_name LIKE ? OR phone LIKE ?";
         try {
@@ -319,7 +318,8 @@ public class PatientDAO {
         return list;
     }
 
-    public List<Patients> filterPatientsByGender(String gender) {
+    public static List<Patients> filterPatientsByGender(String gender) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Patients> list = new ArrayList<>();
         String query = "SELECT * FROM Patients WHERE gender = ?";
         try {
@@ -439,7 +439,7 @@ public class PatientDAO {
         return patientId;
     }
 
-    public List<Patients> searchByPhone(String phone) {
+    public static List<Patients> searchByPhone(String phone) {
         List<Patients> patients = new ArrayList<>();
         String sql = "SELECT * FROM Patients WHERE phone LIKE ?";
         Connection conn = null;
@@ -479,7 +479,7 @@ public class PatientDAO {
         return patients;
     }
 
-    public List<Patients> searchByName(String name) {
+    public static List<Patients> searchByName(String name) {
         List<Patients> patients = new ArrayList<>();
         String sql = "SELECT * FROM Patients WHERE full_name LIKE ?";
         Connection conn = null;
@@ -519,7 +519,7 @@ public class PatientDAO {
         return patients;
     }
 
-    public int createPatient(Patients relativePatient) {
+    public static int createPatient(Patients relativePatient) {
         String sql = "INSERT INTO Patients (user_id, full_name, phone, date_of_birth, gender, avatar) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
@@ -561,6 +561,7 @@ public class PatientDAO {
     
     // Đảm bảo có hàm close để tránh lỗi linter
     public static void close(java.sql.ResultSet rs, java.sql.PreparedStatement ps, java.sql.Connection conn) {
+          
         try { if (rs != null) rs.close(); } catch (Exception e) {}
         try { if (ps != null) ps.close(); } catch (Exception e) {}
         try { if (conn != null) conn.close(); } catch (Exception e) {}
@@ -583,6 +584,7 @@ public class PatientDAO {
     //=================================================================================
     //code của C.TRung =======================================================
     public static boolean updatePatientAvatar(int patientId, String avatarPath) {
+        ResultSet rs = null;
         String sql = "UPDATE Patients SET avatar = ? WHERE patient_id = ?";
         System.out.println("Executing SQL: " + sql);
         System.out.println("Parameters: patientId=" + patientId + ", avatarPath=" + avatarPath);
@@ -646,7 +648,7 @@ public class PatientDAO {
     
     
     /* Lấy tất cả bệnh nhân với phân trang*/
-    public List<Patients> getAllPatientsWithPagination(int offset, int limit) {
+    public static List<Patients> getAllPatientsWithPagination(int offset, int limit) {
         List<Patients> patients = new ArrayList<>();
         String sql = "SELECT * FROM patients ORDER BY created_at DESC LIMIT ? OFFSET ?";
         
@@ -678,7 +680,7 @@ public class PatientDAO {
     }
     
     // Lấy tổng số bệnh nhân
-    public int getTotalPatients() {
+    public static int getTotalPatients() {
         String sql = "SELECT COUNT(*) FROM patients";
         
         try (Connection conn = DBContext.getConnection();
@@ -698,7 +700,7 @@ public class PatientDAO {
     }
     
     // Lấy số bệnh nhân hoạt động (giả sử tất cả đều hoạt động)
-    public int getActivePatients() {
+    public static int getActivePatients() {
         String sql = "SELECT COUNT(*) FROM patients WHERE status = 'active' OR status IS NULL";
         
         try (Connection conn = DBContext.getConnection();
@@ -718,7 +720,7 @@ public class PatientDAO {
     }
     
     // Lấy số bệnh nhân mới trong tháng này
-    public int getNewPatientsThisMonth() {
+    public static int getNewPatientsThisMonth() {
         String sql = "SELECT COUNT(*) FROM patients WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())";
         
         try (Connection conn = DBContext.getConnection();
@@ -739,7 +741,7 @@ public class PatientDAO {
     
     
     // Tìm kiếm bệnh nhân theo tên hoặc phone
-    public List<Patients> searchPatients(String keyword, int offset, int limit) {
+    public static List<Patients> searchPatients(String keyword, int offset, int limit) {
         List<Patients> patients = new ArrayList<>();
         String sql = "SELECT * FROM patients WHERE full_name LIKE ? OR phone LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
         
@@ -775,7 +777,7 @@ public class PatientDAO {
     }
     
     // Thêm bệnh nhân mới
-    public boolean addPatient(Patients patient) {
+    public static boolean addPatient(Patients patient) {
         String sql = "INSERT INTO patients (full_name, email, phone, date_of_birth, gender, avatar) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DBContext.getConnection();
@@ -798,7 +800,7 @@ public class PatientDAO {
     }
     
     // Cập nhật thông tin bệnh nhân
-    public boolean updatePatient(Patients patient) {
+    public static boolean updatePatient(Patients patient) {
         String sql = "UPDATE patients SET full_name = ?, email = ?, phone = ?, date_of_birth = ?, gender = ?, avatar = ?, updated_at = CURRENT_TIMESTAMP WHERE patient_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -822,7 +824,7 @@ public class PatientDAO {
     }
     
     // Xóa bệnh nhân
-    public boolean deletePatient(int patientId) {
+    public static boolean deletePatient(int patientId) {
         String sql = "DELETE FROM patients WHERE patient_id = ?";
         
         try (Connection conn = DBContext.getConnection();

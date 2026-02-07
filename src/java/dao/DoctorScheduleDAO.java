@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.DoctorSchedule;
-import model.TimeSlot;
-import utils.DBContext;
+import model.entity.DoctorSchedule;
+import model.entity.TimeSlot;
+import util.DBContext;
 import java.time.LocalTime;
 import java.sql.Time;
 
@@ -78,16 +78,13 @@ public class DoctorScheduleDAO {
         "ORDER BY ds.slot_id ASC";
 
     // Khai báo biến instance
-    private Connection conn = null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
 
-    public DoctorScheduleDAO() {
-        conn = DBContext.getConnection();
-    }
+
+    public DoctorScheduleDAO() {}
 
     // CRUD Methods cơ bản
-    public List<DoctorSchedule> getAll() throws SQLException {
+    public static List<DoctorSchedule> getAll() throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<DoctorSchedule> schedules = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -133,7 +130,8 @@ public class DoctorScheduleDAO {
     }
 
     // Khi insert lịch nghỉ phép, LUÔN set status = 'pending'
-    public boolean addSchedule(DoctorSchedule schedule) {
+    public static boolean addSchedule(DoctorSchedule schedule) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         try {
             conn = DBContext.getConnection();
             if (conn != null) {
@@ -158,7 +156,8 @@ public class DoctorScheduleDAO {
         return false;
     }
 
-    public boolean updateScheduleStatus(int scheduleId, String status) {
+    public static boolean updateScheduleStatus(int scheduleId, String status) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         try {
             conn = DBContext.getConnection();
             if (conn != null) {
@@ -175,7 +174,8 @@ public class DoctorScheduleDAO {
         return false;
     }
 
-    public boolean deleteSchedule(int scheduleId) throws SQLException {
+    public static boolean deleteSchedule(int scheduleId) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         try {
             conn = DBContext.getConnection();
             if (conn != null) {
@@ -193,7 +193,8 @@ public class DoctorScheduleDAO {
     }
 
     // Search và Filter Methods
-    public List<DoctorSchedule> getSchedulesByDoctorId(long doctorId) {
+    public static List<DoctorSchedule> getSchedulesByDoctorId(long doctorId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<DoctorSchedule> schedules = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -214,7 +215,8 @@ public class DoctorScheduleDAO {
         return schedules;
     }
 
-    public List<DoctorSchedule> getAllPendingSchedules() {
+    public static List<DoctorSchedule> getAllPendingSchedules() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<DoctorSchedule> schedules = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -238,7 +240,7 @@ public class DoctorScheduleDAO {
      * ✅ HÀM MỚI: Lấy tất cả lịch chờ phê duyệt (bao gồm cả nghỉ phép)
      * (CHỈ LẤY status = 'pending')
      */
-    public List<DoctorSchedule> getAllPendingSchedulesIncludingLeaves() {
+    public static List<DoctorSchedule> getAllPendingSchedulesIncludingLeaves() {
         List<DoctorSchedule> schedules = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -276,7 +278,8 @@ public class DoctorScheduleDAO {
         return schedules;
     }
 
-    public List<DoctorSchedule> getApprovedSchedulesByDoctorId(long doctorId) {
+    public static List<DoctorSchedule> getApprovedSchedulesByDoctorId(long doctorId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<DoctorSchedule> schedules = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -383,8 +386,8 @@ public class DoctorScheduleDAO {
         return list;
     }
 
-    public static List<model.Doctors> getDoctorsByWorkDate(String workDate) {
-        List<model.Doctors> list = new ArrayList<>();
+    public static List<model.entity.Doctors> getDoctorsByWorkDate(String workDate) {
+        List<model.entity.Doctors> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -395,7 +398,7 @@ public class DoctorScheduleDAO {
             ps.setDate(1, java.sql.Date.valueOf(workDate));
             rs = ps.executeQuery();
             while (rs.next()) {
-                model.Doctors doctor = new model.Doctors();
+                model.entity.Doctors doctor = new model.entity.Doctors();
                 doctor.setDoctor_id(rs.getLong("doctor_id"));
                 doctor.setFull_name(rs.getString("full_name"));
                 doctor.setSpecialty(rs.getString("specialty"));
@@ -610,7 +613,8 @@ public class DoctorScheduleDAO {
      * ✅ FIXED: Kiểm tra đã có lịch nghỉ cho bác sĩ, ngày chưa 
      * (Hàm này chỉ để kiểm tra tránh trùng lặp khi thêm nghỉ phép)
      */
-    public boolean existsSchedule(long doctorId, java.sql.Date workDate, int slotId) {
+    public static boolean existsSchedule(long doctorId, java.sql.Date workDate, int slotId) {
+        Connection conn = null; PreparedStatement ps = null;
         String sql = "SELECT COUNT(*) FROM DoctorSchedule WHERE doctor_id = ? AND work_date = ? AND slot_id = ?";
         try {
             ps = conn.prepareStatement(sql);
@@ -679,7 +683,8 @@ public class DoctorScheduleDAO {
      * Mặc định bác sĩ làm việc tất cả các ngày, chỉ nghỉ khi có bản ghi trong DoctorSchedule.
      */
     @Deprecated
-    public void autoGenerateSchedulesForAllDoctors2Weeks() {
+    public static void autoGenerateSchedulesForAllDoctors2Weeks() {
+        ResultSet rs = null;
         System.out.println("⚠️ [DEPRECATED] autoGenerateSchedulesForAllDoctors2Weeks() - Hàm này không còn được sử dụng");
         System.out.println("💡 Logic mới: DoctorSchedule chỉ lưu NGÀY NGHỈ, không phải ngày làm việc");
         // Không thực hiện gì cả
@@ -689,7 +694,7 @@ public class DoctorScheduleDAO {
      * DEPRECATED: Hàm này đã bị xóa vì sai logic.
      */
     @Deprecated 
-    public void autoGenerateFullDaySchedules(long doctorId) {
+    public static void autoGenerateFullDaySchedules(long doctorId) {
         System.out.println("⚠️ [DEPRECATED] autoGenerateFullDaySchedules() - Hàm này không còn được sử dụng");
         // Không thực hiện gì cả
     }
@@ -697,7 +702,7 @@ public class DoctorScheduleDAO {
     /**
      * Lấy danh sách lịch nghỉ phép theo status (pending, approved, rejected)
      */
-    public List<DoctorSchedule> getDoctorSchedulesByStatus(String status) {
+    public static List<DoctorSchedule> getDoctorSchedulesByStatus(String status) {
         List<DoctorSchedule> schedules = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -732,7 +737,7 @@ public class DoctorScheduleDAO {
     /**
      * 🆕 Xóa lịch nghỉ theo bác sĩ và ngày
      */
-    public boolean deleteScheduleByDoctorAndDate(long doctorId, java.sql.Date workDate) {
+    public static boolean deleteScheduleByDoctorAndDate(long doctorId, java.sql.Date workDate) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {

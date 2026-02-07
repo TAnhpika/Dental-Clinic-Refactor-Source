@@ -1,18 +1,18 @@
 package dao;
 
-import model.NotificationTemplate;
-import utils.DBContext;
+import model.entity.NotificationTemplate;
+import util.DBContext;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import model.Notification;
+import model.entity.Notification;
 
 public class NotificationTemplateDAO {
     
-    public NotificationTemplate createTemplate(NotificationTemplate template) {
+    public static NotificationTemplate createTemplate(NotificationTemplate template) {
         String sql = "INSERT INTO NotificationTemplates (type, title_template, content_template, is_active) " +
                     "VALUES (?, ?, ?, ?) " +
                     "SELECT SCOPE_IDENTITY() as template_id";
@@ -37,7 +37,7 @@ public class NotificationTemplateDAO {
         return null;
     }
     
-    public NotificationTemplate getTemplateById(int templateId) {
+    public static NotificationTemplate getTemplateById(int templateId) {
         String sql = "SELECT * FROM NotificationTemplates WHERE template_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -56,7 +56,7 @@ public class NotificationTemplateDAO {
         return null;
     }
     
-    public List<NotificationTemplate> getAllTemplates() {
+    public static List<NotificationTemplate> getAllTemplates() {
         List<NotificationTemplate> templates = new ArrayList<>();
         String sql = "SELECT * FROM NotificationTemplates WHERE is_active = 1";
         
@@ -74,7 +74,7 @@ public class NotificationTemplateDAO {
         return templates;
     }
     
-    public boolean updateTemplate(NotificationTemplate template) {
+    public static boolean updateTemplate(NotificationTemplate template) {
         String sql = "UPDATE NotificationTemplates SET type = ?, title_template = ?, " +
                     "content_template = ?, is_active = ? WHERE template_id = ?";
                     
@@ -95,7 +95,7 @@ public class NotificationTemplateDAO {
         }
     }
     
-    public boolean deleteTemplate(int templateId) {
+    public static boolean deleteTemplate(int templateId) {
         String sql = "UPDATE NotificationTemplates SET is_active = 0 WHERE template_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -110,7 +110,7 @@ public class NotificationTemplateDAO {
         }
     }
     
-    public NotificationTemplate getTemplateByType(String type) {
+    public static NotificationTemplate getTemplateByType(String type) {
         String sql = "SELECT * FROM NotificationTemplates WHERE type = ? AND is_active = 1";
         
         try (Connection conn = DBContext.getConnection();
@@ -129,7 +129,7 @@ public class NotificationTemplateDAO {
         return null;
     }
     
-    public String processTemplate(String template, Map<String, String> params) {
+    public static String processTemplate(String template, Map<String, String> params) {
         String result = template;
         for (Map.Entry<String, String> entry : params.entrySet()) {
             result = result.replace("{" + entry.getKey() + "}", entry.getValue());
@@ -137,7 +137,7 @@ public class NotificationTemplateDAO {
         return result;
     }
     
-    public Notification createNotificationFromTemplate(String type, int userId, int referenceId, Map<String, String> params) {
+    public static Notification createNotificationFromTemplate(String type, int userId, int referenceId, Map<String, String> params) {
         NotificationTemplate template = getTemplateByType(type);
         if (template == null) {
             return null;
@@ -157,7 +157,7 @@ public class NotificationTemplateDAO {
         return null;
     }
     
-    private NotificationTemplate mapResultSetToTemplate(ResultSet rs) throws SQLException {
+    private static NotificationTemplate mapResultSetToTemplate(ResultSet rs) throws SQLException {
         NotificationTemplate template = new NotificationTemplate();
         template.setTemplateId(rs.getInt("template_id"));
         template.setType(rs.getString("type"));

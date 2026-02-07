@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.User" %>
-<%@ page import="model.Appointment" %>
+<%@ page import="model.entity.User" %>
+<%@ page import="model.entity.Appointment" %>
 <%@ page import="java.util.List" %>
 
 <%
@@ -37,11 +37,13 @@
             color: white;
             border-color: #4361ee;
         }
+        /* Slot đã được đặt: màu xám */
         .time-slot.booked {
-            background: #fee2e2;
-            color: #dc2626;
-            border-color: #ef4444;
+            background: #9ca3af;
+            color: #ffffff;
+            border-color: #6b7280;
             cursor: not-allowed;
+            opacity: 0.9;
         }
         .time-slot.past {
             background: #e5e7eb;

@@ -1,6 +1,6 @@
 package dao;
 
-import model.Specialty;
+import model.entity.Specialty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.DBContext;
+import util.DBContext;
 
 /**
  * DAO cho bảng Specialties - Chuyên khoa (dùng cho Bác sĩ và Dịch vụ).
@@ -22,7 +22,7 @@ public class SpecialtyDAO {
     /**
      * Lấy chuyên khoa theo ID.
      */
-    public Specialty getById(int specialtyId) {
+    public static Specialty getById(int specialtyId) {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(GET_BY_ID)) {
             ps.setInt(1, specialtyId);
@@ -38,7 +38,7 @@ public class SpecialtyDAO {
     /**
      * Lấy tất cả chuyên khoa.
      */
-    public List<Specialty> getAllSpecialties() {
+    public static List<Specialty> getAllSpecialties() {
         List<Specialty> list = new ArrayList<>();
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(GET_ALL);
@@ -52,7 +52,7 @@ public class SpecialtyDAO {
         return list;
     }
 
-    private Specialty mapRow(ResultSet rs) throws SQLException {
+    private static Specialty mapRow(ResultSet rs) throws SQLException {
         Specialty s = new Specialty();
         s.setSpecialtyId(rs.getInt("specialty_id"));
         s.setSpecialtyName(rs.getString("specialty_name"));

@@ -2,7 +2,7 @@
     <%@ include file="/includes/manager_header.jsp" %>
         <%@ include file="/includes/manager_menu.jsp" %>
             <%@ page import="dao.MedicineDAO" %>
-                <%@ page import="model.Medicine" %>
+                <%@ page import="model.entity.Medicine" %>
                     <%@ page import="java.util.List" %>
 
                         <% User user=(User) session.getAttribute("user"); if (user==null ||

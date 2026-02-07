@@ -1,9 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
-<%@page import="model.Appointment"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Calendar"%>
-<%@page import="java.util.Date"%>
+<%@page import="model.entity.Appointment"%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -12,113 +9,103 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Lịch trong ngày - Doctor</title>
         <style>
+            /* --- Giao diện văn phòng: tông trung tính, ít màu chói --- */
             .container {
                 max-width: 100%;
             }
-            .title{
+            .title {
                 display: flex;
-                margin-bottom: 10px;
+                margin-bottom: 16px;
                 justify-content: space-between;
                 align-items: center;
                 gap: 20px;
             }
 
-            .title-1, .title-2{
+            .title-1, .title-2 {
                 flex: 1;
                 text-align: center;
             }
 
             .title-1 h3, .title-2 h3 {
                 margin: 0;
-                padding: 10px;
-                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-                color: white;
+                padding: 12px 16px;
+                color: #1e293b;
                 border-radius: 8px;
-                font-size: 16px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                font-size: 15px;
+                font-weight: 600;
+                border: 1px solid #e2e8f0;
+                background: #f8fafc;
             }
 
             .title-1 h3 {
-                background: linear-gradient(135deg, #f59e0b, #d97706);
+                border-left: 4px solid #64748b;
+                background: #f1f5f9;
             }
 
             .title-2 h3 {
-                background: linear-gradient(135deg, #10b981, #059669);
-            }
-            .content {
-                margin-bottom: 15px;
+                border-left: 4px solid #0d9488;
+                background: #f0fdfa;
             }
 
-            .content p {
-                color: #3b82f6;
-            }
-
+            .content { margin-bottom: 15px; }
+            .content p { color: #475569; }
             .content h2 {
-                color: #374151;
+                color: #334155;
                 margin-bottom: 20px;
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: 600;
             }
-
             .content .subtitle {
-                color: #6b7280;
+                color: #64748b;
                 font-size: 14px;
                 margin-bottom: 20px;
             }
 
-            /* Auto-refresh info */
             .refresh-info {
-                background-color: #f3f4f6;
-                border: 1px solid #d1d5db;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
                 border-radius: 8px;
                 padding: 8px 12px;
                 font-size: 12px;
-                color: #6b7280;
+                color: #64748b;
                 margin-bottom: 20px;
                 text-align: center;
             }
 
-            /* Debug info styles */
             .debug-info {
-                background-color: #e3f2fd;
-                border: 1px solid #2196f3;
+                background: #f1f5f9;
+                border: 1px solid #cbd5e1;
                 border-radius: 8px;
                 padding: 10px;
                 margin-bottom: 20px;
                 font-size: 12px;
             }
-
-            .debug-info h5 {
-                color: #1976d2;
-                margin: 0 0 10px 0;
-            }
+            .debug-info h5 { color: #475569; margin: 0 0 10px 0; }
 
             .alert {
                 padding: 12px;
                 margin-bottom: 20px;
-                border-radius: 4px;
+                border-radius: 6px;
                 border: 1px solid transparent;
             }
-
             .alert-danger {
-                color: #721c24;
-                background-color: #f8d7da;
-                border-color: #f5c6cb;
+                color: #991b1b;
+                background: #fef2f2;
+                border-color: #fecaca;
             }
-
             .alert-info {
-                color: #0c5460;
-                background-color: #d1ecf1;
-                border-color: #bee5eb;
+                color: #155e75;
+                background: #f0f9ff;
+                border-color: #bae6fd;
             }
 
             .badge-test {
-                background-color: #ffc107;
-                color: #212529;
+                background: #fef3c7;
+                color: #92400e;
                 padding: 2px 6px;
                 border-radius: 4px;
                 font-size: 10px;
-                font-weight: bold;
+                font-weight: 600;
                 margin-left: 5px;
             }
 
@@ -140,24 +127,25 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 16px;
                 min-height: 400px;
                 max-width: calc(50% - 10px);
             }
 
             .single-card {
-                background-color: #fff;
-                padding: 16px;
-                border-radius: 12px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: transform 0.2s ease;
+                background: #fff;
+                padding: 18px;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
                 height: fit-content;
                 min-height: 200px;
             }
 
             .single-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                border-color: #cbd5e1;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             }
 
             .card-header {
@@ -165,140 +153,142 @@
                 justify-content: space-between;
                 align-items: center;
             }
+
             .badge {
                 padding: 4px 10px;
-                border-radius: 20px;
+                border-radius: 6px;
                 font-size: 12px;
-                font-weight: bold;
+                font-weight: 600;
             }
             .badge.waiting {
-                background-color: #dbeafe;
-                color: #2563eb;
+                background: #e0f2fe;
+                color: #0369a1;
             }
             .badge.done {
-                background-color: #bbf7d0;
-                color: #15803d;
+                background: #ccfbf1;
+                color: #0f766e;
             }
             .badge.cancelled {
-                background-color: #fecaca;
-                color: #dc2626;
+                background: #fee2e2;
+                color: #b91c1c;
             }
+
             .info {
                 display: flex;
                 margin-top: 12px;
                 gap: 12px;
             }
             .info img {
-                width: 64px;
-                height: 64px;
+                width: 56px;
+                height: 56px;
                 border-radius: 50%;
                 object-fit: cover;
+                border: 1px solid #e2e8f0;
             }
-            .info-details {
-                flex: 1;
-            }
+            .info-details { flex: 1; }
             .info-details p {
                 margin: 4px 0;
                 font-size: 14px;
+                color: #475569;
             }
+
             .actions {
-                margin-top: 12px;
+                margin-top: 14px;
                 display: flex;
                 gap: 8px;
                 flex-wrap: wrap;
             }
             .actions button, .actions a {
-                padding: 6px 12px;
-                border: none;
+                padding: 8px 14px;
+                border: 1px solid transparent;
                 border-radius: 6px;
-                font-size: 14px;
+                font-size: 13px;
+                font-weight: 500;
                 cursor: pointer;
-                transition: background-color 0.2s ease;
+                transition: background 0.2s ease, border-color 0.2s ease;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
-                gap: 4px;
+                gap: 6px;
             }
             .btn-blue {
-                background-color: #2563eb;
-                color: white;
+                background: #4E80EE;
+                color: #fff;
+                border-color: #4E80EE;
             }
             .btn-blue:hover {
-                background-color: #1d4ed8;
+                background: #3D6FDD;
+                border-color: #3D6FDD;
             }
             .btn-green {
-                background-color: #16a34a;
-                color: white;
+                background: #0d9488;
+                color: #fff;
+                border-color: #0d9488;
             }
             .btn-green:hover {
-                background-color: #15803d;
+                background: #0f766e;
+                border-color: #0f766e;
             }
             .btn-red {
-                background-color: #dc2626;
-                color: white;
+                background: #dc2626;
+                color: #fff;
+                border-color: #dc2626;
             }
             .btn-red:hover {
-                background-color: #b91c1c;
+                background: #b91c1c;
+                border-color: #b91c1c;
             }
             .btn-gray {
-                background-color: #e5e7eb;
-                color: #111827;
+                background: #f1f5f9;
+                color: #475569;
+                border-color: #e2e8f0;
             }
             .btn-gray:hover {
-                background-color: #d1d5db;
+                background: #e2e8f0;
+                border-color: #cbd5e1;
             }
 
             .no-appointments {
                 text-align: center;
                 padding: 40px;
-                color: #6b7280;
-                background-color: #f9fafb;
-                border-radius: 12px;
-                border: 2px dashed #e5e7eb;
+                color: #64748b;
+                background: #f8fafc;
+                border-radius: 8px;
+                border: 1px dashed #e2e8f0;
                 min-height: 150px;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
             }
-
             .no-appointments i {
-                font-size: 48px;
-                margin-bottom: 16px;
-                color: #d1d5db;
+                font-size: 40px;
+                margin-bottom: 12px;
+                color: #cbd5e1;
             }
-
-            .no-appointments h4 {
-                margin: 0 0 8px 0;
-                color: #6b7280;
-            }
-
-            .no-appointments p {
-                margin: 0;
-                font-size: 14px;
-                color: #9ca3af;
-            }
+            .no-appointments h4 { margin: 0 0 8px 0; color: #64748b; font-weight: 600; }
+            .no-appointments p { margin: 0; font-size: 14px; color: #94a3b8; }
 
             .stats {
                 display: flex;
-                gap: 20px;
-                margin-bottom: 20px;
+                gap: 16px;
+                margin-bottom: 24px;
             }
 
             .stat-card {
-                background: white;
-                padding: 16px;
+                background: #fff;
+                padding: 18px 20px;
                 border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
                 flex: 1;
                 text-align: center;
-                cursor: pointer;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                cursor: default;
+                transition: border-color 0.2s ease;
             }
 
             .stat-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                border-color: #cbd5e1;
             }
 
             .stat-card.clickable {
@@ -306,18 +296,15 @@
             }
 
             .stat-card.completed {
-                border-left: 4px solid #10b981;
-                position: relative;
+                border-left: 4px solid #0d9488;
             }
 
             .stat-card.completed::after {
-                content: "👆 Click để xem kết quả";
-                position: absolute;
-                bottom: -5px;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 10px;
-                color: #10b981;
+                content: "Xem kết quả";
+                display: block;
+                margin-top: 6px;
+                font-size: 11px;
+                color: #0d9488;
                 opacity: 0;
                 transition: opacity 0.2s ease;
             }
@@ -327,15 +314,73 @@
             }
 
             .stat-number {
-                font-size: 24px;
-                font-weight: bold;
-                color: #2563eb;
+                font-size: 26px;
+                font-weight: 700;
+                color: #334155;
+                letter-spacing: -0.02em;
             }
 
             .stat-label {
+                font-size: 13px;
+                color: #64748b;
+                margin-top: 6px;
+                font-weight: 500;
+            }
+
+            /* Date selector */
+            .date-selector {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+            .date-selector label {
+                font-weight: 600;
+                color: #334155;
                 font-size: 14px;
-                color: #6b7280;
-                margin-top: 4px;
+            }
+            .date-selector input[type="date"] {
+                padding: 8px 12px;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                font-size: 14px;
+                color: #334155;
+            }
+            .date-selector .btn-date {
+                padding: 8px 16px;
+                border: 1px solid #64748b;
+                border-radius: 6px;
+                background: #f8fafc;
+                color: #334155;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 500;
+            }
+            .date-selector .btn-date:hover {
+                background: #e2e8f0;
+            }
+            .date-selector .btn-date.today {
+                background: #0d9488;
+                color: white;
+                border-color: #0d9488;
+            }
+            .date-selector .btn-date.today:hover {
+                background: #0f766e;
+            }
+            .date-current-label {
+                font-size: 16px;
+                font-weight: 600;
+                color: #1e293b;
+                margin-bottom: 16px;
+            }
+            .date-current-label .badge-today {
+                background: #0d9488;
+                color: white;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                margin-left: 8px;
             }
 
         </style>
@@ -349,19 +394,17 @@
                     <div class="container">
 
             <%
-                // Lấy dữ liệu từ servlet
                 List<Appointment> appointments = (List<Appointment>) request.getAttribute("appointments");
                 String error = (String) request.getAttribute("error");
-                Boolean showAllAppointments = (Boolean) request.getAttribute("showAllAppointments");
-                String testReason = (String) request.getAttribute("testReason");
+                String selectedDate = (String) request.getAttribute("selectedDate");
+                String selectedDateDisplay = (String) request.getAttribute("selectedDateDisplay");
+                Boolean isToday = (Boolean) request.getAttribute("isToday");
                 Integer userId = (Integer) request.getAttribute("userId");
                 
-                // Định dạng ngày tháng
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                Date today = new Date();
+                if (selectedDate == null) selectedDate = "";
+                if (selectedDateDisplay == null) selectedDateDisplay = "";
+                if (isToday == null) isToday = false;
                 
-                // Thống kê
                 int totalAppointments = appointments != null ? appointments.size() : 0;
                 int waitingCount = 0;
                 int completedCount = 0;
@@ -377,26 +420,21 @@
                         } else if ("cancelled".equalsIgnoreCase(app.getStatus())) {
                             cancelledCount++;
                         }
-                        
-                        // Kiểm tra appointment hôm nay
-//                        if (app.getWorkDate() != null) {
-//                            Calendar appCal = Calendar.getInstance();
-//                            appCal.setTime(app.getWorkDate());
-//                            Calendar todayCal = Calendar.getInstance();
-//                            todayCal.setTime(today);
-//                            
-//                            if (appCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-//                                appCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR)) {
-//                                todayCount++;
-//                            }
-//                        }
                     }
+                    todayCount = isToday ? totalAppointments : 0;
                 }
             %>
 
-            
-
-           
+            <!-- Date selector: ngày hiện tại / theo lịch -->
+            <div class="date-current-label">
+                Lịch khám ngày: <strong><%= selectedDateDisplay.isEmpty() ? "—" : selectedDateDisplay %></strong>
+                <% if (isToday) { %><span class="badge-today">Hôm nay</span><% } %>
+            </div>
+            <form method="get" action="${pageContext.request.contextPath}/DoctorAppointmentsServlet" class="date-selector">
+                <label for="date">Chọn ngày:</label>
+                <input type="date" id="date" name="date" value="<%= selectedDate %>" onchange="this.form.submit()">
+                <a href="${pageContext.request.contextPath}/DoctorAppointmentsServlet" class="btn-date today">Hôm nay</a>
+            </form>
 
             <!-- Statistics -->
             <div class="stats">
@@ -457,13 +495,6 @@
                         <div class="info">
                             <img src="${pageContext.request.contextPath}/img/default-avatar.png" alt="avatar" style="width: 64px; height: 64px; object-fit: cover;" onerror="this.src='${pageContext.request.contextPath}/img/default-avatar.png'">
                             <div class="info-details">
-                                <%
-                                    // Debug log
-                                    System.out.println("DEBUG JSP - Appointment ID: " + appointment.getAppointmentId());
-                                    System.out.println("DEBUG JSP - Patient Name: " + appointment.getPatientName());
-                                    System.out.println("DEBUG JSP - Patient ID: " + appointment.getPatientId());
-                                    System.out.println("DEBUG JSP - Status: " + appointment.getStatus());
-                                %>
                                 <p><strong>Bệnh nhân: <%=appointment.getPatientName() != null ? appointment.getPatientName() : "Không có tên"%></strong></p>
                                 <p>Mã cuộc hẹn: <%=appointment.getAppointmentId()%></p>
                                 <p>Ngày khám: <%=appointment.getFormattedDate()%></p>
@@ -536,13 +567,6 @@
                         <div class="info">
                             <img src="${pageContext.request.contextPath}/img/default-avatar.png" alt="avatar" style="width: 64px; height: 64px; object-fit: cover;" onerror="this.src='${pageContext.request.contextPath}/img/default-avatar.png'">
                             <div class="info-details">
-                                <%
-                                    // Debug log
-                                    System.out.println("DEBUG JSP - Appointment ID: " + appointment.getAppointmentId());
-                                    System.out.println("DEBUG JSP - Patient Name: " + appointment.getPatientName());
-                                    System.out.println("DEBUG JSP - Patient ID: " + appointment.getPatientId());
-                                    System.out.println("DEBUG JSP - Status: " + appointment.getStatus());
-                                %>
                                 <p><strong>Bệnh nhân: <%=appointment.getPatientName() != null ? appointment.getPatientName() : "Không có tên"%></strong></p>
                                 <p>Mã cuộc hẹn: #<%=appointment.getAppointmentId()%></p>
                                 <p>Ngày khám: <%=appointment.getFormattedDate()%></p>

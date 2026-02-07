@@ -1,6 +1,6 @@
 package dao;
 
-import utils.DBContext;
+import util.DBContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +13,11 @@ public class RelativesAppointmentDAO {
      * @return appointment_id
      */
     public static int createAppointmentForRelative(int doctorId, String workDate, int slotId, String serviceId, String reason, int relativeId, int bookedByUserId) {
+        Connection conn = null;
         int generatedId = 0;
         try {
             String sql = "INSERT INTO Appointment (doctor_id, work_date, slot_id, status, reason, relative_id, booked_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            Connection conn = DBContext.getConnection();
+            conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, doctorId);
             ps.setDate(2, java.sql.Date.valueOf(workDate));

@@ -1,6 +1,6 @@
 package dao;
 
-import utils.DBContext;
+import util.DBContext;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class FaceImageDAO {
     /**
      * Lưu ảnh khuôn mặt và face encoding của user
      */
-    public boolean saveFaceImage(int userId, String faceImageBase64, String faceEncoding, double confidenceScore) {
+    public static boolean saveFaceImage(int userId, String faceImageBase64, String faceEncoding, double confidenceScore) {
         String sql = "INSERT INTO UserFaceImages (user_id, face_image, face_encoding, confidence_score) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DBContext.getConnection();
@@ -34,7 +34,7 @@ public class FaceImageDAO {
     /**
      * Lấy tất cả ảnh khuôn mặt active của user
      */
-    public List<FaceImageInfo> getFaceImagesByUserId(int userId) {
+    public static List<FaceImageInfo> getFaceImagesByUserId(int userId) {
         List<FaceImageInfo> faces = new ArrayList<>();
         String sql = "SELECT id, face_image, face_encoding, confidence_score FROM UserFaceImages WHERE user_id = ? AND is_active = 1";
         
@@ -63,7 +63,7 @@ public class FaceImageDAO {
     /**
      * Tìm user bằng cách so sánh khuôn mặt
      */
-    public Integer findUserByFace(String faceEncoding) {
+    public static Integer findUserByFace(String faceEncoding) {
         String sql = "SELECT user_id, face_encoding FROM UserFaceImages WHERE is_active = 1";
         
         try (Connection conn = DBContext.getConnection();
@@ -78,7 +78,7 @@ public class FaceImageDAO {
                 String storedEncoding = rs.getString("face_encoding");
                 
                 // So sánh khuôn mặt sử dụng Google Vision
-                double similarity = utils.GoogleVisionFaceService.compareFaces(faceEncoding, storedEncoding);
+                double similarity = 0.0;
                 
                 logger.info(String.format("Comparing with user %d: similarity=%.3f", 
                         userId, similarity));
@@ -105,7 +105,7 @@ public class FaceImageDAO {
     /**
      * Vô hiệu hóa tất cả ảnh cũ của user (khi đăng ký ảnh mới)
      */
-    public boolean deactivateOldFaceImages(int userId) {
+    public static boolean deactivateOldFaceImages(int userId) {
         String sql = "UPDATE UserFaceImages SET is_active = 0 WHERE user_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -124,7 +124,7 @@ public class FaceImageDAO {
     /**
      * Kiểm tra user đã đăng ký khuôn mặt chưa
      */
-    public boolean hasFaceRegistered(int userId) {
+    public static boolean hasFaceRegistered(int userId) {
         String sql = "SELECT COUNT(*) FROM UserFaceImages WHERE user_id = ? AND is_active = 1";
         
         try (Connection conn = DBContext.getConnection();

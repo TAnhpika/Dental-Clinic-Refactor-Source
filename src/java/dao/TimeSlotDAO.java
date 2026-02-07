@@ -12,30 +12,26 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import model.TimeSlot;
-import utils.DBContext;
+import model.entity.TimeSlot;
+import util.DBContext;
 
 /**
  *
  * @author tranhongphuoc
  */
 public class TimeSlotDAO {
-    private Connection conn;
-    private PreparedStatement ps;
-    private ResultSet rs;
 
     public TimeSlotDAO() {
-        conn = DBContext.getConnection();
     }
 
     public static List<TimeSlot> getAllTimeSlots() {
         List<TimeSlot> allSlots = new ArrayList<>();
         String sql = "SELECT * FROM TimeSlot ORDER BY start_time";
-        
+
         try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 TimeSlot slot = new TimeSlot();
                 slot.setSlotId(rs.getInt("slot_id"));
@@ -49,22 +45,23 @@ public class TimeSlotDAO {
         return allSlots;
     }
 
-    public TimeSlot getTimeSlotById(int slotId) {
+    public static TimeSlot getTimeSlotById(int slotId) {
         String sql = "SELECT * FROM TimeSlot WHERE slot_id = ?";
-        try {
-            ps = conn.prepareStatement(sql);
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, slotId);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                TimeSlot slot = new TimeSlot();
-                slot.setSlotId(rs.getInt("slot_id"));
-                Time startTime = rs.getTime("start_time");
-                Time endTime = rs.getTime("end_time");
-                if (startTime != null && endTime != null) {
-                    slot.setStartTime(startTime.toLocalTime());
-                    slot.setEndTime(endTime.toLocalTime());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    TimeSlot slot = new TimeSlot();
+                    slot.setSlotId(rs.getInt("slot_id"));
+                    Time startTime = rs.getTime("start_time");
+                    Time endTime = rs.getTime("end_time");
+                    if (startTime != null && endTime != null) {
+                        slot.setStartTime(startTime.toLocalTime());
+                        slot.setEndTime(endTime.toLocalTime());
+                    }
+                    return slot;
                 }
-                return slot;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,10 +69,10 @@ public class TimeSlotDAO {
         return null;
     }
 
-    public boolean addTimeSlot(LocalTime startTime, LocalTime endTime) {
+    public static boolean addTimeSlot(LocalTime startTime, LocalTime endTime) {
         String sql = "INSERT INTO TimeSlot (start_time, end_time) VALUES (?, ?)";
-        try {
-            ps = conn.prepareStatement(sql);
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTime(1, Time.valueOf(startTime));
             ps.setTime(2, Time.valueOf(endTime));
             return ps.executeUpdate() > 0;
@@ -85,10 +82,10 @@ public class TimeSlotDAO {
         }
     }
 
-    public boolean updateTimeSlot(int slotId, LocalTime startTime, LocalTime endTime) {
+    public static boolean updateTimeSlot(int slotId, LocalTime startTime, LocalTime endTime) {
         String sql = "UPDATE TimeSlot SET start_time = ?, end_time = ? WHERE slot_id = ?";
-        try {
-            ps = conn.prepareStatement(sql);
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTime(1, Time.valueOf(startTime));
             ps.setTime(2, Time.valueOf(endTime));
             ps.setInt(3, slotId);
@@ -99,10 +96,10 @@ public class TimeSlotDAO {
         }
     }
 
-    public boolean deleteTimeSlot(int slotId) {
+    public static boolean deleteTimeSlot(int slotId) {
         String sql = "DELETE FROM TimeSlot WHERE slot_id = ?";
-        try {
-            ps = conn.prepareStatement(sql);
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, slotId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -111,37 +108,37 @@ public class TimeSlotDAO {
         }
     }
 
-    public List<TimeSlot> getAvailableSlots(int doctorId, java.sql.Date workDate) {
+    public static List<TimeSlot> getAvailableSlots(int doctorId, java.sql.Date workDate) {
         List<TimeSlot> availableSlots = new ArrayList<>();
         String sql = """
-            SELECT ts.* FROM TimeSlot ts
-            WHERE ts.slot_id IN (
-                SELECT ds.slot_id FROM DoctorSchedule ds 
-                WHERE ds.doctor_id = ? AND ds.work_date = ?
-                AND ds.status = 'APPROVED'
-            )
-            AND ts.slot_id NOT IN (
-                SELECT a.slot_id FROM Appointment a 
-                WHERE a.doctor_id = ? AND a.work_date = ?
-                AND a.status != 'CANCELLED'
-            )
-            ORDER BY ts.start_time
-        """;
-        
+                    SELECT ts.* FROM TimeSlot ts
+                    WHERE ts.slot_id IN (
+                        SELECT ds.slot_id FROM DoctorSchedule ds
+                        WHERE ds.doctor_id = ? AND ds.work_date = ?
+                        AND ds.status = 'APPROVED'
+                    )
+                    AND ts.slot_id NOT IN (
+                        SELECT a.slot_id FROM Appointment a
+                        WHERE a.doctor_id = ? AND a.work_date = ?
+                        AND a.status != 'CANCELLED'
+                    )
+                    ORDER BY ts.start_time
+                """;
+
         try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, doctorId);
             ps.setDate(2, workDate);
             ps.setInt(3, doctorId);
             ps.setDate(4, workDate);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                TimeSlot slot = new TimeSlot();
-                slot.setSlotId(rs.getInt("slot_id"));
-                slot.setStartTime(rs.getTime("start_time").toLocalTime());
-                slot.setEndTime(rs.getTime("end_time").toLocalTime());
+                while (rs.next()) {
+                    TimeSlot slot = new TimeSlot();
+                    slot.setSlotId(rs.getInt("slot_id"));
+                    slot.setStartTime(rs.getTime("start_time").toLocalTime());
+                    slot.setEndTime(rs.getTime("end_time").toLocalTime());
                     availableSlots.add(slot);
                 }
             }
@@ -154,14 +151,14 @@ public class TimeSlotDAO {
     /**
      * Lấy khung giờ theo ca làm việc
      * Ca 1: 3002-3009 (sáng)
-     * Ca 2: 3010-3019 (chiều) 
+     * Ca 2: 3010-3019 (chiều)
      * Ca 3: 3002-3019 (cả ngày)
      */
     public static List<TimeSlot> getSlotsByShift(int shift) {
         List<TimeSlot> slots = new ArrayList<>();
         String sql = "";
-        
-        switch(shift) {
+
+        switch (shift) {
             case 1: // Ca sáng
                 sql = "SELECT * FROM TimeSlot WHERE slot_id BETWEEN 3002 AND 3009 ORDER BY start_time ASC";
                 break;
@@ -174,9 +171,9 @@ public class TimeSlotDAO {
             default:
                 return slots;
         }
-        
+
         try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 TimeSlot slot = new TimeSlot();
@@ -205,31 +202,32 @@ public class TimeSlotDAO {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM TimeSlot WHERE slot_id IN (");
         for (int i = 0; i < slotIds.size(); i++) {
-            if (i > 0) sql.append(",");
+            if (i > 0)
+                sql.append(",");
             sql.append("?");
         }
         sql.append(") ORDER BY start_time ASC");
 
         try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
             // Set parameters cho IN clause
             for (int i = 0; i < slotIds.size(); i++) {
                 ps.setInt(i + 1, slotIds.get(i));
             }
 
             try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                TimeSlot slot = new TimeSlot();
-                slot.setSlotId(rs.getInt("slot_id"));
+                while (rs.next()) {
+                    TimeSlot slot = new TimeSlot();
+                    slot.setSlotId(rs.getInt("slot_id"));
                     Time startTime = rs.getTime("start_time");
                     Time endTime = rs.getTime("end_time");
                     if (startTime != null && endTime != null) {
                         slot.setStartTime(startTime.toLocalTime());
                         slot.setEndTime(endTime.toLocalTime());
                     }
-                slots.add(slot);
-            }
+                    slots.add(slot);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Error in getTimeSlotsByIds: " + e.getMessage());
@@ -241,12 +239,12 @@ public class TimeSlotDAO {
     /**
      * Lấy 3 ca chính trong ngày (slotId = 1, 2, 3)
      */
-    public List<TimeSlot> getMainTimeSlots() {
+    public static List<TimeSlot> getMainTimeSlots() {
         List<TimeSlot> timeSlots = new ArrayList<>();
         String sql = "SELECT * FROM TimeSlot WHERE slot_id IN (1,2,3) ORDER BY slot_id ASC";
-        try {
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 TimeSlot slot = new TimeSlot();
                 slot.setSlotId(rs.getInt("slot_id"));
@@ -268,31 +266,31 @@ public class TimeSlotDAO {
     // 🆕 METHOD: Lấy danh sách slot trống theo bác sĩ và ngày
     public static List<TimeSlot> getAvailableSlotsByDoctorAndDate(int doctorId, String workDate) {
         List<TimeSlot> availableSlots = new ArrayList<>();
-        
+
         try (Connection conn = DBContext.getConnection()) {
             String sql = """
-                SELECT ts.* FROM TimeSlot ts
-                WHERE ts.slot_id IN (
-                    SELECT ds.slot_id FROM DoctorSchedule ds 
-                    WHERE ds.doctor_id = ? AND ds.work_date = ?
-                    AND ds.status = 'Confirmed'
-                )
-                AND ts.slot_id NOT IN (
-                    SELECT a.slot_id FROM Appointment a 
-                    WHERE a.doctor_id = ? AND a.work_date = ?
-                    AND a.status = 'BOOKED'
-                )
-                ORDER BY ts.start_time
-            """;
+                        SELECT ts.* FROM TimeSlot ts
+                        WHERE ts.slot_id IN (
+                            SELECT ds.slot_id FROM DoctorSchedule ds
+                            WHERE ds.doctor_id = ? AND ds.work_date = ?
+                            AND ds.status = 'Confirmed'
+                        )
+                        AND ts.slot_id NOT IN (
+                            SELECT a.slot_id FROM Appointment a
+                            WHERE a.doctor_id = ? AND a.work_date = ?
+                            AND a.status = 'BOOKED'
+                        )
+                        ORDER BY ts.start_time
+                    """;
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, doctorId);
                 ps.setString(2, workDate);
                 ps.setInt(3, doctorId);
                 ps.setString(4, workDate);
-                
+
                 ResultSet rs = ps.executeQuery();
-                
+
                 while (rs.next()) {
                     TimeSlot slot = new TimeSlot();
                     slot.setSlotId(rs.getInt("slot_id"));
@@ -305,7 +303,7 @@ public class TimeSlotDAO {
             System.out.println("❌ Lỗi lấy slot trống: " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         return availableSlots;
     }
 }

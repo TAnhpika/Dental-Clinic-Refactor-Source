@@ -4,19 +4,18 @@
  */
 package dao;
 
-import model.BlogPost;
+import model.entity.BlogPost;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import utils.DBContext;
+import util.DBContext;
 
 /**
  *
  * @author Home
  */
 public class BlogDAO {
-
     public static List<BlogPost> getAllPosts() throws SQLException {
         List<BlogPost> list = new ArrayList<>();
         try (Connection conn = DBContext.getConnection()) {
@@ -28,13 +27,11 @@ public class BlogDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getString("image_url"),
-                        rs.getTimestamp("created_at")
-                ));
+                        rs.getTimestamp("created_at")));
             }
         }
         return list;
     }
-
     public static BlogPost getPostById(int blogId) throws SQLException {
         try (Connection conn = DBContext.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Blog WHERE blog_id = ?");
@@ -46,28 +43,25 @@ public class BlogDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getString("image_url"),
-                        rs.getTimestamp("created_at")
-                );
+                        rs.getTimestamp("created_at"));
             }
         }
         return null;
     }
-
     public static void insertPost(String title, String content, String imageUrl) throws SQLException {
         try (Connection conn = DBContext.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO Blog (title, content, image_url) VALUES (?, ?, ?)");
+            PreparedStatement ps = conn
+                    .prepareStatement("INSERT INTO Blog (title, content, image_url) VALUES (?, ?, ?)");
             ps.setString(1, title);
             ps.setString(2, content);
             ps.setString(3, imageUrl);
             ps.executeUpdate();
         }
     }
-
     public static void updatePost(int blogId, String title, String content, String imageUrl) {
         try (Connection conn = DBContext.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE Blog SET title = ?, content = ?, image_url = ? WHERE blog_id = ?"
-            );
+                    "UPDATE Blog SET title = ?, content = ?, image_url = ? WHERE blog_id = ?");
             ps.setString(1, title);
             ps.setString(2, content);
             ps.setString(3, imageUrl);
@@ -77,7 +71,6 @@ public class BlogDAO {
             e.printStackTrace();
         }
     }
-
     public static String deletePost(int blogId) throws SQLException {
         String imageUrl = null;
         try (Connection conn = DBContext.getConnection()) {
@@ -96,8 +89,7 @@ public class BlogDAO {
         }
         return imageUrl;
     }
-
-    public List<BlogPost> getLatest(int limit) {
+    public static List<BlogPost> getLatest(int limit) {
         List<BlogPost> list = new ArrayList<>();
         String sql = "SELECT TOP (?) * FROM Blog ORDER BY created_at DESC";
 
@@ -120,27 +112,26 @@ public class BlogDAO {
         }
         return list;
     }
-    public List<BlogPost> getLatestBlogs(int limit) {
-    List<BlogPost> list = new ArrayList<>();
-    String sql = "SELECT TOP (?) * FROM Blog ORDER BY created_at DESC";
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, limit);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            BlogPost post = new BlogPost();
-            post.setBlogId(rs.getInt("blog_id"));
-            post.setTitle(rs.getString("title"));
-            post.setContent(rs.getString("content"));
-            post.setCreatedAt(rs.getTimestamp("created_at"));
-            post.setImageUrl(rs.getString("image_url"));
-            list.add(post);
+    public static List<BlogPost> getLatestBlogs(int limit) {
+        List<BlogPost> list = new ArrayList<>();
+        String sql = "SELECT TOP (?) * FROM Blog ORDER BY created_at DESC";
+        try (Connection conn = DBContext.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                BlogPost post = new BlogPost();
+                post.setBlogId(rs.getInt("blog_id"));
+                post.setTitle(rs.getString("title"));
+                post.setContent(rs.getString("content"));
+                post.setCreatedAt(rs.getTimestamp("created_at"));
+                post.setImageUrl(rs.getString("image_url"));
+                list.add(post);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
-
 
 }

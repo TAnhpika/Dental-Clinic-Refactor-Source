@@ -1,16 +1,16 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ page import="dao.DoctorDAO" %>
-        <%@ page import="model.Doctor" %>
-            <%@ page import="model.User" %>
+        <%@ page import="model.entity.Doctors" %>
+            <%@ page import="model.entity.User" %>
                 <%@ page import="java.util.List" %>
 
                     <% User user=(User) session.getAttribute("user"); if (user==null ||
                         !"MANAGER".equals(user.getRole())) { response.sendRedirect(request.getContextPath()
-                        + "/jsp/auth/login.jsp" ); return; } List<Doctor> doctors = DoctorDAO.getAllDoctors();
+                        + "/jsp/auth/login.jsp" ); return; } List<Doctors> doctors = DoctorDAO.getAllDoctors();
 
                         int activeCount = 0;
                         int leaveCount = 0;
-                        for (Doctor d : doctors) {
+                        for (Doctors d : doctors) {
                         if ("ACTIVE".equals(d.getStatus())) activeCount++;
                         if ("ON_LEAVE".equals(d.getStatus())) leaveCount++;
                         }

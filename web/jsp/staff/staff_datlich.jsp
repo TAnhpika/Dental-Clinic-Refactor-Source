@@ -3,8 +3,8 @@
                     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
                         <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
                             <%@ page import="dao.ServiceDAO" %>
-                                <%@ page import="model.Service" %>
-<%@ page import="model.User" %>
+                                <%@ page import="model.entity.Service" %>
+<%@ page import="model.entity.User" %>
                                     <%@ page import="java.util.List" %>
 
 <%
@@ -89,12 +89,14 @@
                                                     color: white;
             border-color: #4361ee;
         }
+        /* Slot đã được đặt: màu xám, không chọn được */
         .time-slot.booked {
-            background: #fee2e2;
-            border-color: #ef4444;
-            color: #ef4444;
+            background: #9ca3af;
+            border-color: #6b7280;
+            color: #ffffff;
             cursor: not-allowed;
-                                                }
+            opacity: 0.9;
+        }
                                             </style>
                                         </head>
 <body>

@@ -1,8 +1,9 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="model.Doctors" %>
+<%@page import="model.entity.Doctors" %>
+<%@page import="model.entity.User" %>
 
 <%
-    model.User user = (model.User) session.getAttribute("user");
+    User user = (User) session.getAttribute("user");
     if (user == null || !"DOCTOR".equals(user.getRole())) {
         response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
         return;

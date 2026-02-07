@@ -7,8 +7,8 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.Notification;
-import utils.DBContext;
+import model.entity.Notification;
+import util.DBContext;
 
 /**
  *
@@ -16,7 +16,7 @@ import utils.DBContext;
  */
 public class NotificationDAO {
     
-    public boolean createNotification(Notification notification) {
+    public static boolean createNotification(Notification notification) {
         String sql = "INSERT INTO Notifications (user_id, title, content, type, reference_id, is_read, created_at, status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, GETDATE(), ?)";
                     
@@ -39,7 +39,7 @@ public class NotificationDAO {
         }
     }
     
-    public List<Notification> getNotificationsByUserId(int userId) {
+    public static List<Notification> getNotificationsByUserId(int userId) {
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT * FROM Notifications WHERE user_id = ? AND status = 'ACTIVE' ORDER BY created_at DESC";
         
@@ -72,7 +72,7 @@ public class NotificationDAO {
         return notifications;
     }
     
-    public boolean markAsRead(int notificationId) {
+    public static boolean markAsRead(int notificationId) {
         String sql = "UPDATE Notifications SET is_read = 1, read_at = GETDATE() WHERE notification_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -87,7 +87,7 @@ public class NotificationDAO {
         }
     }
     
-    public boolean deleteNotification(int notificationId) {
+    public static boolean deleteNotification(int notificationId) {
         String sql = "UPDATE Notifications SET status = 'DELETED' WHERE notification_id = ?";
         
         try (Connection conn = DBContext.getConnection();
@@ -102,7 +102,7 @@ public class NotificationDAO {
         }
     }
     
-    public int getUnreadCount(int userId) {
+    public static int getUnreadCount(int userId) {
         String sql = "SELECT COUNT(*) FROM Notifications WHERE user_id = ? AND is_read = 0 AND status = 'ACTIVE'";
         
         try (Connection conn = DBContext.getConnection();
@@ -122,7 +122,7 @@ public class NotificationDAO {
         return 0;
     }
     
-    public List<Notification> getUnreadNotifications(int userId) {
+    public static List<Notification> getUnreadNotifications(int userId) {
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT * FROM Notifications WHERE user_id = ? AND is_read = 0 AND status = 'ACTIVE' ORDER BY created_at DESC";
         
@@ -155,7 +155,7 @@ public class NotificationDAO {
         return notifications;
     }
     
-    public List<Notification> getRecentNotifications(int userId, int limit) {
+    public static List<Notification> getRecentNotifications(int userId, int limit) {
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT TOP (?) * FROM Notifications WHERE user_id = ? AND status = 'ACTIVE' ORDER BY created_at DESC";
         

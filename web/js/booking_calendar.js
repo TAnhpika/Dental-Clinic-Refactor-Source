@@ -124,7 +124,7 @@ function renderTimeSlots(slots, tabType, doctorId, useModal) {
             var status = '';
             if (slot.isBooked) {
                 cls += ' booked';
-                status = '<small class="text-muted">Đã được đặt</small>';
+                status = '<small class="text-white-50">Slot đã được đặt. Vui lòng chọn slot khác!</small>';
             } else if (slot.isPast) {
                 cls += ' past';
                 status = '<small class="text-secondary">Đã quá giờ khám</small>';
@@ -141,7 +141,7 @@ function renderTimeSlots(slots, tabType, doctorId, useModal) {
 
 function selectTimeSlot(slotId, startTime, endTime, doctorId, tabType, useModal) {
     if (event && event.currentTarget && event.currentTarget.classList.contains('booked')) {
-        alert('Khung giờ này đã được đặt. Vui lòng chọn khung giờ khác!');
+        alert('Slot đã được đặt. Vui lòng chọn slot khác!');
         return;
     }
     var suffix = (useModal === true) ? tabType + '_modal' : tabType + '_' + doctorId;

@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.math.BigDecimal;
-import model.Service;
-import utils.DBContext;
+import model.entity.Service;
+import util.DBContext;
 
 /**
  * DAO riêng để xử lý giá dịch vụ cố định 50,000 VNĐ
@@ -17,15 +17,13 @@ public class ServicePriceDAO {
     
     private static final String GET_SERVICE_WITH_FIXED_PRICE = "SELECT service_id, service_name, description, status, category, specialty_id, image FROM Services WHERE service_id = ? AND status = 'active'";
     private static final String GET_ALL_SERVICES_WITH_FIXED_PRICE = "SELECT service_id, service_name, description, status, category, specialty_id, image FROM Services WHERE status = 'active' ORDER BY service_name";
-    
-    private Connection conn = null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
+
 
     /**
      * Lấy dịch vụ theo ID với giá cố định 50,000 VNĐ
      */
-    public Service getServiceWithFixedPrice(int serviceId) {
+    public static Service getServiceWithFixedPrice(int serviceId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         Service service = null;
         try {
             conn = DBContext.getConnection();
@@ -50,7 +48,8 @@ public class ServicePriceDAO {
     /**
      * Lấy tất cả dịch vụ với giá cố định 50,000 VNĐ
      */
-    public java.util.List<Service> getAllServicesWithFixedPrice() {
+    public static java.util.List<Service> getAllServicesWithFixedPrice() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         java.util.List<Service> services = new java.util.ArrayList<>();
         try {
             System.out.println("🔍 Bắt đầu lấy danh sách dịch vụ...");
@@ -83,7 +82,7 @@ public class ServicePriceDAO {
     /**
      * Map ResultSet sang Service object với giá cố định 50,000 VNĐ
      */
-    private Service mapResultSetToServiceWithFixedPrice(ResultSet rs) throws SQLException {
+    private static Service mapResultSetToServiceWithFixedPrice(ResultSet rs) throws SQLException {
         if (rs == null || rs.isClosed()) {
             throw new SQLException("ResultSet is null or closed");
         }
@@ -127,7 +126,8 @@ public class ServicePriceDAO {
     /**
      * Kiểm tra dịch vụ có tồn tại và active không
      */
-    public boolean isServiceActive(int serviceId) {
+    public static boolean isServiceActive(int serviceId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean isActive = false;
         try {
             conn = DBContext.getConnection();
@@ -152,7 +152,8 @@ public class ServicePriceDAO {
     /**
      * Lấy thông tin dịch vụ cơ bản (không có giá) để hiển thị
      */
-    public Service getServiceInfoOnly(int serviceId) {
+    public static Service getServiceInfoOnly(int serviceId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         Service service = null;
         try {
             conn = DBContext.getConnection();

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Date;
-import utils.DBContext;
+import util.DBContext;
 
 public class RelativesDAO {
     // Trả về relative_id nếu đã có, nếu chưa thì insert và trả về id mới

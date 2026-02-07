@@ -429,7 +429,7 @@
                                 <div>Xuất trình hóa đơn thanh toán khi sử dụng dịch vụ</div>
                             </div>
                         </c:otherwise>
-                    </c:choose>HÓA ĐƠN THANH TOÁN
+                    </c:choose>
                 </div>
 
                 <!-- Action Buttons -->

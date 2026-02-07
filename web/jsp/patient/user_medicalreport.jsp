@@ -1,7 +1,7 @@
 <%@ page  language="java" %>
 <%@ page import="java.util.*,
-         model.MedicalReport, 
-         model.Prescription" %>
+         model.entity.MedicalReport, 
+         model.entity.Prescription" %>
 <%
     MedicalReport report = (MedicalReport) request.getAttribute("report");
     List<Prescription> prescriptions = (List<Prescription>) request.getAttribute("prescriptions");

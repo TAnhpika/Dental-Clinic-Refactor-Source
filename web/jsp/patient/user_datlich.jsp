@@ -49,11 +49,11 @@
             border-color: #4361ee;
         }
         .time-slot.booked {
-            background: #ef4444;
+            background: #9ca3af;
             color: #ffffff;
-            border-color: #ef4444;
+            border-color: #6b7280;
             cursor: not-allowed;
-            opacity: 0.85;
+            opacity: 0.9;
         }
         .time-slot.past {
             background: #e5e7eb;

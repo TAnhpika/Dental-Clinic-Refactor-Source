@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Service;
-import utils.DBContext;
+import model.entity.Service;
+import util.DBContext;
 
 /**
  * DAO cho bảng Services
@@ -29,14 +29,12 @@ public class ServiceDAO {
     private static final String DELETE_SERVICE = "UPDATE Services SET status = 'inactive' WHERE service_id = ?";
     private static final String GET_ALL_CATEGORIES = "SELECT DISTINCT category FROM Services WHERE status = 'active' ORDER BY category";
 
-    private Connection conn = null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
 
     /**
      * Lấy tất cả dịch vụ đang hoạt động
      */
-    public List<Service> getAllServices() {
+    public static List<Service> getAllServices() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Service> services = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -61,7 +59,8 @@ public class ServiceDAO {
     /**
      * Lấy dịch vụ theo ID
      */
-    public Service getServiceById(int serviceId) {
+    public static Service getServiceById(int serviceId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         Service service = null;
         try {
             conn = DBContext.getConnection();
@@ -87,7 +86,8 @@ public class ServiceDAO {
      * @param serviceName tên dịch vụ cần tìm
      * @return Service object nếu tìm thấy, null nếu không tìm thấy
      */
-    public Service getServiceByName(String serviceName) {
+    public static Service getServiceByName(String serviceName) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         Service service = null;
         try {
             conn = DBContext.getConnection();
@@ -112,7 +112,8 @@ public class ServiceDAO {
     /**
      * Lấy dịch vụ theo trạng thái
      */
-    public List<Service> getServicesByStatus(String status) {
+    public static List<Service> getServicesByStatus(String status) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Service> services = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -137,7 +138,8 @@ public class ServiceDAO {
     /**
      * Lấy dịch vụ theo danh mục
      */
-    public List<Service> getServicesByCategory(String category) {
+    public static List<Service> getServicesByCategory(String category) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Service> services = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -162,14 +164,15 @@ public class ServiceDAO {
     /**
      * Lấy dịch vụ đang hoạt động
      */
-    public List<Service> getActiveServices() {
+    public static List<Service> getActiveServices() {
         return getServicesByStatus("active");
     }
 
     /**
      * Tìm kiếm dịch vụ theo tên
      */
-    public List<Service> searchServicesByName(String searchTerm) {
+    public static List<Service> searchServicesByName(String searchTerm) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<Service> services = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -194,7 +197,8 @@ public class ServiceDAO {
     /**
      * Thêm dịch vụ mới
      */
-    public boolean insertService(Service service) {
+    public static boolean insertService(Service service) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean result = false;
         try {
             conn = DBContext.getConnection();
@@ -224,7 +228,8 @@ public class ServiceDAO {
     /**
      * Cập nhật dịch vụ
      */
-    public boolean updateService(Service service) {
+    public static boolean updateService(Service service) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean result = false;
         try {
             conn = DBContext.getConnection();
@@ -255,7 +260,8 @@ public class ServiceDAO {
     /**
      * Xóa dịch vụ (thực tế là set status = 'inactive')
      */
-    public boolean deleteService(int serviceId) {
+    public static boolean deleteService(int serviceId) {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean result = false;
         try {
             conn = DBContext.getConnection();
@@ -278,7 +284,8 @@ public class ServiceDAO {
     /**
      * Lấy tất cả danh mục dịch vụ
      */
-    public List<String> getAllCategories() {
+    public static List<String> getAllCategories() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<String> categories = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -304,7 +311,7 @@ public class ServiceDAO {
     /**
      * Thêm dữ liệu mẫu nếu bảng trống
      */
-    public void addSampleDataIfEmpty() {
+    public static void addSampleDataIfEmpty() {
         try {
             // Kiểm tra xem có dữ liệu không
             List<Service> existingServices = getAllServices();
@@ -339,7 +346,7 @@ public class ServiceDAO {
      * Lấy specialty_id từ bảng Specialties theo tên chuyên khoa (category).
      * Trả về 0 nếu không tìm thấy hoặc bảng Specialties chưa tồn tại.
      */
-    private int getSpecialtyIdByCategory(Connection conn, String category) {
+    private static int getSpecialtyIdByCategory(Connection conn, String category) {
         if (conn == null || category == null || category.trim().isEmpty()) return 0;
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
@@ -361,7 +368,7 @@ public class ServiceDAO {
     /**
      * Map ResultSet sang Service object
      */
-    private Service mapResultSetToService(ResultSet rs) throws SQLException {
+    private static Service mapResultSetToService(ResultSet rs) throws SQLException {
         // Kiểm tra ResultSet trước khi access
         if (rs == null || rs.isClosed()) {
             throw new SQLException("ResultSet is null or closed");
@@ -416,6 +423,7 @@ public class ServiceDAO {
 
     // Test main method
     public static void main(String[] args) {
+        ResultSet rs = null;
         ServiceDAO dao = new ServiceDAO();
         
         // Thêm dữ liệu mẫu nếu cần
@@ -463,6 +471,7 @@ public class ServiceDAO {
 
     // Đảm bảo có hàm close để tránh lỗi linter
     public static void close(java.sql.ResultSet rs, java.sql.PreparedStatement ps, java.sql.Connection conn) {
+          
         try { if (rs != null) rs.close(); } catch (Exception e) {}
         try { if (ps != null) ps.close(); } catch (Exception e) {}
         try { if (conn != null) conn.close(); } catch (Exception e) {}

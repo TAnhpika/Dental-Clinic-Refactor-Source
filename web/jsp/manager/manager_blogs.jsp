@@ -1,19 +1,17 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ page import="dao.BlogDAO" %>
-        <%@ page import="model.Blog" %>
-            <%@ page import="model.User" %>
+        <%@ page import="model.entity.BlogPost" %>
+            <%@ page import="model.entity.User" %>
                 <%@ page import="java.util.List" %>
+                <%@ page import="java.sql.SQLException" %>
 
                     <% User user=(User) session.getAttribute("user"); if (user==null ||
                         !"MANAGER".equals(user.getRole())) { response.sendRedirect(request.getContextPath()
-                        + "/jsp/auth/login.jsp" ); return; } List<Blog> blogs = BlogDAO.getAllBlogs();
-
+                        + "/jsp/auth/login.jsp" ); return; }
+                        List<BlogPost> blogs = null;
+                        try { blogs = BlogDAO.getAllPosts(); } catch (SQLException e) { blogs = new java.util.ArrayList<>(); }
                         int pendingCount = 0;
-                        int approvedCount = 0;
-                        for (Blog blog : blogs) {
-                        if ("PENDING".equals(blog.getStatus())) pendingCount++;
-                        if ("APPROVED".equals(blog.getStatus())) approvedCount++;
-                        }
+                        int approvedCount = (blogs != null) ? blogs.size() : 0;
                         %>
 
                         <!DOCTYPE html>

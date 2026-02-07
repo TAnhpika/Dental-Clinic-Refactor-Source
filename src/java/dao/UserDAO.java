@@ -5,9 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import utils.DBContext;
-import model.User;
-import model.Patients;
+import util.DBContext;
+import model.entity.User;
+import model.entity.Patients;
 
 /**
  * UserDAO - Refactored theo pattern của PatientDAO
@@ -16,9 +16,7 @@ import model.Patients;
 public class UserDAO {
 
     // Instance variables cho connection management (theo PatientDAO pattern)
-    private Connection conn;
-    private PreparedStatement ps;
-    private ResultSet rs;
+
     
     // SQL Constants
     private static final String GET_ALL = "SELECT * FROM Users";
@@ -35,7 +33,8 @@ public class UserDAO {
     /**
      * Đóng tất cả resources (connection, statement, resultset)
      */
-    private void closeResources() {
+    private static void closeResources() {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         if (rs != null) {
             try {
                 rs.close();
@@ -62,7 +61,8 @@ public class UserDAO {
     /**
      * Lấy tất cả users (instance method)
      */
-    public List<User> getAll() throws SQLException {
+    public static List<User> getAll() throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         List<User> users = new ArrayList<>();
         try {
             conn = DBContext.getConnection();
@@ -83,7 +83,8 @@ public class UserDAO {
     /**
      * Lấy user theo ID (instance method)
      */
-    public User getUserById(Integer userId) throws SQLException {
+    public static User getUserById(Integer userId) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         User user = null;
         try {
             conn = DBContext.getConnection();
@@ -104,7 +105,8 @@ public class UserDAO {
     /**
      * Lấy user theo email - Internal method (instance method)
      */
-    private User getUserByEmailInternal(String email) throws SQLException {
+    private static User getUserByEmailInternal(String email) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         User user = null;
         try {
             conn = DBContext.getConnection();
@@ -125,7 +127,8 @@ public class UserDAO {
     /**
      * Đăng nhập user (instance method) - KHÔNG HASH
      */
-    public User loginUserInstance(String email, String password) throws SQLException {
+    public static User loginUserInstance(String email, String password) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         User user = null;
         try {
             conn = DBContext.getConnection();
@@ -148,7 +151,8 @@ public class UserDAO {
     /**
      * Đăng ký user mới (instance method) - KHÔNG HASH
      */
-    public int registerUserInstance(String email, String password, String role) throws SQLException {
+    public static int registerUserInstance(String email, String password, String role) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         int generatedId = 0;
         try {
             conn = DBContext.getConnection();
@@ -176,7 +180,8 @@ public class UserDAO {
     /**
      * Cập nhật mật khẩu (instance method) - KHÔNG HASH
      */
-    public boolean updatePasswordInstance(int userId, String newPassword) throws SQLException {
+    public static boolean updatePasswordInstance(int userId, String newPassword) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null;
         boolean result = false;
         try {
             conn = DBContext.getConnection();
@@ -198,7 +203,8 @@ public class UserDAO {
     /**
      * Cập nhật user (instance method)
      */
-    public boolean updateUserInstance(User user) throws SQLException {
+    public static boolean updateUserInstance(User user) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null;
         boolean result = false;
         try {
             conn = DBContext.getConnection();
@@ -220,7 +226,8 @@ public class UserDAO {
     /**
      * Cập nhật mật khẩu theo email (instance method) - KHÔNG HASH
      */
-    public boolean updatePasswordByEmailInstance(String email, String newPassword) throws SQLException {
+    public static boolean updatePasswordByEmailInstance(String email, String newPassword) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null;
         if (email == null || email.trim().isEmpty() || newPassword == null || newPassword.isEmpty()) {
             return false;
         }
@@ -257,7 +264,8 @@ public class UserDAO {
     /**
      * Kiểm tra username có tồn tại không (instance method)
      */
-        public boolean isEmailExistsInstance(String email) throws SQLException {
+        public static boolean isEmailExistsInstance(String email) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean exists = false;
         try {
             conn = DBContext.getConnection();
@@ -276,7 +284,8 @@ public class UserDAO {
     /**
      * Kiểm tra email đã tồn tại trong database chưa (instance method)
      */
-    public boolean isPatientExistsInstance(String email) throws SQLException {
+    public static boolean isPatientExistsInstance(String email) throws SQLException {
+        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
         boolean exists = false;
         try {
             conn = DBContext.getConnection();
@@ -295,7 +304,7 @@ public class UserDAO {
     /**
      * Map ResultSet to User object
      */
-    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+    private static User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt("user_id"));
         user.setEmail(rs.getString("email"));
@@ -538,6 +547,7 @@ public class UserDAO {
     }
 
     public static boolean updatePasswordHash(int userId, String newPasswordHash) {
+        ResultSet rs = null;
         String sql = "UPDATE users SET password_hash = ? WHERE user_id = ?";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -551,6 +561,7 @@ public class UserDAO {
     }
 
     public static boolean updatePasswordPlainText(String email, String newPassword) {
+        ResultSet rs = null;
         String sql = "UPDATE Users SET password_hash = ? WHERE email = ?";
         try (Connection conn = DBContext.getConnection(); 
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -590,6 +601,7 @@ public class UserDAO {
      * MAIN METHOD - Test database connection và các method (KHÔNG HASH)
      */
     public static void main(String[] args) {
+        Connection conn = null;
         System.out.println("🧪 [TEST] Bắt đầu test UserDAO (NO HASHING)...");
         
         // Test 1: Database connection
@@ -652,6 +664,7 @@ public class UserDAO {
     }
     
     public static boolean updateEmail(int userId, String email) {
+        ResultSet rs = null;
         String sql = "UPDATE Users SET email = ? WHERE user_id = ?";
         try (Connection conn = DBContext.getConnection(); 
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -669,6 +682,7 @@ public class UserDAO {
      * Cập nhật email và mật khẩu cho user (static, dùng cho servlet)
      */
     public static boolean updateUserAccount(int userId, String email, String password) {
+        ResultSet rs = null;
         if (email == null || email.trim().isEmpty()) return false;
         Connection conn = null;
         PreparedStatement ps = null;

@@ -1,11 +1,11 @@
 package dao;
 
-import model.Bill;
+import model.entity.Bill;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import utils.DBContext;
+import util.DBContext;
 
 /**
  * DAO class xử lý nghiệp vụ Bills
@@ -17,7 +17,8 @@ public class BillDAO {
     /**
      * Tạo hóa đơn mới - KHỚP VỚI DATABASE STRUCTURE THỰC TẾ
      */
-    public Bill createBill(Bill bill) throws SQLException {
+    public static Bill createBill(Bill bill) throws SQLException {
+        ResultSet rs = null;
         String sql = """
             INSERT INTO dbo.Bills 
             (bill_id, order_id, service_id, patient_id, user_id, amount, original_price, 
@@ -27,7 +28,7 @@ public class BillDAO {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             System.out.println("🔧 Creating bill with parameters:");
@@ -94,7 +95,7 @@ public class BillDAO {
     /**
      * Lấy hóa đơn theo bill_id
      */
-    public Bill getBillById(String billId) throws SQLException {
+    public static Bill getBillById(String billId) throws SQLException {
         String sql = """
             SELECT b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -102,7 +103,7 @@ public class BillDAO {
             WHERE b.bill_id = ? AND b.is_deleted = 0
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, billId);
@@ -119,7 +120,7 @@ public class BillDAO {
     /**
      * Lấy hóa đơn theo order_id
      */
-    public Bill getBillByOrderId(String orderId) throws SQLException {
+    public static Bill getBillByOrderId(String orderId) throws SQLException {
         String sql = """
             SELECT b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -127,7 +128,7 @@ public class BillDAO {
             WHERE b.order_id = ? AND b.is_deleted = 0
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, orderId);
@@ -144,7 +145,7 @@ public class BillDAO {
     /**
      * Cập nhật trạng thái thanh toán
      */
-    public boolean updatePaymentStatus(String billId, String paymentStatus, 
+    public static boolean updatePaymentStatus(String billId, String paymentStatus, 
                                      String payosTransactionId, String paymentResponse) throws SQLException {
         String sql = """
             UPDATE dbo.Bills 
@@ -157,7 +158,7 @@ public class BillDAO {
             WHERE bill_id = ?
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, paymentStatus);
@@ -174,7 +175,7 @@ public class BillDAO {
     /**
      * Lấy danh sách hóa đơn theo customer
      */
-    public List<Bill> getBillsByCustomer(String customerPhone, int limit) throws SQLException {
+    public static List<Bill> getBillsByCustomer(String customerPhone, int limit) throws SQLException {
         String sql = """
             SELECT TOP (?) b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -185,7 +186,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -203,7 +204,7 @@ public class BillDAO {
     /**
      * Lấy danh sách hóa đơn theo patient_id
      */
-    public List<Bill> getBillsByPatientId(int patientId, int limit) throws SQLException {
+    public static List<Bill> getBillsByPatientId(int patientId, int limit) throws SQLException {
         String sql = """
             SELECT TOP (?) b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -214,7 +215,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -232,7 +233,7 @@ public class BillDAO {
     /**
      * Lấy danh sách hóa đơn theo service_id
      */
-    public List<Bill> getBillsByServiceId(int serviceId, int limit) throws SQLException {
+    public static List<Bill> getBillsByServiceId(int serviceId, int limit) throws SQLException {
         String sql = """
             SELECT TOP (?) b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -243,7 +244,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -261,7 +262,7 @@ public class BillDAO {
     /**
      * Lấy danh sách hóa đơn gần nhất
      */
-    public List<Bill> getRecentBills(int limit) throws SQLException {
+    public static List<Bill> getRecentBills(int limit) throws SQLException {
         String sql = """
             SELECT TOP (?) b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -272,7 +273,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -289,7 +290,7 @@ public class BillDAO {
     /**
      * Lấy danh sách hóa đơn theo trạng thái
      */
-    public List<Bill> getBillsByStatus(String paymentStatus, int limit) throws SQLException {
+    public static List<Bill> getBillsByStatus(String paymentStatus, int limit) throws SQLException {
         String sql = """
             SELECT TOP (?) b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -300,7 +301,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -318,7 +319,7 @@ public class BillDAO {
     /**
      * Lấy tất cả hóa đơn
      */
-    public List<Bill> getAllBills() throws SQLException {
+    public static List<Bill> getAllBills() throws SQLException {
         String sql = """
             SELECT b.*, s.service_name, s.description as service_description 
             FROM dbo.Bills b
@@ -329,7 +330,7 @@ public class BillDAO {
         
         List<Bill> bills = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             ResultSet rs = stmt.executeQuery();
@@ -353,7 +354,7 @@ public class BillDAO {
     /**
      * Cập nhật thanh toán
      */
-    public boolean updatePayment(int billId, double paidAmount, String paymentMethod, String notes) throws SQLException {
+    public static boolean updatePayment(int billId, double paidAmount, String paymentMethod, String notes) throws SQLException {
         String sql = """
             UPDATE dbo.Bills 
             SET payment_status = CASE 
@@ -368,7 +369,7 @@ public class BillDAO {
             WHERE bill_id = ?
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setDouble(1, paidAmount);
@@ -385,7 +386,7 @@ public class BillDAO {
     /**
      * Lấy thống kê revenue theo ngày
      */
-    public List<RevenueSummary> getRevenueByDate(Date fromDate, Date toDate) throws SQLException {
+    public static List<RevenueSummary> getRevenueByDate(Date fromDate, Date toDate) throws SQLException {
         String sql = """
             SELECT 
                 CAST(b.created_at AS DATE) as bill_date,
@@ -402,7 +403,7 @@ public class BillDAO {
         
         List<RevenueSummary> summaries = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setDate(1, fromDate);
@@ -425,7 +426,7 @@ public class BillDAO {
     /**
      * Lấy thống kê revenue theo dịch vụ
      */
-    public List<ServiceRevenue> getRevenueByService(int limit) throws SQLException {
+    public static List<ServiceRevenue> getRevenueByService(int limit) throws SQLException {
         String sql = """
             SELECT TOP (?)
                 s.service_id,
@@ -444,7 +445,7 @@ public class BillDAO {
         
         List<ServiceRevenue> revenues = new ArrayList<>();
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, limit);
@@ -468,10 +469,10 @@ public class BillDAO {
     /**
      * Xóa mềm hóa đơn
      */
-    public boolean softDeleteBill(String billId) throws SQLException {
+    public static boolean softDeleteBill(String billId) throws SQLException {
         String sql = "UPDATE dbo.Bills SET is_deleted = 1, updated_at = GETDATE() WHERE bill_id = ?";
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, billId);
@@ -482,10 +483,10 @@ public class BillDAO {
     /**
      * Kiểm tra bill có tồn tại
      */
-    public boolean billExists(String billId) throws SQLException {
+    public static boolean billExists(String billId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM dbo.Bills WHERE bill_id = ? AND is_deleted = 0";
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, billId);
@@ -502,7 +503,7 @@ public class BillDAO {
     /**
      * Map ResultSet to Bill object - KHỚP VỚI DATABASE STRUCTURE THỰC TẾ
      */
-    private Bill mapResultSetToBill(ResultSet rs) throws SQLException {
+    private static Bill mapResultSetToBill(ResultSet rs) throws SQLException {
         Bill bill = new Bill();
         
         bill.setBillId(rs.getString("bill_id"));
@@ -608,7 +609,7 @@ public class BillDAO {
     /**
      * Cập nhật trạng thái thanh toán (version đơn giản với 2 tham số)
      */
-    public boolean updatePaymentStatus(String billId, String paymentStatus) throws SQLException {
+    public static boolean updatePaymentStatus(String billId, String paymentStatus) throws SQLException {
         String sql = """
             UPDATE dbo.Bills 
             SET payment_status = ?, 
@@ -618,7 +619,7 @@ public class BillDAO {
             WHERE bill_id = ?
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, paymentStatus);
@@ -646,7 +647,7 @@ public class BillDAO {
      * Tạo bán hàng đơn giản - CHỈ LƯU TỔNG TIỀN ĐỂ BÁO CÁO
      * Khớp với Bills table structure
      */
-    public boolean createSimpleSale(int staffUserId, java.math.BigDecimal totalAmount, String medicineDetails, String customerName) throws SQLException {
+    public static boolean createSimpleSale(int staffUserId, java.math.BigDecimal totalAmount, String medicineDetails, String customerName) throws SQLException {
         String sql = """
             INSERT INTO dbo.Bills 
             (bill_id, order_id, service_id, patient_id, user_id, amount, original_price, 
@@ -655,7 +656,7 @@ public class BillDAO {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             // Tạo ID đơn giản
@@ -713,7 +714,7 @@ public class BillDAO {
     /**
      * Lấy tổng doanh thu bán thuốc theo ngày
      */
-    public java.math.BigDecimal getDailyPharmacyRevenue(Date date) throws SQLException {
+    public static java.math.BigDecimal getDailyPharmacyRevenue(Date date) throws SQLException {
         String sql = """
             SELECT COALESCE(SUM(amount), 0) as daily_revenue
             FROM dbo.Bills 
@@ -723,7 +724,7 @@ public class BillDAO {
                 AND is_deleted = 0
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setDate(1, date);
@@ -740,7 +741,7 @@ public class BillDAO {
     /**
      * Lấy tổng doanh thu bán thuốc theo tháng
      */
-    public java.math.BigDecimal getMonthlyPharmacyRevenue(int year, int month) throws SQLException {
+    public static java.math.BigDecimal getMonthlyPharmacyRevenue(int year, int month) throws SQLException {
         String sql = """
             SELECT COALESCE(SUM(amount), 0) as monthly_revenue
             FROM dbo.Bills 
@@ -751,7 +752,7 @@ public class BillDAO {
                 AND is_deleted = 0
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, year);
@@ -767,7 +768,7 @@ public class BillDAO {
     }
 
     // đặt lịch cho người thân
-    public boolean createBillForRelative(String billId, String orderId, int serviceId, int patientId, int userId, 
+    public static boolean createBillForRelative(String billId, String orderId, int serviceId, int patientId, int userId, 
                                        java.math.BigDecimal amount, java.math.BigDecimal originalPrice, 
                                        String customerName, String customerPhone, String customerEmail, 
                                        int doctorId, java.sql.Date appointmentDate, java.sql.Time appointmentTime, 
@@ -781,7 +782,7 @@ public class BillDAO {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
         
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, billId);
@@ -848,9 +849,9 @@ public class BillDAO {
     /**
      * Sinh bill_id cho hóa đơn thuốc: HOADONTHUOC_0001, HOADONTHUOC_0002, ...
      */
-    public String getNextPharmacyBillId() throws SQLException {
+    public static String getNextPharmacyBillId() throws SQLException {
         String sql = "SELECT MAX(CAST(SUBSTRING(bill_id, 13, 4) AS INT)) AS max_num FROM dbo.Bills WHERE bill_id LIKE 'HOADONTHUOC_%'";
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             int next = 1;
@@ -871,7 +872,7 @@ public class BillDAO {
      * @param notes Ghi chú
      * @return bill_id của bill con được tạo, null nếu lỗi
      */
-    public String createBillInstallment(Bill parentBill, int period, double amount, String paymentMethod, String notes) {
+    public static String createBillInstallment(Bill parentBill, int period, double amount, String paymentMethod, String notes) {
         try {
             // Sinh bill_id cho bill con
             String childBillId = getNextInstallmentBillId();
@@ -937,9 +938,9 @@ public class BillDAO {
     /**
      * Sinh bill_id cho bill con trả góp: ThanhToanTraGop_0001, ThanhToanTraGop_0002, ...
      */
-    private String getNextInstallmentBillId() throws SQLException {
+    private static String getNextInstallmentBillId() throws SQLException {
         String sql = "SELECT MAX(CAST(SUBSTRING(bill_id, 17, 4) AS INT)) AS max_num FROM dbo.Bills WHERE bill_id LIKE 'ThanhToanTraGop_%'";
-        try (Connection conn = dbConnection.getConnection();
+        try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             int next = 1;

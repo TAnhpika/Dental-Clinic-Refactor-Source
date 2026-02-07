@@ -4,11 +4,11 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.MedicalReport;
-import model.Medicine;
-import model.Prescription;
-import utils.DBContext;
-import static utils.DBContext.getConnection;
+import model.entity.MedicalReport;
+import model.entity.Medicine;
+import model.entity.Prescription;
+import util.DBContext;
+import static util.DBContext.getConnection;
 
 /**
  *
@@ -16,11 +16,11 @@ import static utils.DBContext.getConnection;
  */
 
 
-public class MedicineDAO  {
+public class MedicineDAO {
 
 
 
-    public int insertMedicalReport(int appointmentId, long doctorId, int patientId,
+    public static int insertMedicalReport(int appointmentId, long doctorId, int patientId,
             String diagnosis, String treatmentPlan, String note, String sign) throws SQLException {
         String sql = "INSERT INTO MedicalReport (appointment_id, doctor_id, patient_id, diagnosis, treatment_plan, note, sign) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -47,7 +47,7 @@ public class MedicineDAO  {
     }
 
     // Thêm đơn thuốc gắn với báo cáo
-    public void insertPrescription(int reportId, int medicineId, int quantity, String usage) throws SQLException {
+    public static void insertPrescription(int reportId, int medicineId, int quantity, String usage) throws SQLException {
         String sql = "INSERT INTO Prescription (report_id, medicine_id, quantity, usage) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -81,7 +81,7 @@ public class MedicineDAO  {
         return list;
     }
 
-    public boolean hasEnoughStock(int medicineId, int requiredQty) throws SQLException {
+    public static boolean hasEnoughStock(int medicineId, int requiredQty) throws SQLException {
         String sql = "SELECT quantity_in_stock FROM Medicine WHERE medicine_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, medicineId);
@@ -94,7 +94,7 @@ public class MedicineDAO  {
         return false;
     }
 
-    public void reduceMedicineStock(int medicineId, int quantity) throws SQLException {
+    public static void reduceMedicineStock(int medicineId, int quantity) throws SQLException {
         String sql = "UPDATE Medicine SET quantity_in_stock = quantity_in_stock - ? WHERE medicine_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
@@ -103,7 +103,7 @@ public class MedicineDAO  {
         }
     }
 
-    public void updateAppointmentStatus(int appointmentId, String status) throws SQLException {
+    public static void updateAppointmentStatus(int appointmentId, String status) throws SQLException {
         String sql = "UPDATE Appointment SET status = ? WHERE appointment_id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, status);
@@ -137,7 +137,7 @@ public class MedicineDAO  {
 
  
 
-    public MedicalReport getMedicalReportById(int reportId) {
+    public static MedicalReport getMedicalReportById(int reportId) {
     MedicalReport report = null;
     String sql = "SELECT mr.*, p.full_name AS patient_name, d.full_name AS doctor_name "
                + "FROM MedicalReport mr "

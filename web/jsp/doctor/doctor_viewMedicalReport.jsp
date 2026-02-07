@@ -1,17 +1,13 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="model.*"%>
+<%@page import="model.entity.*"%>
 <%@page import="java.util.*"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <%@ include file="/includes/dashboard_head.jsp" %>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title> Báo Cáo Y Tế</title>
+    <title>Báo Cáo Y Tế</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
-            background: #f5f5f5; 
-        }
         .container { 
             max-width: 800px; 
             margin: 0 auto; 
@@ -187,7 +183,12 @@
     </script>
 </head>
 <body>
-    <div class="container">
+    <div class="dashboard-wrapper">
+        <%@ include file="/jsp/doctor/doctor_menu.jsp" %>
+        <main class="dashboard-main">
+            <%@ include file="/jsp/doctor/doctor_header.jsp" %>
+            <div class="dashboard-content">
+                <div class="container">
         <h1>📋 Báo Cáo Y Tế</h1>
         
         <%
@@ -362,6 +363,10 @@
         <div class="section" style="text-align: center;">
             <a href="${pageContext.request.contextPath}/DoctorAppointmentsServlet" class="back-link">⬅️ Quay về Trang Chính</a>
         </div>
+                </div>
+            </div>
+        </main>
     </div>
+    <%@ include file="/includes/dashboard_scripts.jsp" %>
 </body>
 </html>

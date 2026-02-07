@@ -3,9 +3,9 @@
 <%@page import="dao.AppointmentDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-<%@page import="model.Doctors"%>
-<%@page import="model.Patients"%>
-<%@page import="model.Appointment"%>
+<%@page import="model.entity.Doctors"%>
+<%@page import="model.entity.Patients"%>
+<%@page import="model.entity.Appointment"%>
 
 <%
             String appointmentIdParam = request.getParameter("appointmentId");
@@ -147,6 +147,16 @@
                             </div>
                             <div class="col-md-6">
                                 <p class="mb-1"><strong>Thời gian khám:</strong> <%= timeFormat.format(currentTime) %></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="reexam_lan_2" id="reexam_lan_2" value="1"
+                                    <%= (appointment != null && appointment.getPreviousAppointmentId() > 0) ? "checked" : "" %>>
+                                <label class="form-check-label" for="reexam_lan_2">
+                                    <strong>Tái khám lần 2</strong> — Bệnh nhân đã khám lần đầu, đây là lần tái khám thứ 2
+                                </label>
                             </div>
                         </div>
                         

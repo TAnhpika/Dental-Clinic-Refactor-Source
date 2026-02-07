@@ -1,6 +1,6 @@
 package dao;
 
-import model.Doctors;
+import model.entity.Doctors;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import model.Appointment;
-import model.DoctorSchedule;
-import model.MedicalReport;
-import model.PrescriptionDetail;
-import model.TimeSlot;
-import utils.DBContext;
+import model.entity.Appointment;
+import model.entity.DoctorSchedule;
+import model.entity.MedicalReport;
+import model.entity.PrescriptionDetail;
+import model.entity.TimeSlot;
+import util.DBContext;
 
 public class DoctorDAO {
 
@@ -33,8 +33,7 @@ public class DoctorDAO {
     
     public static Doctors getDoctorInfo(int doctorId) {
         String sql = "SELECT * FROM Doctors WHERE doctor_id = ?";
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -58,8 +57,7 @@ public class DoctorDAO {
 
     public static int getUserId(int doctorId) {
         String sql = "SELECT user_id FROM Doctors WHERE doctor_id = ?";
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -75,8 +73,7 @@ public class DoctorDAO {
         String sql = "SELECT DISTINCT DAY(work_date) AS day FROM DoctorSchedule " +
                      "WHERE doctor_id = ? AND YEAR(work_date) = ? AND MONTH(work_date) = ?";
 
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, doctorId);
             ps.setInt(2, year);
             ps.setInt(3, month);
@@ -85,7 +82,6 @@ public class DoctorDAO {
             while (rs.next()) {
                 workDays.add(rs.getInt("day"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,8 +101,7 @@ public class DoctorDAO {
             WHERE d.user_id = ?
             ORDER BY a.work_date DESC, a.slot_id ASC
         """;
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -127,6 +122,7 @@ public class DoctorDAO {
         return appointments;
     }
      public static void main(String[] args) {
+        ResultSet rs = null;
     Connection conn = getConnect();
     if (conn != null) {
         System.out.println("✅ Kết nối database thành công!");
@@ -148,8 +144,7 @@ public class DoctorDAO {
     public static List<Doctors> getAllDoctorsOnline() {
         List<Doctors> doctors = new ArrayList<>();
         String sql = "SELECT * FROM Doctors WHERE status = 'active'";
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Doctors doctor = new Doctors(
@@ -248,7 +243,6 @@ public class DoctorDAO {
                 doctor.setAvatar(rs.getString("avatar"));
                 list.add(doctor);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,8 +274,7 @@ public class DoctorDAO {
 
     public static Doctors getDoctorByUserId(int userId) {
         String sql = "SELECT * FROM Doctors WHERE user_id = ?";
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -318,9 +311,10 @@ public class DoctorDAO {
     /**
      * Tạo QR payment link cho appointment
      */
-    public String createPaymentLink(int doctorId, int appointmentId, int patientId, BigDecimal amount) throws SQLException {
+    public static String createPaymentLink(int doctorId, int appointmentId, int patientId, BigDecimal amount) throws SQLException {
+        
         String sql = "INSERT INTO payment_links (doctor_id, appointment_id, patient_id, amount, status, created_at) VALUES (?, ?, ?, ?, 'PENDING', GETDATE())";
-        try (PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             st.setInt(1, doctorId);
             st.setInt(2, appointmentId);
             st.setInt(3, patientId);
@@ -341,9 +335,10 @@ public class DoctorDAO {
     /**
      * Xác nhận thanh toán appointment
      */
-    public boolean confirmDoctorPayment(int doctorId, String paymentCode, String status) throws SQLException {
+    public static boolean confirmDoctorPayment(int doctorId, String paymentCode, String status) throws SQLException {
+        
         String sql = "UPDATE payment_links SET status = ?, updated_at = GETDATE() WHERE doctor_id = ? AND payment_code = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setString(1, status);
             st.setInt(2, doctorId);
             st.setString(3, paymentCode);
@@ -355,7 +350,8 @@ public class DoctorDAO {
     /**
      * Lấy danh sách payments của doctor
      */
-    public List<Map<String, Object>> getDoctorPayments(int doctorId, String fromDate, String toDate) throws SQLException {
+    public static List<Map<String, Object>> getDoctorPayments(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         List<Map<String, Object>> payments = new ArrayList<>();
         String sql = "SELECT p.*, pt.full_name as patient_name, a.appointment_date " +
                     "FROM payment_links p " +
@@ -364,7 +360,7 @@ public class DoctorDAO {
                     "WHERE p.doctor_id = ? AND p.created_at BETWEEN ? AND ? " +
                     "ORDER BY p.created_at DESC";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -391,9 +387,10 @@ public class DoctorDAO {
     /**
      * Tạo schedule template cho doctor
      */
-    public boolean createDoctorScheduleTemplate(int doctorId, String templateName, String scheduleData) throws SQLException {
+    public static boolean createDoctorScheduleTemplate(int doctorId, String templateName, String scheduleData) throws SQLException {
+        
         String sql = "INSERT INTO doctor_schedule_templates (doctor_id, template_name, schedule_data, created_at) VALUES (?, ?, ?, GETDATE())";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, templateName);
             st.setString(3, scheduleData);
@@ -405,12 +402,13 @@ public class DoctorDAO {
     /**
      * Apply schedule template cho một tuần
      */
-    public boolean applyScheduleTemplate(int doctorId, int templateId, String startDate, String endDate) throws SQLException {
+    public static boolean applyScheduleTemplate(int doctorId, int templateId, String startDate, String endDate) throws SQLException {
+        
         // Lấy template data
         String getTemplateSql = "SELECT schedule_data FROM doctor_schedule_templates WHERE template_id = ? AND doctor_id = ?";
         String templateData = null;
         
-        try (PreparedStatement st = connection.prepareStatement(getTemplateSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(getTemplateSql)) {
             st.setInt(1, templateId);
             st.setInt(2, doctorId);
             
@@ -425,7 +423,7 @@ public class DoctorDAO {
         
         // Parse và insert schedule
         String insertSql = "INSERT INTO doctor_schedules (doctor_id, work_date, start_time, end_time, status, created_at) VALUES (?, ?, ?, ?, 'AVAILABLE', GETDATE())";
-        try (PreparedStatement st = connection.prepareStatement(insertSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(insertSql)) {
             // Parse template data và insert từng ngày
             String[] daySchedules = templateData.split(",");
             
@@ -452,7 +450,8 @@ public class DoctorDAO {
     /**
      * Lấy thống kê appointments của doctor theo tháng
      */
-    public Map<String, Object> getDoctorMonthlyStats(int doctorId, int month, int year) throws SQLException {
+    public static Map<String, Object> getDoctorMonthlyStats(int doctorId, int month, int year) throws SQLException {
+        
         Map<String, Object> stats = new HashMap<>();
         
         // Total appointments
@@ -467,10 +466,10 @@ public class DoctorDAO {
         // Revenue
         String revenueSql = "SELECT SUM(b.total_amount) as revenue FROM bills b JOIN appointments a ON b.appointment_id = a.appointment_id WHERE a.doctor_id = ? AND MONTH(a.appointment_date) = ? AND YEAR(a.appointment_date) = ? AND b.status = 'PAID'";
         
-        try (PreparedStatement st1 = connection.prepareStatement(totalSql);
-             PreparedStatement st2 = connection.prepareStatement(completedSql);
-             PreparedStatement st3 = connection.prepareStatement(cancelledSql);
-             PreparedStatement st4 = connection.prepareStatement(revenueSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st1 = conn.prepareStatement(totalSql);
+             PreparedStatement st2 = conn.prepareStatement(completedSql);
+             PreparedStatement st3 = conn.prepareStatement(cancelledSql);
+             PreparedStatement st4 = conn.prepareStatement(revenueSql)) {
             
             // Set parameters for all statements
             st1.setInt(1, doctorId); st1.setInt(2, month); st1.setInt(3, year);
@@ -502,7 +501,8 @@ public class DoctorDAO {
     /**
      * Lấy top services được sử dụng bởi doctor
      */
-    public List<Map<String, Object>> getTopServicesByDoctor(int doctorId, String fromDate, String toDate, int limit) throws SQLException {
+    public static List<Map<String, Object>> getTopServicesByDoctor(int doctorId, String fromDate, String toDate, int limit) throws SQLException {
+        
         List<Map<String, Object>> services = new ArrayList<>();
         String sql = "SELECT s.service_name, COUNT(bs.service_id) as usage_count, " +
                     "AVG(s.price) as avg_price, SUM(bs.quantity * s.price) as total_revenue " +
@@ -518,7 +518,7 @@ public class DoctorDAO {
             sql = sql.replace("ORDER BY", "ORDER BY") + " OFFSET 0 ROWS FETCH NEXT " + limit + " ROWS ONLY";
         }
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -541,7 +541,8 @@ public class DoctorDAO {
     /**
      * Tự động gợi ý schedule dựa trên historical data
      */
-    public List<String> suggestOptimalSchedule(int doctorId, String month, String year) throws SQLException {
+    public static List<String> suggestOptimalSchedule(int doctorId, String month, String year) throws SQLException {
+        
         List<String> suggestions = new ArrayList<>();
         
         // Analyze historical appointment patterns
@@ -555,7 +556,7 @@ public class DoctorDAO {
                     "HAVING COUNT(*) >= 3 " +
                     "ORDER BY appointment_count DESC";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             
             try (ResultSet rs = st.executeQuery()) {
@@ -574,7 +575,7 @@ public class DoctorDAO {
         return suggestions;
     }
     
-    private String getDayName(int dayOfWeek) {
+    private static String getDayName(int dayOfWeek) {
         String[] days = {"", "Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"};
         return (dayOfWeek >= 1 && dayOfWeek <= 7) ? days[dayOfWeek] : "Không xác định";
     }
@@ -582,7 +583,8 @@ public class DoctorDAO {
     /**
      * Kiểm tra và cảnh báo conflict trong lịch
      */
-    public List<String> checkScheduleConflicts(int doctorId, String startDate, String endDate) throws SQLException {
+    public static List<String> checkScheduleConflicts(int doctorId, String startDate, String endDate) throws SQLException {
+        
         List<String> conflicts = new ArrayList<>();
         
         String sql = "SELECT ds1.work_date, ds1.start_time, ds1.end_time, " +
@@ -595,7 +597,7 @@ public class DoctorDAO {
                     "AND ds1.work_date BETWEEN ? AND ? " +
                     "AND ((ds1.start_time <= ds2.end_time AND ds1.end_time >= ds2.start_time))";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, startDate);
             st.setString(3, endDate);
@@ -621,7 +623,8 @@ public class DoctorDAO {
     /**
      * Gửi thông báo cho patients của doctor
      */
-    public boolean sendNotificationToPatients(int doctorId, String message, String notificationType) throws SQLException {
+    public static boolean sendNotificationToPatients(int doctorId, String message, String notificationType) throws SQLException {
+        
         String getPatientsSql = "SELECT DISTINCT p.patient_id, p.email, p.phone_number " +
                                "FROM patients p " +
                                "JOIN appointments a ON p.patient_id = a.patient_id " +
@@ -632,7 +635,7 @@ public class DoctorDAO {
         
         List<Integer> patientIds = new ArrayList<>();
         
-        try (PreparedStatement st = connection.prepareStatement(getPatientsSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(getPatientsSql)) {
             st.setInt(1, doctorId);
             
             try (ResultSet rs = st.executeQuery()) {
@@ -644,7 +647,7 @@ public class DoctorDAO {
         
         String insertNotificationSql = "INSERT INTO notifications (user_id, doctor_id, message, type, status, created_at) VALUES (?, ?, ?, ?, 'UNREAD', GETDATE())";
         
-        try (PreparedStatement st = connection.prepareStatement(insertNotificationSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(insertNotificationSql)) {
             for (int patientId : patientIds) {
                 st.setInt(1, patientId);
                 st.setInt(2, doctorId);
@@ -660,7 +663,8 @@ public class DoctorDAO {
     /**
      * Lấy feedback/ratings của doctor
      */
-    public Map<String, Object> getDoctorFeedbackStats(int doctorId) throws SQLException {
+    public static Map<String, Object> getDoctorFeedbackStats(int doctorId) throws SQLException {
+        
         Map<String, Object> stats = new HashMap<>();
         
         String sql = "SELECT " +
@@ -672,7 +676,7 @@ public class DoctorDAO {
                     "JOIN appointments a ON af.appointment_id = a.appointment_id " +
                     "WHERE a.doctor_id = ?";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             
             try (ResultSet rs = st.executeQuery()) {
@@ -693,9 +697,10 @@ public class DoctorDAO {
     /**
      * Tạo medical report cho appointment của doctor
      */
-    public boolean createMedicalReport(int appointmentId, int doctorId, String diagnosis, String treatment, String notes) throws SQLException {
+    public static boolean createMedicalReport(int appointmentId, int doctorId, String diagnosis, String treatment, String notes) throws SQLException {
+        
         String sql = "INSERT INTO medical_reports (appointment_id, doctor_id, diagnosis, treatment_plan, notes, created_at, status) VALUES (?, ?, ?, ?, ?, GETDATE(), 'ACTIVE')";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, appointmentId);
             st.setInt(2, doctorId);
             st.setString(3, diagnosis);
@@ -709,9 +714,10 @@ public class DoctorDAO {
     /**
      * Cập nhật medical report
      */
-    public boolean updateMedicalReport(int reportId, int doctorId, String diagnosis, String treatment, String notes) throws SQLException {
+    public static boolean updateMedicalReport(int reportId, int doctorId, String diagnosis, String treatment, String notes) throws SQLException {
+        
         String sql = "UPDATE medical_reports SET diagnosis = ?, treatment_plan = ?, notes = ?, updated_at = GETDATE() WHERE report_id = ? AND doctor_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setString(1, diagnosis);
             st.setString(2, treatment);
             st.setString(3, notes);
@@ -725,7 +731,8 @@ public class DoctorDAO {
     /**
      * Lấy medical reports của doctor
      */
-    public List<Map<String, Object>> getDoctorMedicalReports(int doctorId, String fromDate, String toDate) throws SQLException {
+    public static List<Map<String, Object>> getDoctorMedicalReports(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         List<Map<String, Object>> reports = new ArrayList<>();
         String sql = "SELECT mr.*, a.appointment_date, p.full_name as patient_name " +
                     "FROM medical_reports mr " +
@@ -734,7 +741,7 @@ public class DoctorDAO {
                     "WHERE mr.doctor_id = ? AND mr.created_at BETWEEN ? AND ? " +
                     "ORDER BY mr.created_at DESC";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -760,10 +767,11 @@ public class DoctorDAO {
     /**
      * Tạo prescription cho medical report
      */
-    public boolean createPrescription(int reportId, int doctorId, List<Map<String, Object>> medicines) throws SQLException {
+    public static boolean createPrescription(int reportId, int doctorId, List<Map<String, Object>> medicines) throws SQLException {
+        
         String sql = "INSERT INTO prescriptions (report_id, doctor_id, medicine_name, dosage, frequency, duration, instructions, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE())";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             for (Map<String, Object> medicine : medicines) {
                 st.setInt(1, reportId);
                 st.setInt(2, doctorId);
@@ -781,7 +789,8 @@ public class DoctorDAO {
     /**
      * Lấy prescription history của doctor
      */
-    public List<Map<String, Object>> getDoctorPrescriptions(int doctorId, String fromDate, String toDate) throws SQLException {
+    public static List<Map<String, Object>> getDoctorPrescriptions(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         List<Map<String, Object>> prescriptions = new ArrayList<>();
         String sql = "SELECT p.*, mr.diagnosis, pt.full_name as patient_name, a.appointment_date " +
                     "FROM prescriptions p " +
@@ -791,7 +800,7 @@ public class DoctorDAO {
                     "WHERE p.doctor_id = ? AND p.created_at BETWEEN ? AND ? " +
                     "ORDER BY p.created_at DESC";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -820,7 +829,8 @@ public class DoctorDAO {
     /**
      * Lấy performance metrics của doctor
      */
-    public Map<String, Object> getDoctorPerformanceMetrics(int doctorId, String period) throws SQLException {
+    public static Map<String, Object> getDoctorPerformanceMetrics(int doctorId, String period) throws SQLException {
+        
         Map<String, Object> metrics = new HashMap<>();
         
         String dateCondition = "";
@@ -864,10 +874,10 @@ public class DoctorDAO {
                           "JOIN appointments a ON b.appointment_id = a.appointment_id " +
                           "WHERE a.doctor_id = ? AND b.status = 'PAID' " + dateCondition;
         
-        try (PreparedStatement st1 = connection.prepareStatement(satisfactionSql);
-             PreparedStatement st2 = connection.prepareStatement(completionSql);
-             PreparedStatement st3 = connection.prepareStatement(consultationTimeSql);
-             PreparedStatement st4 = connection.prepareStatement(revenueSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st1 = conn.prepareStatement(satisfactionSql);
+             PreparedStatement st2 = conn.prepareStatement(completionSql);
+             PreparedStatement st3 = conn.prepareStatement(consultationTimeSql);
+             PreparedStatement st4 = conn.prepareStatement(revenueSql)) {
             
             st1.setInt(1, doctorId);
             st2.setInt(1, doctorId);
@@ -919,7 +929,8 @@ public class DoctorDAO {
     /**
      * Lấy patient retention rate của doctor
      */
-    public double getDoctorPatientRetentionRate(int doctorId, int months) throws SQLException {
+    public static double getDoctorPatientRetentionRate(int doctorId, int months) throws SQLException {
+        
         String sql = "SELECT " +
                     "COUNT(DISTINCT patient_id) as total_patients, " +
                     "COUNT(DISTINCT CASE WHEN appointment_count > 1 THEN patient_id END) as returning_patients " +
@@ -932,7 +943,7 @@ public class DoctorDAO {
                     "    GROUP BY patient_id" +
                     ") patient_stats";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setInt(2, months);
             
@@ -952,7 +963,8 @@ public class DoctorDAO {
     /**
      * Lấy most common diagnoses của doctor
      */
-    public List<Map<String, Object>> getDoctorCommonDiagnoses(int doctorId, int limit) throws SQLException {
+    public static List<Map<String, Object>> getDoctorCommonDiagnoses(int doctorId, int limit) throws SQLException {
+        
         List<Map<String, Object>> diagnoses = new ArrayList<>();
         String sql = "SELECT diagnosis, COUNT(*) as frequency, " +
                     "COUNT(*) * 100.0 / (SELECT COUNT(*) FROM medical_reports WHERE doctor_id = ?) as percentage " +
@@ -965,7 +977,7 @@ public class DoctorDAO {
             sql += " OFFSET 0 ROWS FETCH NEXT " + limit + " ROWS ONLY";
         }
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setInt(2, doctorId);
             
@@ -986,7 +998,8 @@ public class DoctorDAO {
     /**
      * Tạo comprehensive doctor report
      */
-    public Map<String, Object> generateDoctorComprehensiveReport(int doctorId, String fromDate, String toDate) throws SQLException {
+    public static Map<String, Object> generateDoctorComprehensiveReport(int doctorId, String fromDate, String toDate) throws SQLException {
+        ResultSet rs = null;
         Map<String, Object> report = new HashMap<>();
         
         // Basic info
@@ -1036,12 +1049,13 @@ public class DoctorDAO {
     /**
      * Sync doctor data với external systems
      */
-    public boolean syncDoctorWithExternalSystem(int doctorId, String systemName, Map<String, Object> syncData) throws SQLException {
+    public static boolean syncDoctorWithExternalSystem(int doctorId, String systemName, Map<String, Object> syncData) throws SQLException {
+        
         String sql = "INSERT INTO doctor_external_sync (doctor_id, system_name, sync_data, last_sync, status) " +
                     "VALUES (?, ?, ?, GETDATE(), 'SUCCESS') " +
                     "ON DUPLICATE KEY UPDATE sync_data = VALUES(sync_data), last_sync = VALUES(last_sync), status = VALUES(status)";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, systemName);
             st.setString(3, syncData.toString());
@@ -1053,7 +1067,8 @@ public class DoctorDAO {
     /**
      * Export doctor data for backup/migration
      */
-    public Map<String, Object> exportDoctorData(int doctorId) throws SQLException {
+    public static Map<String, Object> exportDoctorData(int doctorId) throws SQLException {
+        ResultSet rs = null;
         Map<String, Object> exportData = new HashMap<>();
         
         // Doctor basic info
@@ -1085,7 +1100,8 @@ public class DoctorDAO {
     /**
      * Import doctor data từ backup
      */
-    public boolean importDoctorData(Map<String, Object> importData) throws SQLException {
+    public static boolean importDoctorData(Map<String, Object> importData) throws SQLException {
+        ResultSet rs = null;
         try {
             // Validate import data structure
             if (!importData.containsKey("doctor") || !importData.containsKey("exportVersion")) {
@@ -1117,7 +1133,8 @@ public class DoctorDAO {
     /**
      * Tạo detailed revenue report cho doctor
      */
-    public Map<String, Object> generateDoctorRevenueReport(int doctorId, String fromDate, String toDate, String groupBy) throws SQLException {
+    public static Map<String, Object> generateDoctorRevenueReport(int doctorId, String fromDate, String toDate, String groupBy) throws SQLException {
+        
         Map<String, Object> report = new HashMap<>();
         List<Map<String, Object>> revenueData = new ArrayList<>();
         
@@ -1153,7 +1170,7 @@ public class DoctorDAO {
                     "WHERE a.doctor_id = ? AND a.appointment_date BETWEEN ? AND ? " +
                     groupByClause + " ORDER BY " + selectClause;
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -1206,7 +1223,8 @@ public class DoctorDAO {
     /**
      * Phân tích patient demographics cho doctor
      */
-    public Map<String, Object> analyzeDoctorPatientDemographics(int doctorId, String fromDate, String toDate) throws SQLException {
+    public static Map<String, Object> analyzeDoctorPatientDemographics(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         Map<String, Object> demographics = new HashMap<>();
         
         // Age distribution
@@ -1235,9 +1253,9 @@ public class DoctorDAO {
                            "GROUP BY p.city " +
                            "ORDER BY patient_count DESC";
         
-        try (PreparedStatement st1 = connection.prepareStatement(ageSql);
-             PreparedStatement st2 = connection.prepareStatement(genderSql);
-             PreparedStatement st3 = connection.prepareStatement(locationSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st1 = conn.prepareStatement(ageSql);
+             PreparedStatement st2 = conn.prepareStatement(genderSql);
+             PreparedStatement st3 = conn.prepareStatement(locationSql)) {
             
             // Age distribution
             st1.setInt(1, doctorId);
@@ -1295,7 +1313,8 @@ public class DoctorDAO {
     /**
      * Predictive analytics cho doctor workload
      */
-    public Map<String, Object> predictDoctorWorkload(int doctorId, int predictDays) throws SQLException {
+    public static Map<String, Object> predictDoctorWorkload(int doctorId, int predictDays) throws SQLException {
+        
         Map<String, Object> prediction = new HashMap<>();
         
         // Historical pattern analysis
@@ -1325,8 +1344,8 @@ public class DoctorDAO {
                            "GROUP BY DATEPART(month, appointment_date) " +
                            "ORDER BY month";
         
-        try (PreparedStatement st1 = connection.prepareStatement(historicalSql);
-             PreparedStatement st2 = connection.prepareStatement(seasonalSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st1 = conn.prepareStatement(historicalSql);
+             PreparedStatement st2 = conn.prepareStatement(seasonalSql)) {
             
             // Historical patterns
             st1.setInt(1, doctorId);
@@ -1402,7 +1421,7 @@ public class DoctorDAO {
         return prediction;
     }
     
-    private String getWorkloadLevel(int appointmentCount) {
+    private static String getWorkloadLevel(int appointmentCount) {
         if (appointmentCount <= 5) return "Light";
         else if (appointmentCount <= 10) return "Moderate";
         else if (appointmentCount <= 15) return "Heavy";
@@ -1412,7 +1431,7 @@ public class DoctorDAO {
     /**
      * Tạo AI-powered recommendations cho doctor
      */
-    public List<Map<String, Object>> generateDoctorRecommendations(int doctorId) throws SQLException {
+    public static List<Map<String, Object>> generateDoctorRecommendations(int doctorId) throws SQLException {
         List<Map<String, Object>> recommendations = new ArrayList<>();
         
         // Analyze recent performance
@@ -1513,7 +1532,8 @@ public class DoctorDAO {
     /**
      * Backup và cleanup data cũ
      */
-    public boolean cleanupOldDoctorData(int doctorId, int retentionMonths) throws SQLException {
+    public static boolean cleanupOldDoctorData(int doctorId, int retentionMonths) throws SQLException {
+        
         String cutoffDate = LocalDate.now().minusMonths(retentionMonths).toString();
         
         // Archive old appointments
@@ -1524,8 +1544,8 @@ public class DoctorDAO {
         String deleteSql = "DELETE FROM appointments WHERE doctor_id = ? AND appointment_date < ? " +
                          "AND status IN ('COMPLETED', 'CANCELLED')";
         
-        try (PreparedStatement st1 = connection.prepareStatement(archiveSql);
-             PreparedStatement st2 = connection.prepareStatement(deleteSql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st1 = conn.prepareStatement(archiveSql);
+             PreparedStatement st2 = conn.prepareStatement(deleteSql)) {
             
             // Archive
             st1.setInt(1, doctorId);
@@ -1542,11 +1562,12 @@ public class DoctorDAO {
     }
     
     // Helper methods for missing functionality
-    private List<Map<String, Object>> getDoctorSchedules(int doctorId, String fromDate, String toDate) throws SQLException {
+    private static List<Map<String, Object>> getDoctorSchedules(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         List<Map<String, Object>> schedules = new ArrayList<>();
         String sql = "SELECT * FROM doctor_schedules WHERE doctor_id = ? AND work_date BETWEEN ? AND ?";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -1566,11 +1587,12 @@ public class DoctorDAO {
         return schedules;
     }
     
-    private List<Map<String, Object>> getDoctorAppointments(int doctorId, String fromDate, String toDate) throws SQLException {
+    private static List<Map<String, Object>> getDoctorAppointments(int doctorId, String fromDate, String toDate) throws SQLException {
+        
         List<Map<String, Object>> appointments = new ArrayList<>();
         String sql = "SELECT * FROM appointments WHERE doctor_id = ? AND appointment_date BETWEEN ? AND ?";
         
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, doctorId);
             st.setString(2, fromDate);
             st.setString(3, toDate);
@@ -1591,7 +1613,8 @@ public class DoctorDAO {
     }
     
         // Lấy lịch làm việc của một bác sĩ cụ thể
-    public List<DoctorSchedule> getSchedulesByDoctorId(int doctorId) throws SQLException {
+    public static List<DoctorSchedule> getSchedulesByDoctorId(int doctorId) throws SQLException {
+        ResultSet rs = null;
         List<DoctorSchedule> schedules = new ArrayList<>();
         String sql = """
             SELECT ds.schedule_id, ds.doctor_id, ds.work_date, ds.slot_id,
@@ -1604,7 +1627,7 @@ public class DoctorDAO {
             ORDER BY ds.work_date, ts.start_time
             """;
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)) {
 
             statement.setInt(1, doctorId);
             System.out.println("Executing query for doctor ID: " + doctorId);
@@ -1671,8 +1694,7 @@ public class DoctorDAO {
       // Lấy email bác sĩ từ doctor_id (JOIN Doctors với users)
       public static String getDoctorEmailByDoctorId(long doctorId) {
         String sql = "SELECT u.email FROM Doctors d JOIN users u ON d.user_id = u.user_id WHERE d.doctor_id = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, doctorId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -1693,8 +1715,7 @@ public class DoctorDAO {
     public static String getDoctorNameById(int doctorId) {
         String sql = "SELECT d.full_name FROM Doctors d WHERE d.doctor_id = ?";
         
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, doctorId);
             
@@ -1719,7 +1740,8 @@ public class DoctorDAO {
     //=================================================================================================================
     // CODE của Bảo Châu
     
-    public void addDoctor(Doctors doctor, String password) throws SQLException {
+    public static void addDoctor(Doctors doctor, String password) throws SQLException {
+        PreparedStatement ps = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -1759,10 +1781,10 @@ public class DoctorDAO {
     }
     
     
-    public boolean delete(int doctorId) throws SQLException {
+    public static boolean delete(int doctorId) throws SQLException {
+        ResultSet rs = null;
         String sql = "DELETE FROM doctors WHERE doctor_id = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, doctorId);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0; // Trả về true nếu xóa thành công
@@ -1770,10 +1792,10 @@ public class DoctorDAO {
     }
     
     public static boolean updatePassword(int userId, String hashedPassword) {
+        ResultSet rs = null;
         String sql = "UPDATE Users SET password_hash = ? WHERE user_id = ?";
         
-        try (Connection conn = getConnect(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, hashedPassword);
             ps.setInt(2, userId);
@@ -1791,6 +1813,7 @@ public class DoctorDAO {
     // code của TOÀN 
     
          public static boolean updateDoctor(Doctors doctor) throws SQLException {
+        ResultSet rs = null;
         String sql = """
             UPDATE Doctors
             SET full_name = ?, phone = ?, address = ?, date_of_birth = ?, 
@@ -1798,8 +1821,7 @@ public class DoctorDAO {
             WHERE user_id = ?
         """;
 
-        try (Connection conn = getConnect(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             // Thiết lập các tham số cho truy vấn
             ps.setString(1, doctor.getFull_name());
@@ -1824,10 +1846,10 @@ public class DoctorDAO {
     }
          
          public static boolean updateDoctorStatus(long doctorId, String status) throws SQLException {
+        ResultSet rs = null;
         String sql = "UPDATE Doctors SET status = ? WHERE doctor_id = ?";
         
-        try (Connection conn = getConnect(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, status);
             ps.setLong(2, doctorId);
@@ -1849,8 +1871,7 @@ public class DoctorDAO {
          public static MedicalReport getPrescriptionsByReportId(int reportId) throws SQLException {
         String sql = "SELECT * FROM MedicalReport WHERE report_id = ?";
         
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, reportId);
             ResultSet rs = ps.executeQuery();
@@ -1866,6 +1887,7 @@ public class DoctorDAO {
                 report.setNote(rs.getString("note"));
                 report.setCreatedAt(rs.getTimestamp("created_at"));
                 report.setSign(rs.getString("sign"));
+                try { report.setReexamLan2(rs.getBoolean("is_reexam_lan_2")); } catch (SQLException e) { report.setReexamLan2(false); }
                 return report;
             }
         }
@@ -1875,8 +1897,7 @@ public class DoctorDAO {
              public static MedicalReport getMedicalReportById(int reportId) throws SQLException {
       String sql = "SELECT * FROM MedicalReport WHERE report_id = ?";
         
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, reportId);
             ResultSet rs = ps.executeQuery();
@@ -1892,6 +1913,7 @@ public class DoctorDAO {
                 report.setNote(rs.getString("note"));
                 report.setCreatedAt(rs.getTimestamp("created_at"));
                 report.setSign(rs.getString("sign"));
+                try { report.setReexamLan2(rs.getBoolean("is_reexam_lan_2")); } catch (SQLException e) { report.setReexamLan2(false); }
                 return report;
             }
         }
@@ -1904,8 +1926,7 @@ public class DoctorDAO {
     public static MedicalReport getMedicalReportByAppointmentId(int appointmentId) throws SQLException {
         String sql = "SELECT * FROM MedicalReport WHERE appointment_id = ?";
         
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, appointmentId);
             ResultSet rs = ps.executeQuery();
@@ -1921,6 +1942,7 @@ public class DoctorDAO {
                 report.setNote(rs.getString("note"));
                 report.setCreatedAt(rs.getTimestamp("created_at"));
                 report.setSign(rs.getString("sign"));
+                try { report.setReexamLan2(rs.getBoolean("is_reexam_lan_2")); } catch (SQLException e) { report.setReexamLan2(false); }
                 return report;
             }
         }
@@ -1938,8 +1960,7 @@ public class DoctorDAO {
             WHERE a.appointment_id = ?
         """;
         
-        try (Connection conn = getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setInt(1, appointmentId);
             ResultSet rs = ps.executeQuery();
@@ -1954,10 +1975,17 @@ public class DoctorDAO {
     
     public static int insertMedicalReport(int appointmentId, long doctorId, int patientId,
             String diagnosis, String treatmentPlan, String note, String sign) throws SQLException {
-        String sql = "INSERT INTO MedicalReport (appointment_id, doctor_id, patient_id, diagnosis, treatment_plan, note, sign) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = getConnect(); 
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        return insertMedicalReport(appointmentId, doctorId, patientId, diagnosis, treatmentPlan, note, sign, false);
+    }
+
+    /**
+     * Insert phiếu khám. isReexamLan2 = true khi bác sĩ tick "Tái khám lần 2".
+     */
+    public static int insertMedicalReport(int appointmentId, long doctorId, int patientId,
+            String diagnosis, String treatmentPlan, String note, String sign, boolean isReexamLan2) throws SQLException {
+        String sql = "INSERT INTO MedicalReport (appointment_id, doctor_id, patient_id, diagnosis, treatment_plan, note, sign, is_reexam_lan_2) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, appointmentId);
             ps.setLong(2, doctorId);
@@ -1966,6 +1994,7 @@ public class DoctorDAO {
             ps.setString(5, treatmentPlan);
             ps.setString(6, note);
             ps.setString(7, sign);
+            ps.setBoolean(8, isReexamLan2);
 
             ps.executeUpdate();
 
@@ -1984,8 +2013,7 @@ public class DoctorDAO {
      */
     public static void insertPrescription(int reportId, int medicineId, int quantity, String usage) throws SQLException {
         String sql = "INSERT INTO Prescription (report_id, medicine_id, quantity, usage) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnect(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, reportId);
             ps.setInt(2, medicineId);
@@ -2010,8 +2038,7 @@ public class DoctorDAO {
             WHERE d.user_id = ?
             ORDER BY a.work_date DESC, a.slot_id ASC
         """;
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -2046,27 +2073,8 @@ public class DoctorDAO {
     public static List<Doctors> getAvailableDoctorsBySpecialty(String specialty, int excludeDoctorId, String workDate) {
         List<Doctors> availableDoctors = new ArrayList<>();
         
-        try (Connection conn = DBContext.getConnection()) {
-            String sql = """
-                SELECT DISTINCT d.*, u.email as doctor_email
-                FROM Doctors d
-                INNER JOIN users u ON d.user_id = u.user_id
-                INNER JOIN DoctorSchedule ds ON d.doctor_id = ds.doctor_id
-                WHERE d.specialty = ? 
-                AND d.doctor_id != ? 
-                AND d.status = 'Active'
-                AND ds.work_date = ?
-                AND ds.status = 'Confirmed'
-                AND NOT EXISTS (
-                    SELECT 1 FROM Appointment a 
-                    WHERE a.doctor_id = d.doctor_id 
-                    AND a.work_date = ? 
-                    AND a.status = 'BOOKED'
-                )
-                ORDER BY d.full_name
-            """;
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT d.*, u.email as doctor_email FROM Doctors d JOIN users u ON d.user_id = u.user_id WHERE d.specialty = ? AND d.doctor_id != ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, specialty);
                 ps.setInt(2, excludeDoctorId);
                 ps.setString(3, workDate);
@@ -2089,7 +2097,6 @@ public class DoctorDAO {
                     
                     availableDoctors.add(doctor);
                 }
-            }
         } catch (SQLException e) {
             System.out.println("❌ Lỗi lấy danh sách bác sĩ thay thế: " + e.getMessage());
             e.printStackTrace();
@@ -2100,15 +2107,8 @@ public class DoctorDAO {
 
     // 🆕 METHOD: Lấy thông tin bác sĩ theo ID với email
     public static Doctors getDoctorByIdWithEmail(int doctorId) {
-        try (Connection conn = DBContext.getConnection()) {
-            String sql = """
-                SELECT d.*, u.email as doctor_email
-                FROM Doctors d
-                INNER JOIN users u ON d.user_id = u.user_id
-                WHERE d.doctor_id = ?
-            """;
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT d.*, u.email as doctor_email FROM Doctors d JOIN users u ON d.user_id = u.user_id WHERE d.specialty = ? AND d.doctor_id != ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, doctorId);
                 ResultSet rs = ps.executeQuery();
                 
@@ -2127,7 +2127,6 @@ public class DoctorDAO {
                     
                     return doctor;
                 }
-            }
         } catch (SQLException e) {
             System.out.println("❌ Lỗi lấy thông tin bác sĩ: " + e.getMessage());
             e.printStackTrace();
