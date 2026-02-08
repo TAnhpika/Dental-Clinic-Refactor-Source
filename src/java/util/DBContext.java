@@ -8,6 +8,15 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Kết nối database SQL Server (local hoặc Azure SQL).
+ * Cấu hình đọc từ file .env ở thư mục gốc project (cạnh pom.xml / nbproject).
+ * Mẫu: copy .env.example thành .env rồi điền DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD.
+ * - Local: DB_HOST=localhost, DB_PORT=1433, DB_NAME=BenhVien, DB_USERNAME=sa, DB_PASSWORD=...
+ * - Azure:  DB_HOST=ten-server.database.windows.net, DB_PORT=1433, DB_NAME=BenhVien,
+ *           DB_USERNAME=sqladmin, DB_PASSWORD=..., DB_ENCRYPT=true, DB_TRUST_SERVER_CERTIFICATE=false
+ * Nếu không có .env hoặc biến trống → dùng mặc định bên dưới (local).
+ */
 public class DBContext {
     public static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
@@ -24,6 +33,7 @@ public class DBContext {
 
     public static String getDbURLStatic() { return getDbURL(); }
 
+    /** Mặc định khi .env không có DB_USERNAME / DB_PASSWORD (chạy local). */
     public static String userDB = "sa";
     public static String passDB = "Phuoc12345@";
 
@@ -32,8 +42,8 @@ public class DBContext {
         try {
             String user = Env.get("DB_USERNAME");
             String pass = Env.get("DB_PASSWORD");
-            if (user.isEmpty()) user = userDB;
-            if (pass.isEmpty()) pass = passDB;
+            if (user == null || user.isEmpty()) user = userDB;
+            if (pass == null || pass.isEmpty()) pass = passDB;
             Class.forName(driverName);
             con = DriverManager.getConnection(getDbURL(), user, pass);
             return con;

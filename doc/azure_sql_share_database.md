@@ -100,6 +100,14 @@ Bạn đang ở trang **Azure SQL | SQL databases** (No SQL databases to display
 
 ---
 
+## Sau khi deployment xong ("Your deployment is complete")
+
+1. Bấm **Go to resource group** (hoặc vào **SQL servers** → chọn `benhvien-sql-server`).
+2. Làm ngay **Bước 2** (Firewall) để máy bạn kết nối được.
+3. Rồi **Bước 3** (migrate dữ liệu), **Bước 4** (chia sẻ cho bạn bè), **Bước 5** (cấu hình app).
+
+---
+
 ## Bước 2: Mở Firewall để bạn và bạn bè kết nối được
 
 Azure SQL mặc định chặn mọi IP. Cần thêm IP của **máy bạn** và **máy bạn bè**.

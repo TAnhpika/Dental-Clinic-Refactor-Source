@@ -52,188 +52,286 @@
 
                     .header {
                         background: var(--header-bg);
-                        padding: 20px 25px;
-                        box-shadow: 0 2px 5px var(--shadow-color);
+                        padding: 15px 40px;
+                        box-shadow: 0 2px 8px var(--shadow-color);
                         position: fixed;
                         top: 0;
                         left: 0;
                         width: 100%;
                         z-index: 1000;
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    }
+
+                    [data-theme="dark"] .header {
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                     }
 
                     .header-top {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        margin-top: -20px;
+                        max-width: 1400px;
+                        margin: 0 auto;
                     }
 
                     .logo {
                         display: flex;
                         align-items: center;
-                        transition: transform 0.3s ease;
+                        gap: 12px;
                     }
 
                     .logo img {
-                        width: 80px;
-                        height: 80px;
+                        width: 45px;
+                        height: 45px;
                         object-fit: contain;
-                        margin-right: 15px;
-                        background: transparent;
-                        border: none;
                     }
 
                     .logo h1 {
-                        font-size: 48px;
+                        font-size: 22px;
                         font-weight: 700;
                         color: var(--highlight-text);
                         text-transform: uppercase;
-                        line-height: 1.2;
+                        line-height: 1;
+                        margin: 0;
                     }
 
                     .logo span {
-                        color: var(--highlight-text);
                         font-weight: 400;
-                        font-size: 34px;
-                        text-transform: none;
-                    }
-
-                    .auth-buttons {
-                        display: flex;
-                        padding-right: 50px;
-                        gap: 20px;
-                        margin-top: 0;
-                        align-items: center;
-                    }
-
-                    .auth-btn {
-                        padding: 10px 30px;
-                        text-decoration: none;
-                        font-size: 18px;
-                        font-weight: 500;
-                        border-radius: 5px;
-                        transition: all 0.3s ease;
-                    }
-
-                    .auth-btn.register {
-                        background: var(--header-bg);
-                        color: var(--highlight-text);
-                    }
-
-                    .auth-btn.register:hover {
-                        background: var(--link-color);
-                        color: #fff;
-                        transform: translateY(-2px);
-                        box-shadow: 0 3px 8px var(--shadow-color);
-                    }
-
-                    .auth-btn.login {
-                        background: var(--header-bg);
-                        color: var(--highlight-text);
-                        border: 1px solid var(--link-color);
-                    }
-
-                    .auth-btn.login:hover {
-                        background: var(--link-color);
-                        color: #fff;
-                        transform: translateY(-2px);
-                        box-shadow: 0 3px 8px var(--shadow-color);
-                    }
-
-                    .theme-toggle {
-                        background: none;
-                        border: none;
-                        font-size: 18px;
-                        cursor: pointer;
-                        color: var(--highlight-text);
-                        transition: color 0.3s ease;
-                    }
-
-                    .theme-toggle:hover {
+                        font-size: 22px;
                         color: var(--link-color);
                     }
 
-                    .language-selector {
+                    .header-center {
+                        flex: 1;
                         display: flex;
-                        align-items: center;
-                        gap: 10px;
-                    }
-
-                    .language-selector select {
-                        padding: 8px;
-                        border-radius: 5px;
-                        border: 1px solid var(--link-color);
-                        background: var(--header-bg);
-                        color: var(--text-color);
-                        font-size: 16px;
-                        cursor: pointer;
-                    }
-
-                    .nav {
-                        display: flex;
-                        justify-content: end;
+                        justify-content: center;
+                        padding: 0 30px;
                     }
 
                     .nav ul {
                         display: flex;
                         list-style: none;
-                        gap: 35px;
-                        border-top: 1px solid rgba(0, 0, 0, 0.3);
-                        margin-bottom: -5px;
-                        margin-right: 20px;
+                        gap: 3px;
+                        margin: 0;
+                        padding: 0;
                     }
 
                     .nav ul li {
                         position: relative;
-                        margin-top: 10px;
                     }
 
                     .nav ul li a {
                         text-decoration: none;
-                        color: #1e3a8a;
-                        font-weight: 700;
-                        font-size: 17px;
-                        padding: 10px 15px;
-                        transition: color 0.1s ease;
+                        color: var(--text-color);
+                        font-weight: 500;
+                        font-size: 14px;
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        transition: all 0.2s ease;
+                        display: block;
                     }
 
-                    .nav ul li a::after {
-                        content: '';
-                        position: absolute;
-                        width: 0;
-                        height: 1px;
-                        background-color: var(--link-color);
-                        bottom: 0;
-                        left: 15px;
-                        transition: width 0.3s ease;
+                    .nav ul li a:hover {
+                        color: var(--link-color);
+                        background: rgba(59, 130, 246, 0.1);
                     }
 
-                    .nav ul li a:hover::after,
-                    .nav ul li a.active::after {
-                        width: calc(100% - 30px);
+                    [data-theme="dark"] .nav ul li a:hover {
+                        background: rgba(96, 165, 250, 0.15);
                     }
 
-                    .nav ul li a:hover,
                     .nav ul li a.active {
                         color: var(--link-color);
-                        font-weight: bold;
+                        background: rgba(59, 130, 246, 0.15);
+                        font-weight: 600;
+                    }
+
+                    [data-theme="dark"] .nav ul li a.active {
+                        background: rgba(96, 165, 250, 0.2);
+                    }
+
+                    .header-right {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+
+                    .auth-buttons {
+                        display: flex;
+                        gap: 10px;
+                        align-items: center;
+                    }
+
+                    .auth-btn {
+                        padding: 8px 20px;
+                        text-decoration: none;
+                        font-size: 14px;
+                        font-weight: 500;
+                        border-radius: 6px;
+                        transition: all 0.2s ease;
+                        white-space: nowrap;
+                    }
+
+                    .auth-btn.login {
+                        background: transparent;
+                        color: var(--link-color);
+                        border: 1.5px solid var(--link-color);
+                    }
+
+                    .auth-btn.login:hover {
+                        background: rgba(59, 130, 246, 0.1);
+                    }
+
+                    [data-theme="dark"] .auth-btn.login:hover {
+                        background: rgba(96, 165, 250, 0.15);
+                    }
+
+                    .auth-btn.register {
+                        background: var(--btn-bg);
+                        color: #ffffff;
+                        border: 1.5px solid var(--btn-bg);
+                    }
+
+                    .auth-btn.register:hover {
+                        background: var(--btn-hover-bg);
+                        border-color: var(--btn-hover-bg);
+                    }
+
+                    .controls {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding-left: 12px;
+                        border-left: 1px solid rgba(0, 0, 0, 0.1);
+                    }
+
+                    [data-theme="dark"] .controls {
+                        border-left: 1px solid rgba(255, 255, 255, 0.1);
+                    }
+
+                    .theme-toggle {
+                        background: var(--secondary-bg);
+                        border: none;
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 6px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.2s ease;
+                    }
+
+                    .theme-toggle:hover {
+                        background: var(--testimonial-bg);
+                    }
+
+                    .language-selector select {
+                        padding: 8px 10px;
+                        border-radius: 6px;
+                        border: 1.5px solid var(--shadow-color);
+                        background: var(--header-bg);
+                        color: var(--text-color);
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        outline: none;
+                    }
+
+                    .language-selector select:hover {
+                        border-color: var(--link-color);
+                    }
+
+                    .language-selector select:focus {
+                        border-color: var(--link-color);
+                        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                    }
+
+                    [data-theme="dark"] .language-selector select:focus {
+                        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
                     }
 
                     @media screen and (max-width: 768px) {
                         .header {
-                            padding: 8px 10px;
+                            padding: 15px 20px;
                         }
 
                         .header-top {
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: space-between;
+                            flex-wrap: wrap;
+                            gap: 12px;
+                        }
+
+                        .logo img {
+                            width: 45px;
+                            height: 45px;
+                        }
+
+                        .logo h1 {
+                            font-size: 22px;
+                        }
+
+                        .logo span {
+                            font-size: 22px;
+                        }
+
+                        .header-center {
+                            order: 3;
+                            width: 100%;
+                            padding: 0;
+                            margin-top: 8px;
+                        }
+
+                        .nav ul {
+                            justify-content: center;
+                            gap: 4px;
+                            flex-wrap: wrap;
+                        }
+
+                        .nav ul li a {
+                            font-size: 13px;
+                            padding: 8px 14px;
+                        }
+
+                        .header-right {
+                            gap: 10px;
+                        }
+
+                        .auth-buttons {
+                            gap: 8px;
+                        }
+
+                        .auth-btn {
+                            padding: 8px 16px;
+                            font-size: 13px;
+                        }
+
+                        .controls {
+                            gap: 8px;
+                            padding-left: 10px;
+                        }
+
+                        .theme-toggle {
+                            width: 34px;
+                            height: 34px;
+                            font-size: 16px;
+                        }
+
+                        .language-selector select {
+                            padding: 8px 10px;
+                            font-size: 12px;
+                        }
+                    }
+
+                    @media screen and (min-width: 769px) and (max-width: 1024px) {
+                        .header {
+                            padding: 18px 35px;
                         }
 
                         .logo img {
                             width: 50px;
                             height: 50px;
-                            margin-right: 10px;
                         }
 
                         .logo h1 {
@@ -241,91 +339,25 @@
                         }
 
                         .logo span {
-                            font-size: 18px;
+                            font-size: 24px;
                         }
 
-                        .auth-buttons {
-                            padding-right: 0;
-                            gap: 8px;
-                            flex-direction: row;
-                        }
-
-                        .auth-btn {
-                            padding: 6px 12px;
-                            font-size: 12px;
-                        }
-
-                        .theme-toggle {
-                            font-size: 14px;
-                        }
-
-                        .language-selector select {
-                            padding: 6px;
-                            font-size: 12px;
-                        }
-
-                        .nav {
-                            justify-content: center;
+                        .header-center {
+                            padding: 0 25px;
                         }
 
                         .nav ul {
-                            flex-direction: row;
-                            gap: 10px;
-                            margin-right: 0;
-                            border-top: none;
-                            flex-wrap: wrap;
-                            justify-content: center;
+                            gap: 4px;
                         }
 
                         .nav ul li a {
-                            font-size: 12px;
-                            padding: 6px 8px;
-                        }
-
-                        .nav ul li a::after {
-                            left: 8px;
-                        }
-                    }
-
-                    @media screen and (min-width: 769px) and (max-width: 1024px) {
-                        .logo img {
-                            width: 80px;
-                            height: 80px;
-                        }
-
-                        .logo h1 {
-                            font-size: 40px;
-                        }
-
-                        .logo span {
-                            font-size: 28px;
-                        }
-
-                        .auth-buttons {
-                            gap: 15px;
-                            padding-right: 20px;
+                            font-size: 14px;
+                            padding: 9px 16px;
                         }
 
                         .auth-btn {
-                            padding: 8px 25px;
-                            font-size: 16px;
-                        }
-
-                        .theme-toggle {
-                            font-size: 16px;
-                        }
-
-                        .language-selector select {
-                            padding: 7px;
+                            padding: 9px 20px;
                             font-size: 14px;
-                        }
-
-                        .nav ul {
-                            gap: 20px;
-                        }
-
-                        .nav ul li a {
-                            font-size: 16px;
                         }
                     }
                 </style>
@@ -338,30 +370,38 @@
                         <img src="img/logo.png" alt="HAPPY Smile Logo">
                         <h1>HAPPY <span>Smile</span></h1>
                     </div>
-                    <div class="auth-buttons">
-                        <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp" class="auth-btn login"
-                            data-lang="login">Đăng nhập</a>
-                        <a href="${pageContext.request.contextPath}/jsp/auth/signup.jsp" class="auth-btn register"
-                            data-lang="register">Đăng ký</a>
-                        <button class="theme-toggle" id="theme-toggle">🌙</button>
-                        <div class="language-selector">
-                            <select id="language-switcher">
-                                <option value="vi">Tiếng Việt</option>
-                                <option value="en">English</option>
-                                <option value="ja">日本語</option>
-                            </select>
+
+                    <div class="header-center">
+                        <nav class="nav">
+                            <ul>
+                                <li><a href="#hero" class="active" data-lang="overview">Tổng quan</a></li>
+                                <li><a href="#services" data-lang="services">Dịch vụ</a></li>
+                                <li><a href="#team" data-lang="team">Đội ngũ bác sĩ</a></li>
+                                <li><a href="#news" data-lang="news">Tin tức</a></li>
+                                <li><a href="#contact" data-lang="contact">Liên hệ</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="header-right">
+                        <div class="auth-buttons">
+                            <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp" class="auth-btn login"
+                                data-lang="login">Đăng nhập</a>
+                            <a href="${pageContext.request.contextPath}/jsp/auth/signup.jsp" class="auth-btn register"
+                                data-lang="register">Đăng ký</a>
+                        </div>
+                        <div class="controls">
+                            <button class="theme-toggle" id="theme-toggle">🌙</button>
+                            <div class="language-selector">
+                                <select id="language-switcher">
+                                    <option value="vi">Tiếng Việt</option>
+                                    <option value="en">English</option>
+                                    <option value="ja">日本語</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <nav class="nav">
-                    <ul>
-                        <li><a href="#hero" class="active" data-lang="overview">Tổng quan</a></li>
-                        <li><a href="#services" data-lang="services">Dịch vụ</a></li>
-                        <li><a href="#team" data-lang="team">Đội ngũ bác sĩ</a></li>
-                        <li><a href="#news" data-lang="news">Tin tức</a></li>
-                        <li><a href="#contact" data-lang="contact">Liên hệ</a></li>
-                    </ul>
-                </nav>
             </header>
         </body>
 

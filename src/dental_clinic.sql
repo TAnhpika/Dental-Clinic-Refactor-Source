@@ -35,7 +35,7 @@ CREATE TABLE [dbo].[Appointment] (
     FOREIGN KEY ([patient_id]) REFERENCES [dbo].[Patients] ([patient_id]),
     FOREIGN KEY ([previous_appointment_id]) REFERENCES [dbo].[Appointment] ([appointment_id]),
     FOREIGN KEY ([slot_id]) REFERENCES [dbo].[TimeSlot] ([slot_id]),
-    FOREIGN KEY ([relative_id]) REFERENCES [dbo].[Relatives]([relative_id])
+    -- FK to Relatives added later (Relatives created at end of script)
 );
 CREATE TABLE [dbo].[Bills] (
     [bill_id]                  NVARCHAR (50)   NOT NULL,
@@ -53,6 +53,7 @@ CREATE TABLE [dbo].[Bills] (
     [customer_phone]           NVARCHAR (20)   NULL,
     [customer_email]           NVARCHAR (255)  NULL,
     [doctor_id]                INT             NULL,
+    [appointment_id]            INT             NULL,
     [appointment_date]         DATE            NULL,
     [appointment_time]         TIME (7)        NULL,
     [appointment_notes]        NVARCHAR (1000) NULL,
@@ -74,6 +75,7 @@ CREATE TABLE [dbo].[Bills] (
     CHECK ([original_price]>(0)),
     CHECK ([tax_amount]>=(0)),
     CONSTRAINT [FK_Bills_Services] FOREIGN KEY ([service_id]) REFERENCES [dbo].[Services] ([service_id]),
+    CONSTRAINT [FK_Bills_Appointment] FOREIGN KEY ([appointment_id]) REFERENCES [dbo].[Appointment] ([appointment_id]),
     UNIQUE NONCLUSTERED ([order_id] ASC)
 );
 
@@ -179,6 +181,7 @@ CREATE TABLE [dbo].[MedicalReport] (
     [note]           NVARCHAR (1000) NULL,
     [created_at]     DATETIME        DEFAULT (getdate()) NULL,
     [sign]           NVARCHAR (MAX)  NULL,
+    [is_reexam_lan_2] BIT            DEFAULT ((0)) NULL,
     PRIMARY KEY CLUSTERED ([report_id] ASC),
     FOREIGN KEY ([doctor_id]) REFERENCES [dbo].[Doctors] ([doctor_id]),
     FOREIGN KEY ([patient_id]) REFERENCES [dbo].[Patients] ([patient_id]),
@@ -274,21 +277,6 @@ CREATE TABLE [dbo].[PaymentInstallments] (
     CONSTRAINT [FK_PaymentInstallments_Bills] FOREIGN KEY ([bill_id]) REFERENCES [dbo].[Bills] ([bill_id])
 );
 
-
-CREATE TABLE [dbo].[Patients] (
-    [patient_id]    INT            IDENTITY (1, 1) NOT NULL,
-    [user_id]       INT            NULL,
-    [full_name]     NVARCHAR (255) NOT NULL,
-    [phone]         NVARCHAR (20)  NULL,
-    [date_of_birth] DATE           NULL,
-    [gender]        NVARCHAR (10)  NULL,
-    [created_at]    DATETIME       DEFAULT (getdate()) NULL,
-    [avatar]        NVARCHAR (MAX) NULL,
-    PRIMARY KEY CLUSTERED ([patient_id] ASC),
-    CHECK ([gender]='other' OR [gender]='female' OR [gender]='male'),
-    UNIQUE NONCLUSTERED ([user_id] ASC)
-);
-
 insert into patients ( [user_id] , [full_name] , [phone] , [date_of_birth] , [gender] , [created_at] , [avatar] ) 
 values ( /* user_id */ 2 ,/* full_name */ N'THP' ,/* phone */ N'0358014258' ,/* date_of_birth */ '2024-05-24' ,/* gender */ N'male' ,/* created_at */ '2025-05-26 11:15:35.770' ,/* avatar */ null  ), 
 ( /* user_id */ 49 ,/* full_name */ N'Tran Hong Phuoc' ,/* phone */ N'0936929381' ,/* date_of_birth */ '2025-05-02' ,/* gender */ N'male' ,/* created_at */ '2025-05-26 11:40:27.040' ,/* avatar */ null  ), 
@@ -298,38 +286,6 @@ values ( /* user_id */ 2 ,/* full_name */ N'THP' ,/* phone */ N'0358014258' ,/* 
 ( /* user_id */ 5 ,/* full_name */ N'Phạm Văn Hùng' ,/* phone */ N'0945678901' ,/* date_of_birth */ '1988-07-08' ,/* gender */ N'male' ,/* created_at */ '2025-06-10 17:09:53.250' ,/* avatar */ null  ), 
 ( /* user_id */ 2011 ,/* full_name */ N'king' ,/* phone */ N'0936929381' ,/* date_of_birth */ '2025-06-23' ,/* gender */ N'male' ,/* created_at */ '2025-06-23 14:57:43.747' ,/* avatar */ null  ), 
 ( /* user_id */ 2012 ,/* full_name */ N'Trương Gia Bình ' ,/* phone */ N'0936929382' ,/* date_of_birth */ '2004-06-05' ,/* gender */ N'male' ,/* created_at */ '2025-06-27 14:19:27.610' ,/* avatar */ null  );
-
-
-CREATE TABLE [dbo].[PaymentInstallments] (
-    [installment_id]     INT             IDENTITY (1, 1) NOT NULL,
-    [bill_id]            NVARCHAR (50)   NOT NULL,
-    [total_amount]       MONEY           NOT NULL,
-    [down_payment]       MONEY           NOT NULL,
-    [installment_count]  INT             NOT NULL,
-    [interest_rate]      DECIMAL (5, 2)  DEFAULT ((0)) NULL,
-    [installment_number] INT             NOT NULL,
-    [due_date]           DATE            NOT NULL,
-    [amount_due]         MONEY           NOT NULL,
-    [amount_paid]        MONEY           DEFAULT ((0)) NULL,
-    [remaining_amount]   MONEY           DEFAULT ((0)) NULL,
-    [payment_date]       DATE            NULL,
-    [status]             NVARCHAR (20)   DEFAULT ('PENDING') NULL,
-    [payment_method]     NVARCHAR (50)   NULL,
-    [transaction_id]     NVARCHAR (100)  NULL,
-    [late_fee]           MONEY           DEFAULT ((0)) NULL,
-    [last_reminder_date] DATE            NULL,
-    [reminder_count]     INT             DEFAULT ((0)) NULL,
-    [next_reminder_date] DATE            NULL,
-    [created_at]         DATETIME2 (7)   DEFAULT (getdate()) NULL,
-    [updated_at]         DATETIME2 (7)   DEFAULT (getdate()) NULL,
-    [notes]              NVARCHAR (1000) NULL,
-    PRIMARY KEY CLUSTERED ([installment_id] ASC),
-    CHECK ([amount_paid]<=[amount_due]),
-    CHECK ([down_payment]>=[total_amount]*(0.3)),
-    CHECK ([installment_count]>=(3) AND [installment_count]<=(12)),
-    CHECK ([installment_number]<=[installment_count]),
-    CONSTRAINT [FK_PaymentInstallments_Bills] FOREIGN KEY ([bill_id]) REFERENCES [dbo].[Bills] ([bill_id])
-);
 
 CREATE TABLE [dbo].[Prescription] (
     [prescription_id] INT            IDENTITY (1, 1) NOT NULL,
@@ -566,6 +522,7 @@ BEGIN
         END
         FROM [dbo].[StaffSchedule] s
         INNER JOIN inserted i ON s.[schedule_id] = i.[schedule_id]
+        INNER JOIN deleted d ON s.[schedule_id] = d.[schedule_id]
         WHERE i.[status] <> d.[status];
     END
 END;
@@ -674,25 +631,84 @@ CREATE TABLE [dbo].[Relatives] (
     FOREIGN KEY ([user_id]) REFERENCES [dbo].[users] ([user_id])
 );
 
--- Bảng lưu thông tin tái khám  
-CREATE TABLE Reexamination (
-    reexam_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã tái khám tự tăng
-    appointment_id INT NOT NULL,-- ID cuộc hẹn gốc cần tái khám
-    reexam_count INT DEFAULT 1,-- Số lần tái khám (ví dụ: 1, 2, 3...)  
-    note NVARCHAR(500), -- Ghi chú lý do tái khám 
-    created_by INT NOT NULL,-- ID người tạo yêu cầu (bác sĩ hoặc nhân viên)  
-    created_at DATETIME DEFAULT GETDATE(), -- Thời điểm tạo   
-    approved_by INT NULL, -- Người duyệt (nếu có)   
-    approved_at DATETIME NULL, -- Thời gian duyệt  
-    scheduled_appointment_id INT NULL, -- ID cuộc hẹn tái khám đã đặt (nếu có)
-    status NVARCHAR(50) DEFAULT N'active' CHECK (status IN ('active', 'booked', 'completed', 'cancelled')),
-	-- Trạng thái yêu cầu tái khám:
-    -- 'active'    : Mới tạo
-    -- 'booked'    : Đã đặt lịch tái khám (đã gán scheduled_appointment_id)
-    -- 'completed' : Đã hoàn thành tái khám
-    -- 'cancelled' : Hủy bỏ
+-- Thêm FK Appointment -> Relatives (sau khi Relatives đã tạo)
+ALTER TABLE [dbo].[Appointment] ADD CONSTRAINT [FK_Appointment_Relatives] FOREIGN KEY ([relative_id]) REFERENCES [dbo].[Relatives]([relative_id]);
 
-    -- Khóa ngoại
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY (scheduled_appointment_id) REFERENCES Appointment(appointment_id)
-);
+-- ========== DỮ LIỆU MẪU BỔ SUNG ==========
+-- Chạy sau khi đã có: users, Patients, Doctors, Staff, Services, TimeSlot, Relatives
+
+-- Appointment (lịch hẹn mẫu)
+INSERT INTO [dbo].[Appointment] (patient_id, doctor_id, work_date, slot_id, status, reason) VALUES
+(1, 1, '2025-02-10', 4, N'COMPLETED', N'Khám tổng quát răng miệng'),
+(2, 1, '2025-02-10', 5, N'COMPLETED', N'Cạo vôi răng'),
+(3, 2, '2025-02-11', 6, N'BOOKED', N'Tư vấn niềng răng'),
+(1, 2, '2025-02-12', 7, N'BOOKED', N'Trám răng sâu'),
+(4, 1, '2025-02-12', 8, N'WAITING_PAYMENT', N'Khám và điều trị tủy'),
+(5, 3, '2025-02-13', 9, N'BOOKED', N'Chỉnh nha - Niềng răng'),
+(2, 1, '2025-02-14', 10, N'CANCELLED', N'Khám định kỳ'),
+(6, 2, '2025-02-15', 11, N'BOOKED', N'Tẩy trắng răng');
+
+-- DoctorSchedule (lịch làm việc bác sĩ mẫu)
+INSERT INTO [dbo].[DoctorSchedule] (doctor_id, work_date, slot_id, status) VALUES
+(1, '2025-02-17', 4, N'available'),
+(1, '2025-02-17', 5, N'available'),
+(1, '2025-02-17', 6, N'available'),
+(2, '2025-02-17', 6, N'available'),
+(2, '2025-02-17', 7, N'available'),
+(3, '2025-02-18', 8, N'available'),
+(3, '2025-02-18', 9, N'available');
+
+-- MedicalReport (phiếu khám mẫu - cần có appointment_id 1,2,3)
+INSERT INTO [dbo].[MedicalReport] (appointment_id, doctor_id, patient_id, diagnosis, treatment_plan, note, is_reexam_lan_2) VALUES
+(1, 1, 1, N'Sâu răng hàm dưới bên phải', N'Trám răng composite', N'Bệnh nhân cần hẹn tái khám sau 2 tuần', 0),
+(2, 1, 2, N'Vôi răng mức độ nhẹ', N'Cạo vôi, đánh bóng', N'Vệ sinh răng miệng tốt', 0),
+(3, 2, 3, N'Khớp cắn hơi lệch', N'Tư vấn niềng răng 6-12 tháng', N'Theo dõi thêm', 0);
+
+-- Prescription (đơn thuốc mẫu - report_id 1,2,3)
+INSERT INTO [dbo].[Prescription] (report_id, medicine_id, quantity, usage) VALUES
+(1, 1, 20, N'Uống 1 viên khi đau, tối đa 3 lần/ngày'),
+(1, 2, 14, N'Uống 1 viên x 2 lần/ngày, sau ăn'),
+(2, 1, 10, N'Uống khi đau nhức sau cạo vôi'),
+(3, 3, 15, N'Uống 1 viên khi đau (nếu niềng gây khó chịu)');
+
+-- Bills (hóa đơn mẫu - bill_id, order_id unique)
+INSERT INTO [dbo].[Bills] (bill_id, order_id, service_id, patient_id, user_id, amount, original_price, discount_amount, tax_amount, payment_method, payment_status, customer_name, customer_phone, appointment_id, appointment_date, appointment_time, appointment_notes) VALUES
+('BILL001', 'ORD001', 1, 1, 1, 200000, 200000, 0, 0, N'CASH', N'PAID', N'THP', N'0358014258', 1, '2025-02-10', '08:00:00', N'Khám tổng quát'),
+('BILL002', 'ORD002', 3, 2, 1, 10000, 10000, 0, 0, N'CASH', N'PAID', N'Tran Hong Phuoc', N'0936929381', 2, '2025-02-10', '08:30:00', N'Cạo vôi răng'),
+('BILL003', 'ORD003', 2, 3, 1, 100000, 100000, 0, 0, N'PayOS', N'pending', N'Tran Hong Phuoc', N'0936929381', 3, '2025-02-11', '09:00:00', N'Tư vấn niềng răng');
+
+-- ChatMessages (tin nhắn mẫu)
+INSERT INTO [dbo].[ChatMessages] (user_id, message_content, receiver_id) VALUES
+(2, N'Xin chào, tôi muốn đặt lịch khám ạ.', 3),
+(3, N'Dạ để tôi kiểm tra lịch trống cho bạn.', 2),
+(2, N'Cảm ơn ạ, tôi muốn khám vào sáng thứ 2.', 3);
+
+-- Notifications (thông báo mẫu)
+INSERT INTO [dbo].[Notifications] (user_id, title, content, type, reference_id, is_read, status) VALUES
+(1, N'Lịch hẹn mới', N'Có 3 lịch hẹn mới trong ngày 15/02/2025.', N'APPOINTMENT', 8, 0, N'ACTIVE'),
+(2, N'Nhắc lịch khám', N'Bạn có lịch khám vào 11/02/2025 lúc 09:00.', N'REMINDER', 3, 0, N'ACTIVE'),
+(4, N'Thanh toán thành công', N'Hóa đơn BILL001 đã thanh toán.', N'BILL', 1, 1, N'ACTIVE');
+
+-- NotificationTemplates (mẫu thông báo)
+INSERT INTO [dbo].[NotificationTemplates] (type, title_template, content_template, is_active) VALUES
+(N'APPOINTMENT', N'Lịch hẹn mới: {date}', N'Bạn có lịch hẹn khám vào {date} lúc {time}.', 1),
+(N'REMINDER', N'Nhắc lịch: {date}', N'Lịch khám của bạn vào {date} lúc {time}. Vui lòng có mặt đúng giờ.', 1),
+(N'BILL', N'Hóa đơn {bill_id}', N'Hóa đơn {bill_id} đã được thanh toán thành công.', 1);
+
+-- Reexamination (yêu cầu tái khám mẫu)
+INSERT INTO [dbo].[Reexamination] (appointment_id, reexam_type, note, status, created_by) VALUES
+(1, N'REQUEST', N'Tái khám kiểm tra sau trám răng', N'PENDING', 1),
+(2, N'SCHEDULED', N'Hẹn cạo vôi định kỳ 6 tháng', N'COMPLETED', 1);
+
+-- StaffSchedule (lịch nhân viên mẫu)
+INSERT INTO [dbo].[StaffSchedule] (staff_id, work_date, slot_id, status) VALUES
+(1, '2025-02-17', 4, N'approved'),
+(1, '2025-02-17', 5, N'approved'),
+(1, '2025-02-18', 6, N'pending'),
+(2, '2025-02-17', 7, N'approved');
+
+-- Relatives (người thân đặt hộ mẫu)
+INSERT INTO [dbo].[Relatives] (user_id, full_name, phone, date_of_birth, gender, relationship) VALUES
+(2, N'Nguyễn Văn Bố', N'0909111222', '1965-05-10', N'male', N'Cha'),
+(4, N'Trần Thị Mẹ', N'0918222333', '1970-08-20', N'female', N'Mẹ'),
+(5, N'Phạm Văn Anh', N'0947333444', '1995-01-15', N'male', N'Anh trai');

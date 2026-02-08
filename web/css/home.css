@@ -41,7 +41,7 @@
 
 body {
     background: var(--bg-color);
-    padding-top: 120px;
+    padding-top: 90px;
     color: var(--text-color);
     transition: background 0.3s ease, color 0.3s ease;
 }
@@ -56,6 +56,7 @@ body {
     position: relative;
     overflow: hidden;
     object-fit: cover;
+    margin-top: -30px;
 }
 
 .hero-content {
