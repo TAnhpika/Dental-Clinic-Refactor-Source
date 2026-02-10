@@ -2,9 +2,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page import="model.entity.User" %>
+<%@page import="model.entity.Service" %>
+<%@page import="java.util.List" %>
+<%@page import="dao.ServiceDAO" %>
 
 <%
     User user = (User) session.getAttribute("user");
+
+    // Nếu user truy cập trực tiếp URL .jsp (không qua ServiceServlet),
+    // thì request sẽ không có sẵn attributes "services" và "categories" -> trang bị rỗng.
+    // Fallback: tự load data từ DB để render được ngay trên URI .jsp.
+    if (request.getAttribute("services") == null) {
+        List<Service> services = ServiceDAO.getActiveServices();
+        request.setAttribute("services", services);
+    }
+    if (request.getAttribute("categories") == null) {
+        List<String> categories = ServiceDAO.getAllCategories();
+        request.setAttribute("categories", categories);
+    }
 %>
 
 <!DOCTYPE html>

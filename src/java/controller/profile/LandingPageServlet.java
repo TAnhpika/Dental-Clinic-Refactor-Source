@@ -65,6 +65,7 @@ public class LandingPageServlet extends HttpServlet {
         List<BlogPost> latestBlogs = blogDao.getLatestBlogs(3); // Lấy 3 bài mới nhất
 
         request.setAttribute("latestBlogs", latestBlogs);
+        // Tạm thời dùng lại đường dẫn JSP cũ để tránh lỗi 404 khi Tomcat chưa deploy thư mục /view
         request.getRequestDispatcher("/public/home.jsp").forward(request, response);
     }
 

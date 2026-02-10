@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.ArrayList;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -316,19 +317,25 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/DoctorHomePageServlet");
 
             } else if ("PATIENT".equalsIgnoreCase(role)) {
-                List<Appointment> upcomingAppointments = AppointmentDAO
-                        .getUpcomingAppointmentsByPatientId(patient.getPatientId());
-                request.setAttribute("upcomingAppointments", upcomingAppointments);
+                // Kiểm tra patient có null không
+                if (patient == null) {
+                    System.out.println("[WARN] Patient không tồn tại cho user_id: " + user.getId() + " - Tiếp tục với dữ liệu trống");
+                    request.setAttribute("upcomingAppointments", new java.util.ArrayList<>());
+                    request.setAttribute("totalVisits", 0);
+                } else {
+                    List<Appointment> upcomingAppointments = AppointmentDAO
+                            .getUpcomingAppointmentsByPatientId(patient.getPatientId());
+                    request.setAttribute("upcomingAppointments", upcomingAppointments);
 
-                int totalVisits = PatientDAO.getTotalVisitsByPatientId(patient.getPatientId());
-                request.setAttribute("totalVisits", totalVisits);
+                    int totalVisits = PatientDAO.getTotalVisitsByPatientId(patient.getPatientId());
+                    request.setAttribute("totalVisits", totalVisits);
 
-                System.out.println("Patient ID: " + patient.getPatientId());
-                System.out.println("Total visits: " + totalVisits);
+                    System.out.println("Patient ID: " + patient.getPatientId());
+                    System.out.println("Total visits: " + totalVisits);
+                }
 
                 BlogDAO blogDAO = new BlogDAO();
-
-                List<BlogPost> latestBlogs = blogDAO.getLatestBlogs(2); // hoặc tất cả nếu cần
+                List<BlogPost> latestBlogs = blogDAO.getLatestBlogs(2);
                 request.setAttribute("latestBlogs", latestBlogs);
 
                 request.getRequestDispatcher("jsp/patient/user_homepage.jsp").forward(request, response);

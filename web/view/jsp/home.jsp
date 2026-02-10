@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HAPPY Smile - Phòng khám nha khoa tư nhân chuyên nghiệp</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/view/assets/css/home.css">
 </head>
 
 <body>
@@ -18,7 +18,6 @@
     <div class="hero-content">
         <h2 data-lang="hero-subtitle">Phòng khám nha khoa</h2>
         <h3 data-lang="hero-title">HAPPY SMILE</h3>
-
     </div>
 </section>
 
@@ -276,9 +275,13 @@
 </section>
 
 <%@ include file="/includes/footer.jsp" %>
-<% String _lang=(String) session.getAttribute("language"); if (_lang==null) _lang="vi" ; %>
+<%
+    String _lang = (String) session.getAttribute("language");
+    if (_lang == null) _lang = "vi";
+%>
 <script>window.__INIT_LANG__ = '<%= _lang %>';</script>
-<script src="${pageContext.request.contextPath}/js/home.js"></script>
+<script src="${pageContext.request.contextPath}/view/assets/js/home.js"></script>
 </body>
 
 </html>
+

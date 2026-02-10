@@ -88,13 +88,14 @@ public class RegisterInformation extends HttpServlet {
         String gender = request.getParameter("gender");
 
         // Gọi DAO để lưu thông tin bệnh nhân
-        boolean success =UserDAO.savePatientInfo(id, fullName, phone, dateOfBirth, gender);
+        boolean success = UserDAO.savePatientInfo(id, fullName, phone, dateOfBirth, gender);
 
+        // Không dùng trang information.jsp nữa; nếu lỗi quay về login với flag.
         if (success) {
             response.sendRedirect("auth/login.jsp");
         } else {
-            response.sendRedirect("auth/information.jsp?error=true");
-        }    
+            response.sendRedirect("auth/login.jsp?error=save_failed");
+        }
     }
 
     /**

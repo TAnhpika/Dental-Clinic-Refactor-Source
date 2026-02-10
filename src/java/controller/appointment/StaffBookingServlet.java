@@ -275,26 +275,18 @@ public class StaffBookingServlet extends HttpServlet {
             System.out.println("✅ Available slot IDs (NEW LOGIC): " + approvedSlotIds);
 
             // Convert doctor schedule slot IDs to actual time slot IDs
-            // slot ID: 1 thì hãy list ra từ slot ID: 3002 -> 3009 , slot ID: 2 thì hãy list
-            // ra từ slot ID: 3010 -> 3019 , slot ID: 3 thì hãy list ra từ slot ID: 3002 ->
-            // 3019
+            // slotId 1/2/3 là "ca" (shift) -> map ra slot_id thật theo start_time/end_time trong TimeSlot table
             List<Integer> actualTimeSlotIds = new ArrayList<>();
             for (Integer slotId : approvedSlotIds) {
                 switch (slotId) {
                     case 1: // Ca sáng (8:00-12:00)
-                        for (int i = 3002; i <= 3009; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(1));
                         break;
                     case 2: // Ca chiều (13:00-17:00)
-                        for (int i = 3010; i <= 3019; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(2));
                         break;
                     case 3: // Cả ngày (8:00-17:00)
-                        for (int i = 3002; i <= 3019; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(3));
                         break;
                     default:
                         System.out.println("Unknown slot ID: " + slotId);

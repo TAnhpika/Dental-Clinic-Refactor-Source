@@ -33,29 +33,25 @@ public class UserDAO {
     /**
      * Đóng tất cả resources (connection, statement, resultset)
      */
-    private static void closeResources() {
-        Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    private static void closeResources(ResultSet rs, PreparedStatement ps, Connection conn) {
+        // Dùng helper đã có sẵn ở DBContext để tránh leak
+        DBContext.close(rs, ps, conn);
+    }
+
+    /**
+     * Chuẩn hoá password đầu vào để so sánh/lưu DB.
+     * - Nếu input đã là MD5 32-hex → dùng luôn
+     * - Nếu là plain text → hash MD5
+     */
+    private static String normalizePasswordForDb(String password) {
+        if (password == null) {
+            return null;
         }
-        if (ps != null) {
-            try {
-                ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        String p = password.trim();
+        if (p.matches("^[a-fA-F0-9]{32}$")) {
+            return p.toLowerCase();
         }
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        return hashPassword(p);
     }
     
     /**
@@ -75,7 +71,7 @@ public class UserDAO {
                 }
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return users;
     }
@@ -97,7 +93,7 @@ public class UserDAO {
             }
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return user;
     }
@@ -119,13 +115,15 @@ public class UserDAO {
                 }
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return user;
     }
 
     /**
-     * Đăng nhập user (instance method) - KHÔNG HASH
+     * Đăng nhập user (instance method)
+     * Lưu ý: project đang có chỗ gửi password dạng "plain", chỗ khác gửi "passwordHash" (MD5).
+     * Vì vậy ở đây normalize để chạy ổn định cho cả 2 trường hợp.
      */
     public static User loginUserInstance(String email, String password) throws SQLException {
         Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
@@ -135,15 +133,28 @@ public class UserDAO {
             if (conn != null) {
                 ps = conn.prepareStatement(LOGIN_QUERY);
                 ps.setString(1, email);
-                // So sánh trực tiếp mật khẩu gốc, không hash
-                ps.setString(2, password); 
+                String normalized = normalizePasswordForDb(password);
+                ps.setString(2, normalized);
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     user = mapResultSetToUser(rs);
                 }
+
+                // Fallback: nếu user cũ đang lưu plain password (từng có code "KHÔNG HASH"),
+                // thì thử login lại bằng plain để không bị "User not found" gây hiểu nhầm.
+                if (user == null && password != null && !password.trim().matches("^[a-fA-F0-9]{32}$")) {
+                    DBContext.close(rs, ps, null);
+                    ps = conn.prepareStatement(LOGIN_QUERY);
+                    ps.setString(1, email);
+                    ps.setString(2, password.trim());
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        user = mapResultSetToUser(rs);
+                    }
+                }
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return user;
     }
@@ -159,8 +170,7 @@ public class UserDAO {
             if (conn != null) {
                 ps = conn.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, email);
-                // Lưu mật khẩu gốc, không hash
-                ps.setString(2, password); 
+                ps.setString(2, normalizePasswordForDb(password));
                 ps.setString(3, role);
 
                 int rowsAffected = ps.executeUpdate();
@@ -172,7 +182,7 @@ public class UserDAO {
                 }
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return generatedId;
     }
@@ -187,15 +197,14 @@ public class UserDAO {
             conn = DBContext.getConnection();
             if (conn != null) {
                 ps = conn.prepareStatement(UPDATE_PASSWORD);
-                // Cập nhật mật khẩu gốc, không hash
-                ps.setString(1, newPassword); 
+                ps.setString(1, normalizePasswordForDb(newPassword));
                 ps.setInt(2, userId);
 
                 int rowsUpdated = ps.executeUpdate();
                 result = rowsUpdated > 0;
             }
         } finally {
-            closeResources();
+            closeResources(null, ps, conn);
         }
         return result;
     }
@@ -218,7 +227,7 @@ public class UserDAO {
                 result = rowsUpdated > 0;
             }
         } finally {
-            closeResources();
+            closeResources(null, ps, conn);
         }
         return result;
         }
@@ -239,8 +248,7 @@ public class UserDAO {
                 conn.setAutoCommit(false);
                 try {
                     ps = conn.prepareStatement(UPDATE_PASSWORD_BY_EMAIL);
-                    // Cập nhật mật khẩu gốc, không hash
-                    ps.setString(1, newPassword);
+                    ps.setString(1, normalizePasswordForDb(newPassword));
                     ps.setString(2, email.trim().toLowerCase());
                     
                     int rowsAffected = ps.executeUpdate();
@@ -256,7 +264,7 @@ public class UserDAO {
                 }
             }
         } finally {
-            closeResources();
+            closeResources(null, ps, conn);
         }
         return result;
     }
@@ -276,7 +284,7 @@ public class UserDAO {
                 exists = rs.next();
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return exists;
     }
@@ -296,7 +304,7 @@ public class UserDAO {
                 exists = rs.next();
             }
         } finally {
-            closeResources();
+            closeResources(rs, ps, conn);
         }
         return exists;
     }
@@ -356,7 +364,7 @@ public class UserDAO {
     }
 
     /**
-     * Static wrapper for registerPatient - Servlet compatibility - KHÔNG HASH
+     * Static wrapper for registerPatient - Servlet compatibility
      */
     public static int registerPatient(String email, String password) {
         Connection conn = null;
@@ -368,8 +376,7 @@ public class UserDAO {
             if (conn != null) {
                 ps = conn.prepareStatement(REGISTER_PATIENT, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, email);
-                // Lưu mật khẩu gốc, không hash
-                ps.setString(2, password);
+                ps.setString(2, normalizePasswordForDb(password));
 
                 int rowsAffected = ps.executeUpdate();
                 if (rowsAffected > 0) {
@@ -699,7 +706,7 @@ public class UserDAO {
                 String sql = "UPDATE Users SET email = ?, password_hash = ? WHERE user_id = ?";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, email);
-                ps.setString(2, password); // Lưu password gốc, không hash
+                ps.setString(2, normalizePasswordForDb(password));
                 ps.setInt(3, userId);
             }
             int rows = ps.executeUpdate();

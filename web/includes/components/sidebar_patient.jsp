@@ -38,12 +38,12 @@
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Dịch vụ</div>
 
-                    <a href="${pageContext.request.contextPath}/services" class="sidebar-item" id="sidebar-services">
+                    <a href="${pageContext.request.contextPath}/jsp/patient/user_services.jsp" class="sidebar-item" id="sidebar-services">
                         <i class="fas fa-tooth"></i>
                         <span>Dịch vụ Nha khoa</span>
                     </a>
 
-                    <a href="${pageContext.request.contextPath}/PatientAppointments" class="sidebar-item"
+                    <a href="${pageContext.request.contextPath}/jsp/patient/user_datlich_bacsi.jsp" class="sidebar-item"
                         id="sidebar-appointments">
                         <i class="fas fa-calendar-check"></i>
                         <span>Lịch khám của tôi</span>
@@ -90,7 +90,7 @@
                         <span>Tài khoản của tôi</span>
                     </a>
 
-                    <a href="${pageContext.request.contextPath}/jsp/patient/user_medicalreport.jsp" class="sidebar-item"
+                    <a href="${pageContext.request.contextPath}/jsp/patient/user_datlich_bacsi.jsp" class="sidebar-item"
                         id="sidebar-medical-record">
                         <i class="fas fa-file-medical"></i>
                         <span>Hồ sơ y tế</span>

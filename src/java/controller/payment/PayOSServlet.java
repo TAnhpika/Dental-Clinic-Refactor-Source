@@ -1,19 +1,18 @@
 package controller.payment;
 
-import dao.ServiceDAO;
 import dao.PatientDAO;
 import dao.BillDAO;
 import dao.AppointmentDAO;
+import dao.DoctorDAO;
+import dao.ServiceDAO;
+import dao.TimeSlotDAO;
+import dao.UserDAO;
 import model.entity.Service;
 import model.entity.Patients;
 import model.entity.User;
 import model.entity.Bill;
 import model.entity.SlotReservation;
-import dao.DoctorDAO;
-import dao.TimeSlotDAO;
-import util.DBContext;
 import util.PayOSConfig;
-import java.util.HashMap;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,27 +22,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.BufferedReader;
 import java.security.MessageDigest;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.UUID;
 import java.sql.SQLException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.OutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Map;
 import java.io.PrintWriter;
-import model.entity.TimeSlot;
 import util.N8nWebhookService;
-import dao.UserDAO;
-import java.time.LocalDate;
 import dao.RelativesDAO;
 import dao.ServicePriceDAO;
+import model.entity.TimeSlot;
 
 /**
  * Servlet xử lý thanh toán PayOS với QR code + tích hợp đặt lịch appointment
@@ -51,7 +43,6 @@ import dao.ServicePriceDAO;
 @WebServlet("/payment")
 public class PayOSServlet extends HttpServlet {
 
-    private ServiceDAO serviceDAO = new ServiceDAO();
     private PatientDAO patientDAO = new PatientDAO();
     private BillDAO billDAO = new BillDAO();
     private Gson gson = new Gson();
@@ -145,12 +136,27 @@ public class PayOSServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin patient
+            // Lấy thông tin patient (bắt buộc phải có patient_id để đặt lịch & thanh toán
+            // giữ chỗ)
             Patients patient = patientDAO.getPatientByUserId(user.getId());
             if (patient == null) {
-                // Chuyển hướng đến trang điền thông tin
-                response.sendRedirect(request.getContextPath() + "/jsp/auth/information.jsp");
-                return;
+                // Auto-create patient tối thiểu để không bị chặn luồng thanh toán giữ chỗ.
+                // DB chỉ bắt buộc full_name; các field khác có thể NULL.
+                String fullName = (user.getEmail() != null && !user.getEmail().trim().isEmpty())
+                        ? user.getEmail().trim()
+                        : "Khách";
+                boolean created = PatientDAO.addPatientFromGoogle(user.getId(), fullName);
+                if (!created) {
+                    response.sendRedirect(request.getContextPath() + "/UserAccountServlet?needInfo=true");
+                    return;
+                }
+                patient = patientDAO.getPatientByUserId(user.getId());
+                if (patient == null) {
+                    response.sendRedirect(request.getContextPath() + "/UserAccountServlet?needInfo=true");
+                    return;
+                }
+                // Optional: lưu lại vào session để các trang khác dùng
+                session.setAttribute("patient", patient);
             }
 
             // KIỂM TRA: Nếu có appointment thông tin, validate slot
@@ -376,35 +382,61 @@ public class PayOSServlet extends HttpServlet {
                 return;
             }
 
-            // Tạo payment request với PayOS API
-            String payosQRCode = createPayOSPaymentRequest(savedBill, service);
+            // ===== PayOS SDK: tạo payment link và redirect người dùng sang PayOS =====
+            String baseUrl = request.getScheme() + "://" + request.getServerName()
+                    + ((request.getScheme().equals("http") && request.getServerPort() == 80)
+                            || (request.getScheme().equals("https") && request.getServerPort() == 443)
+                                    ? ""
+                                    : ":" + request.getServerPort())
+                    + request.getContextPath();
 
-            // Tạo thông tin thanh toán để hiển thị
-            PaymentInfo paymentInfo = new PaymentInfo(
-                    savedBill.getOrderId(),
-                    savedBill.getBillId(),
-                    service.getServiceName(),
-                    service.getDescription(),
-                    savedBill.getAmount().intValue(),
-                    savedBill.getCustomerName(),
-                    savedBill.getCustomerPhone(),
-                    doctorIdStr,
-                    workDate,
-                    slotIdStr,
-                    reason,
-                    payosQRCode // QR code thật từ PayOS
-            );
+            String returnUrl = baseUrl + "/payment?action=success";
+            String cancelUrl = baseUrl + "/payment?action=cancel";
 
-            // Lưu thông tin vào session
-            session.setAttribute("paymentInfo", paymentInfo);
-            session.setAttribute("serviceInfo", service);
-            session.setAttribute("currentBill", savedBill);
+            // PayOS giới hạn description <= 25 ký tự → cắt ngắn cho an toàn
+            String rawDescription = "DV " + service.getServiceName();
+            String description = rawDescription.length() > 25
+                    ? rawDescription.substring(0, 25)
+                    : rawDescription;
 
-            // Forward tới JSP thanh toán
-            request.setAttribute("paymentInfo", paymentInfo);
-            request.setAttribute("service", service);
-            request.setAttribute("patient", patient);
-            request.getRequestDispatcher("/payment/payment.jsp").forward(request, response);
+            try {
+                // SỬ DỤNG DIRECT REST API thay vì SDK để tránh lỗi signature
+                System.out.println("[PAYMENT] Switching to PayOS Direct REST API...");
+                String checkoutUrl = util.PayOSDirectHelper.createPaymentLinkDirect(
+                        savedBill,
+                        description,
+                        returnUrl,
+                        cancelUrl);
+
+                // Lưu thông tin vào session để success/cancel xử lý tiếp
+                PaymentInfo paymentInfo = new PaymentInfo(
+                        savedBill.getOrderId(),
+                        savedBill.getBillId(),
+                        service.getServiceName(),
+                        service.getDescription(),
+                        savedBill.getAmount().intValue(),
+                        savedBill.getCustomerName(),
+                        savedBill.getCustomerPhone(),
+                        doctorIdStr,
+                        workDate,
+                        slotIdStr,
+                        reason,
+                        null // Không cần QR nội bộ, PayOS sẽ hiển thị
+                );
+
+                session.setAttribute("paymentInfo", paymentInfo);
+                session.setAttribute("serviceInfo", service);
+                session.setAttribute("currentBill", savedBill);
+
+                // Redirect sang PayOS checkout
+                response.sendRedirect(checkoutUrl);
+                return;
+            } catch (Exception sdkEx) {
+                sdkEx.printStackTrace();
+                response.sendError(HttpServletResponse.SC_BAD_GATEWAY,
+                        "Không thể tạo payment link PayOS: " + sdkEx.getMessage());
+                return;
+            }
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Tham số không hợp lệ: " + e.getMessage());
@@ -1870,136 +1902,6 @@ public class PayOSServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             return "";
-        }
-    }
-
-    /**
-     * Tạo payment request thật với PayOS API
-     */
-    private String createPayOSPaymentRequest(Bill bill, Service service) {
-        try {
-            // Log để debug
-            System.out.println("=== YÊU CẦU API PAYOS ===");
-            System.out.println("Mã đơn hàng: " + bill.getOrderId());
-            System.out.println("Số tiền: " + bill.getAmount().intValue());
-
-            // Tạo JSON payload cho PayOS
-            Map<String, Object> paymentData = new HashMap<>();
-
-            // Fix: PayOS payload format đúng
-            String orderIdStr = bill.getOrderId().replace("ORDER_", "");
-            long orderCode = Math.abs(orderIdStr.hashCode()) % 999999L; // Positive long
-
-            paymentData.put("orderCode", orderCode);
-            paymentData.put("amount", bill.getAmount().intValue());
-            paymentData.put("description", service.getServiceName());
-            paymentData.put("buyerName", bill.getCustomerName());
-            paymentData.put("buyerPhone", bill.getCustomerPhone());
-            paymentData.put("buyerEmail",
-                    bill.getCustomerEmail() != null ? bill.getCustomerEmail() : "customer@example.com");
-            paymentData.put("cancelUrl", "http://localhost:8080/TestFull/payment?action=cancel");
-            paymentData.put("returnUrl", "http://localhost:8080/TestFull/payment?action=success");
-
-            // Thêm expiredAt (required)
-            paymentData.put("expiredAt", System.currentTimeMillis() / 1000 + 900); // 15 phút
-
-            // Items array (required)
-            Map<String, Object> item = new HashMap<>();
-            item.put("name", service.getServiceName());
-            item.put("quantity", 1);
-            item.put("price", bill.getAmount().intValue());
-            paymentData.put("items", new Object[] { item });
-
-            // Convert to JSON
-            String jsonPayload = gson.toJson(paymentData);
-            System.out.println("Dữ liệu PayOS: " + jsonPayload);
-
-            // Gửi request tới PayOS API
-            URL url = new URL(PayOSConfig.CREATE_PAYMENT_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-client-id", getPayosClientId());
-            conn.setRequestProperty("x-api-key", getPayosApiKey());
-            conn.setDoOutput(true);
-
-            // Gửi payload
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonPayload.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
-
-            // Đọc response
-            int responseCode = conn.getResponseCode();
-            System.out.println("Mã phản hồi PayOS: " + responseCode);
-
-            if (responseCode == 200) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-                    StringBuilder response = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
-                    }
-
-                    System.out.println("Phản hồi thành công PayOS: " + response.toString());
-
-                    // Parse JSON response để lấy QR code
-                    Map responseMap = gson.fromJson(response.toString(), Map.class);
-                    Map data = (Map) responseMap.get("data");
-                    if (data != null && data.containsKey("qrCode")) {
-                        String qrCode = (String) data.get("qrCode");
-                        System.out.println("Mã QR PayOS: " + qrCode);
-                        return qrCode;
-                    }
-                }
-            } else {
-                System.err.println("Lỗi API PayOS - Mã phản hồi: " + responseCode);
-                // Đọc error response
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"))) {
-                    StringBuilder errorResponse = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        errorResponse.append(responseLine.trim());
-                    }
-                    System.err.println("Phản hồi lỗi PayOS: " + errorResponse.toString());
-                }
-            }
-
-        } catch (Exception e) {
-            System.err.println("❌ LỖI TẠO YÊU CẦU THANH TOÁN PAYOS: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        // Fallback: trả về QR code test nếu API call fail
-        System.out.println("Sử dụng QR dự phòng cho MB Bank...");
-
-        // Sử dụng QR dự phòng
-        System.out.println("Sử dụng QR dự phòng cho MB Bank...");
-
-        // Trả về QR dự phòng
-        return generateFallbackQR(bill);
-    }
-
-    /**
-     * Tạo QR code dự phòng tương thích VietQR
-     */
-    private String generateFallbackQR(Bill bill) {
-        // Tạo QR code dự phòng cho VietQR
-        try {
-            String orderId = bill.getOrderId();
-            int amount = bill.getAmount().intValue();
-
-            // Tạo VietQR URL theo chuẩn VietQR
-            String qrData = String.format(
-                    "https://img.vietqr.io/image/MB-5529062004-compact2.png?amount=%d&addInfo=Thanh%%20toan%%20hoa%%20don%%20%s",
-                    amount, orderId);
-
-            System.out.println("🔗 Tạo VietQR dự phòng: " + qrData);
-            return qrData;
-
-        } catch (Exception e) {
-            System.err.println("❌ Lỗi tạo VietQR dự phòng: " + e.getMessage());
-            return "ERROR_QR";
         }
     }
 

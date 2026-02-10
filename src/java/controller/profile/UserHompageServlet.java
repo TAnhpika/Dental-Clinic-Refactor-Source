@@ -2,6 +2,7 @@ package controller.profile;
 
 import dao.AppointmentDAO;
 import dao.BlogDAO;
+import dao.DoctorDAO;
 import dao.PatientDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,10 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import model.entity.Patients;
 import java.util.List;
 import model.entity.Appointment;
 import model.entity.BlogPost;
+import model.entity.Doctors;
 
 // @WebServlet annotation removed - using web.xml mapping instead
 public class UserHompageServlet extends HttpServlet {
@@ -30,14 +33,24 @@ public class UserHompageServlet extends HttpServlet {
 
         // ❌ Nếu chưa có session → về trang login
         if (session == null) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
 
-        // ✅ Có session nhưng patient null → về trang user_taikhoan
+        // ✅ Có session nhưng patient null: vẫn cho vào trang chủ (show dữ liệu trống)
         Patients patient = (Patients) session.getAttribute("patient");
         if (patient == null) {
-            response.sendRedirect(request.getContextPath() + "/UserAccountServlet");
+            request.setAttribute("upcomingAppointments", new ArrayList<Appointment>());
+            request.setAttribute("totalVisits", 0);
+
+            // Các section khác trên homepage vẫn nên có data tối thiểu
+            List<Doctors> doctors = DoctorDAO.getAllDoctorsOnline();
+            request.setAttribute("doctors", doctors);
+
+            List<BlogPost> latestBlogs = BlogDAO.getLatest(2);
+            request.setAttribute("latestBlogs", latestBlogs);
+
+            request.getRequestDispatcher("/jsp/patient/user_homepage.jsp").forward(request, response);
             return;
         }
 
@@ -50,13 +63,11 @@ public class UserHompageServlet extends HttpServlet {
 
         System.out.println("Patient ID: " + patient.getPatientId());
         System.out.println("Total visits: " + totalVisits);
-        BlogDAO BlogDAO = new BlogDAO();
-
         List<BlogPost> latestBlogs = BlogDAO.getLatest(2); // hoặc tất cả nếu cần
         request.setAttribute("latestBlogs", latestBlogs);
 
         // Chuyển đến user_homepage.jsp
-        request.getRequestDispatcher("jsp/patient/user_homepage.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/patient/user_homepage.jsp").forward(request, response);
     }
 
     @Override

@@ -150,42 +150,70 @@ public class TimeSlotDAO {
 
     /**
      * Lấy khung giờ theo ca làm việc
-     * Ca 1: 3002-3009 (sáng)
-     * Ca 2: 3010-3019 (chiều)
-     * Ca 3: 3002-3019 (cả ngày)
+     * Ca 1: 08:00-12:00 (sáng)
+     * Ca 2: 13:00-17:00 (chiều)
+     * Ca 3: 08:00-17:00 (cả ngày)
      */
     public static List<TimeSlot> getSlotsByShift(int shift) {
-        List<TimeSlot> slots = new ArrayList<>();
-        String sql = "";
+        // FIX: Không hardcode slot_id kiểu 3002..3019 vì DB thật có thể là 97..117 (như ảnh bạn gửi).
+        // Map theo time range để render khung giờ luôn đúng.
+        List<Integer> ids = getTimeSlotIdsForShift(shift);
+        return getTimeSlotsByIds(ids);
+    }
+
+    /**
+     * Lấy list slot_id theo ca làm việc (1/2/3) dựa trên start_time/end_time.
+     * - Ca 1: 08:00 - 12:00
+     * - Ca 2: 13:00 - 17:00
+     * - Ca 3: 08:00 - 17:00
+     *
+     * (Không phụ thuộc slot_id là 97.. hay 3002..)
+     */
+    public static List<Integer> getTimeSlotIdsForShift(int shift) {
+        List<Integer> ids = new ArrayList<>();
+
+        // NOTE: Nếu business của bạn đổi giờ làm, chỉ cần sửa 3 mốc này.
+        LocalTime from;
+        LocalTime to;
 
         switch (shift) {
-            case 1: // Ca sáng
-                sql = "SELECT * FROM TimeSlot WHERE slot_id BETWEEN 3002 AND 3009 ORDER BY start_time ASC";
+            case 1:
+                from = LocalTime.of(8, 0);
+                to = LocalTime.of(12, 0);
                 break;
-            case 2: // Ca chiều
-                sql = "SELECT * FROM TimeSlot WHERE slot_id BETWEEN 3010 AND 3019 ORDER BY start_time ASC";
+            case 2:
+                from = LocalTime.of(13, 0);
+                to = LocalTime.of(17, 0);
                 break;
-            case 3: // Cả ngày
-                sql = "SELECT * FROM TimeSlot WHERE slot_id BETWEEN 3002 AND 3019 ORDER BY start_time ASC";
+            case 3:
+                from = LocalTime.of(8, 0);
+                to = LocalTime.of(17, 0);
                 break;
             default:
-                return slots;
+                return ids;
         }
 
+        // Chọn slot theo start_time trong khoảng [from, to)
+        // Lưu ý: cột start_time trong DB đang là DATETIME nên cần CAST về TIME
+        // để tránh lỗi "time and datetime are incompatible".
+        String sql = "SELECT slot_id FROM TimeSlot " +
+                     "WHERE CAST(start_time AS time) >= CAST(? AS time) " +
+                     "AND   CAST(start_time AS time) <  CAST(? AS time) " +
+                     "ORDER BY start_time ASC";
         try (Connection conn = DBContext.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                TimeSlot slot = new TimeSlot();
-                slot.setSlotId(rs.getInt("slot_id"));
-                slot.setStartTime(rs.getTime("start_time").toLocalTime());
-                slot.setEndTime(rs.getTime("end_time").toLocalTime());
-                slots.add(slot);
+            ps.setTime(1, Time.valueOf(from));
+            ps.setTime(2, Time.valueOf(to));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ids.add(rs.getInt("slot_id"));
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return slots;
+
+        return ids;
     }
 
     /**
@@ -240,25 +268,12 @@ public class TimeSlotDAO {
      * Lấy 3 ca chính trong ngày (slotId = 1, 2, 3)
      */
     public static List<TimeSlot> getMainTimeSlots() {
+        // FIX: DB TimeSlot thường không có slot_id = 1,2,3.
+        // 1/2/3 là "ca" (shift) dùng cho part-time, nên tạo object ngay trong code.
         List<TimeSlot> timeSlots = new ArrayList<>();
-        String sql = "SELECT * FROM TimeSlot WHERE slot_id IN (1,2,3) ORDER BY slot_id ASC";
-        try (Connection conn = DBContext.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                TimeSlot slot = new TimeSlot();
-                slot.setSlotId(rs.getInt("slot_id"));
-                Time startTime = rs.getTime("start_time");
-                Time endTime = rs.getTime("end_time");
-                if (startTime != null && endTime != null) {
-                    slot.setStartTime(startTime.toLocalTime());
-                    slot.setEndTime(endTime.toLocalTime());
-                }
-                timeSlots.add(slot);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        timeSlots.add(new TimeSlot(1, LocalTime.of(8, 0), LocalTime.of(12, 0)));
+        timeSlots.add(new TimeSlot(2, LocalTime.of(13, 0), LocalTime.of(17, 0)));
+        timeSlots.add(new TimeSlot(3, LocalTime.of(8, 0), LocalTime.of(17, 0)));
         return timeSlots;
     }
 

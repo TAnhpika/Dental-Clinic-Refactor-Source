@@ -600,19 +600,13 @@ public class BookingPageServlet extends HttpServlet {
             for (Integer slotId : approvedSlotIds) {
                 switch (slotId) {
                     case 1: // Ca sáng (8:00-12:00)
-                        for (int i = 3002; i <= 3009; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(1));
                         break;
                     case 2: // Ca chiều (13:00-17:00)
-                        for (int i = 3010; i <= 3019; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(2));
                         break;
                     case 3: // Cả ngày (8:00-17:00)
-                        for (int i = 3002; i <= 3019; i++) {
-                            actualTimeSlotIds.add(i);
-                        }
+                        actualTimeSlotIds.addAll(TimeSlotDAO.getTimeSlotIdsForShift(3));
                         break;
                     default:
                         System.out.println("Unknown slot ID: " + slotId);
