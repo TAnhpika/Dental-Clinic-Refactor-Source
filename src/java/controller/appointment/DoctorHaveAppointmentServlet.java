@@ -1,8 +1,8 @@
 package controller.appointment;
 
 import dao.DoctorDAO;
-import model.entity.Doctors;
-import model.entity.DoctorSchedule;
+import model.Doctors;
+import model.DoctorSchedule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -58,7 +58,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
         System.out.println("DEBUG: doctor in session = " + doctor);
         if (doctor == null) {
             request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-            request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
             return;
         }
 
@@ -75,7 +75,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
         request.setAttribute("isToday", false);
         request.setAttribute("filterByDate", false);
 
-        request.getRequestDispatcher("/jsp/doctor/doctor_trongtuan.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/doctor/doctor_trongtuan.jsp").forward(request, response);
     }
 
     /**
@@ -88,7 +88,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
         Doctors doctor = (Doctors) request.getSession().getAttribute("doctor");
         if (doctor == null) {
             request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-            request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
             return;
         }
 
@@ -121,7 +121,7 @@ public class DoctorHaveAppointmentServlet extends HttpServlet {
             request.setAttribute("pageTitle", "Lịch Làm Việc Ngày " + localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             request.setAttribute("filterByDate", true);
 
-            request.getRequestDispatcher("/jsp/doctor/doctor_trongtuan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_trongtuan.jsp").forward(request, response);
         } catch (DateTimeParseException e) {
             request.setAttribute("errorMessage", "Ngày không hợp lệ. Vui lòng sử dụng định dạng yyyy-MM-dd");
             showPersonalSchedule(request, response);

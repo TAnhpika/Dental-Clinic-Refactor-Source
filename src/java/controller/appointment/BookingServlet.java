@@ -3,10 +3,10 @@ package controller.appointment;
 import dao.AppointmentDAO;
 import dao.ServiceDAO;
 import dao.PatientDAO;
-import model.entity.SlotReservation;
-import model.entity.Service;
-import model.entity.Patients;
-import model.entity.User;
+import model.SlotReservation;
+import model.Service;
+import model.Patients;
+import model.User;
 import com.google.gson.Gson;
 
 import jakarta.servlet.ServletException;

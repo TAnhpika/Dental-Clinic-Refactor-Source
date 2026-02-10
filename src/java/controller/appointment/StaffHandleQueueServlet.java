@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
-import model.entity.Appointment;
-import model.entity.Doctors;
+import model.Appointment;
+import model.Doctors;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -39,7 +39,7 @@ public class StaffHandleQueueServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/staff/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
         }
     }
 
@@ -105,7 +105,7 @@ public class StaffHandleQueueServlet extends HttpServlet {
             for (Appointment apt : appointmentsToUse) {
                 try {
                     // Lấy tên bệnh nhân thật từ Patients table
-                    model.entity.Patients patient = patientDAO.getPatientById(apt.getPatientId());
+                    model.Patients patient = patientDAO.getPatientById(apt.getPatientId());
                     if (patient != null) {
                         apt.setPatientName(patient.getFullName());
                         // Số điện thoại THẬT của bệnh nhân (để staff gọi đến)
@@ -124,7 +124,7 @@ public class StaffHandleQueueServlet extends HttpServlet {
                     }
 
                     // Lấy tên bác sĩ thật từ Doctors table
-                    model.entity.Doctors doctor = doctorDAO.getDoctorById((int) apt.getDoctorId());
+                    model.Doctors doctor = doctorDAO.getDoctorById((int) apt.getDoctorId());
                     if (doctor != null) {
                         apt.setDoctorName(doctor.getFull_name());
                         System.out.println("👨‍⚕️ Doctor " + apt.getDoctorId() + ": " + doctor.getFull_name());
@@ -197,12 +197,12 @@ public class StaffHandleQueueServlet extends HttpServlet {
             System.out.println("✅ Forwarding to JSP with " + appointmentsToUse.size() + " appointments");
 
             // Forward đến trang quản lý hàng đợi
-            request.getRequestDispatcher("/jsp/staff/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi khi tải dữ liệu hàng đợi: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/staff/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_quanlyhangdoibenhnhan.jsp").forward(request, response);
         }
     }
 

@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-import model.entity.User;
-import model.entity.Patients;
+import model.User;
+import model.Patients;
 import dao.UserDAO;
 import dao.PatientDAO;
 
@@ -26,7 +26,7 @@ import dao.PatientDAO;
     maxRequestSize = 1024 * 1024 * 10 // 10MB
 )
 public class UpdateUserServlet extends HttpServlet {
-    private static final String RETURN_URL = "/jsp/patient/user_taikhoan.jsp";
+    private static final String RETURN_URL = "/view/jsp/patient/user_taikhoan.jsp";
     private static final String UPLOAD_DIR = "uploads";
     private static final String[] ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg"};
 

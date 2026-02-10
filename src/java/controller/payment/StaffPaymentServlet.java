@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.entity.Bill;
-import model.entity.Patients;
-import model.entity.Appointment;
-import model.entity.PaymentInstallment;
-import model.entity.Service;
+import model.Bill;
+import model.Patients;
+import model.Appointment;
+import model.PaymentInstallment;
+import model.Service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -101,7 +101,7 @@ public class StaffPaymentServlet extends HttpServlet {
             // Kiểm tra response đã committed chưa trước khi forward
             if (!response.isCommitted()) {
                 request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-                request.getRequestDispatcher("/jsp/staff/staff_thanhtoan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/staff_thanhtoan.jsp").forward(request, response);
             } else {
                 System.err.println("❌ Cannot forward - response already committed. Error: " + e.getMessage());
             }
@@ -286,7 +286,7 @@ public class StaffPaymentServlet extends HttpServlet {
             // Kiểm tra session timeout
             HttpSession session = request.getSession(false);
             if (session == null) {
-                response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+                response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
                 return;
             }
 
@@ -420,7 +420,7 @@ public class StaffPaymentServlet extends HttpServlet {
             System.out.println("🚀 Forwarding to payment JSP with " + allBills.size() + " bills");
 
             // Forward đến trang quản lý thanh toán
-            request.getRequestDispatcher("/jsp/staff/staff_thanhtoan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_thanhtoan.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -436,7 +436,7 @@ public class StaffPaymentServlet extends HttpServlet {
                 request.setAttribute("partialAmount", 0.0);
                 request.setAttribute("totalBills", 0);
 
-                request.getRequestDispatcher("/jsp/staff/staff_thanhtoan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/staff_thanhtoan.jsp").forward(request, response);
             } else {
                 System.err.println("❌ Cannot forward from handlePaymentManagement - response already committed. Error: " + e.getMessage());
             }
@@ -599,7 +599,7 @@ public class StaffPaymentServlet extends HttpServlet {
                     " VNĐ, Paid: " + totalPaid + " VNĐ, Remaining: " + remainingAmount + " VNĐ");
             
             // Forward to invoice detail page or back to payment management with detail view
-            request.getRequestDispatcher("/jsp/staff/staff_thanhtoan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_thanhtoan.jsp").forward(request, response);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -799,12 +799,12 @@ public class StaffPaymentServlet extends HttpServlet {
             }
 
             request.setAttribute("installmentBills", installmentBills);
-            request.getRequestDispatcher("/jsp/staff/staff_tragop.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_tragop.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi tải dữ liệu trả góp: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/staff/staff_tragop.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_tragop.jsp").forward(request, response);
         }
     }
 
@@ -839,7 +839,7 @@ public class StaffPaymentServlet extends HttpServlet {
             request.setAttribute("billId", billId);
 
             // Forward đến trang chi tiết trả góp
-            request.getRequestDispatcher("/jsp/staff/staff_tragop_chitiet.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_tragop_chitiet.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -866,14 +866,14 @@ public class StaffPaymentServlet extends HttpServlet {
             request.setAttribute("reminders", reminders);
 
             // Forward đến trang nhắc nợ
-            request.getRequestDispatcher("/jsp/staff/staff_nhacno.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_nhacno.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             if (!response.isCommitted()) {
                 request.setAttribute("error", "Có lỗi khi tải dữ liệu nhắc nợ: " + e.getMessage());
                 request.setAttribute("reminders", new ArrayList<PaymentInstallment>());
-                request.getRequestDispatcher("/jsp/staff/staff_nhacno.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/staff_nhacno.jsp").forward(request, response);
             } else {
                 System.err.println("❌ Cannot forward from handleReminders - response already committed. Error: " + e.getMessage());
             }

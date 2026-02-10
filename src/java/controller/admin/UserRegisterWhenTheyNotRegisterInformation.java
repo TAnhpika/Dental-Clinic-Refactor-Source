@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import dao.PatientDAO;
-import model.entity.User;
-import model.entity.Patients;
+import model.User;
+import model.Patients;
 
 
 public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
@@ -71,7 +71,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
             response.sendRedirect("BookingPage");
         } else {
             request.setAttribute("error", "Không thể lưu thông tin. Vui lòng thử lại!");
-            request.getRequestDispatcher("/jsp/auth/information.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/auth/information.jsp").forward(request, response);
         }    
     }
 

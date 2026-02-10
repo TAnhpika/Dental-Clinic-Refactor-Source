@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import model.entity.Patients;
+import model.Patients;
 import util.DBContext;
-import model.entity.User;
+import model.User;
 
 public class PatientDAO {
 

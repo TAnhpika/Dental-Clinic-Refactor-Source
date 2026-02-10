@@ -16,10 +16,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ColoredLogger;
-import model.entity.Staff;
-import model.entity.StaffSchedule;
-import model.entity.TimeSlot;
-import model.entity.User;
+import model.Staff;
+import model.StaffSchedule;
+import model.TimeSlot;
+import model.User;
 
 /**
  * Servlet xử lý lịch làm việc của nhân viên

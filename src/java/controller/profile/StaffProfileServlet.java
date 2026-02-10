@@ -7,15 +7,15 @@ import java.text.SimpleDateFormat;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.entity.Staff;
-import model.entity.User;
+import model.Staff;
+import model.User;
 import dao.StaffDAO;
 import dao.UserDAO;
 
 @WebServlet(name = "StaffProfileServlet", urlPatterns = {"/StaffProfileServlet"})
 public class StaffProfileServlet extends HttpServlet {
 
-    private static final String RETURN_URL = "/jsp/staff/staff_taikhoan.jsp";
+    private static final String RETURN_URL = "/view/view/jsp/admin/staff_taikhoan.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

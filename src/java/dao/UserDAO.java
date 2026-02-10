@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import util.DBContext;
-import model.entity.User;
-import model.entity.Patients;
+import model.User;
+import model.Patients;
 
 /**
  * UserDAO - Refactored theo pattern của PatientDAO

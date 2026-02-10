@@ -7,10 +7,10 @@ package controller.auth;
 import dao.UserDAO;
 import dao.StaffDAO;
 import dao.DoctorDAO;
-import model.entity.Patients;
-import model.entity.User;
-import model.entity.Staff;
-import model.entity.Doctors;
+import model.Patients;
+import model.User;
+import model.Staff;
+import model.Doctors;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -36,8 +36,8 @@ import java.net.URL;
 
 import java.security.SecureRandom;
 import java.util.Base64;
-import model.entity.Appointment;
-import model.entity.BlogPost;
+import model.Appointment;
+import model.BlogPost;
 import org.json.JSONObject;
 
 /**
@@ -135,7 +135,7 @@ public class LoginServlet extends HttpServlet {
                     PatientDAO.addPatientFromGoogle(userId, userName);
                     user = UserDAO.getUserByEmail(userEmail);
                 } else {
-                    response.sendRedirect("jsp/jsp/auth/login.jsp?error=system_error");
+                    response.sendRedirect("jsp/view/jsp/auth/login.jsp?error=system_error");
                     return;
                 }
             }
@@ -177,12 +177,12 @@ public class LoginServlet extends HttpServlet {
                     e.printStackTrace();
                     System.out.println("[ERROR] Lỗi khi lấy staff: " + e.getMessage());
                 }
-                request.getRequestDispatcher("/jsp/staff/staff_tongquan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/staff_tongquan.jsp").forward(request, response);
             } else if ("MANAGER".equalsIgnoreCase(role)) {
-                request.getRequestDispatcher("/jsp/manager/manager_tongquan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/manager_tongquan.jsp").forward(request, response);
             } else {
                 System.out.println("Invalid role: " + role);
-                response.sendRedirect("jsp/jsp/auth/login.jsp?error=invalid_role");
+                response.sendRedirect("jsp/view/jsp/auth/login.jsp?error=invalid_role");
             }
         } else {
             // Xử lý OAuth callback từ Google
@@ -194,7 +194,7 @@ public class LoginServlet extends HttpServlet {
 
             if (error != null) {
                 System.out.println("[ERROR] Google OAuth error: " + error);
-                response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp?error=google_oauth_error");
+                response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=google_oauth_error");
                 return;
             }
 
@@ -252,7 +252,7 @@ public class LoginServlet extends HttpServlet {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp?error=google_auth_failed");
+                    response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=google_auth_failed");
                 }
             }
         }
@@ -353,17 +353,17 @@ public class LoginServlet extends HttpServlet {
                     e.printStackTrace();
                     System.out.println("[ERROR] Lỗi khi lấy staff: " + e.getMessage());
                 }
-                request.getRequestDispatcher("/jsp/staff/staff_tongquan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/staff_tongquan.jsp").forward(request, response);
             } else if ("MANAGER".equalsIgnoreCase(role)) {
-                request.getRequestDispatcher("/jsp/manager/manager_tongquan.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/manager_tongquan.jsp").forward(request, response);
             } else {
                 System.out.println("Invalid role: " + role);
                 response.sendRedirect(
-                        "jsp/jsp/auth/login.jsp?error=" + java.net.URLEncoder.encode("invalid_role", "UTF-8"));
+                        "jsp/view/jsp/auth/login.jsp?error=" + java.net.URLEncoder.encode("invalid_role", "UTF-8"));
             }
         } else {
             System.out.println("Login failed - User not found");
-            response.sendRedirect("jsp/jsp/auth/login.jsp?error=1");
+            response.sendRedirect("jsp/view/jsp/auth/login.jsp?error=1");
         }
     }
 

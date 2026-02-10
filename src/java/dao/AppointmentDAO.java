@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import model.entity.Appointment;
-import model.entity.SlotReservation;
+import model.Appointment;
+import model.SlotReservation;
 import static util.DBContext.getConnection;
-import model.entity.TimeSlot;
+import model.TimeSlot;
 import dao.TimeSlotDAO;
 
 /**

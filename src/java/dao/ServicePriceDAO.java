@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.math.BigDecimal;
-import model.entity.Service;
+import model.Service;
 import util.DBContext;
 
 /**

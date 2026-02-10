@@ -13,9 +13,9 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.entity.Staff;
-import model.entity.StaffSchedule;
-import model.entity.User;
+import model.Staff;
+import model.StaffSchedule;
+import model.User;
 
 /**
  * Servlet xử lý phê duyệt/từ chối yêu cầu lịch làm việc của staff

@@ -1,9 +1,9 @@
 package controller.appointment;
 
 import dao.AppointmentDAO;
-import model.entity.Appointment;
-import model.entity.Doctors;
-import model.entity.User;
+import model.Appointment;
+import model.Doctors;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -28,7 +28,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null) {
             System.out.println("No session found, redirecting to login");
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         
@@ -38,7 +38,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
         
         if (user == null || doctor == null) {
             System.out.println("User or Doctor object not found in session");
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         
@@ -95,7 +95,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
             request.setAttribute("userId", user.getId());
             
             // Forward đến JSP để hiển thị
-            request.getRequestDispatcher("/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
 
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
@@ -106,7 +106,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
             request.setAttribute("cancelledAppointments", null);
             
             // Forward tới JSP để hiển thị lỗi
-            request.getRequestDispatcher("/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("General Error: " + e.getMessage());
             e.printStackTrace();
@@ -114,7 +114,7 @@ public class CancelledAppointmentsServlet extends HttpServlet {
             request.setAttribute("error", "Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("cancelledAppointments", null);
             
-            request.getRequestDispatcher("/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_bihuy.jsp").forward(request, response);
         }
     }
     

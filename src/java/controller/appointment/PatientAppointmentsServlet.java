@@ -3,10 +3,10 @@ package controller.appointment;
 import dao.AppointmentDAO;
 import dao.DoctorDAO;
 import dao.PatientDAO;
-import model.entity.Appointment;
-import model.entity.Doctors;
-import model.entity.Patients;
-import model.entity.User;
+import model.Appointment;
+import model.Doctors;
+import model.Patients;
+import model.User;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -40,7 +40,7 @@ public class PatientAppointmentsServlet extends HttpServlet {
             Patients patient =PatientDAO.getPatientByUserId(user.getId());
             if (patient == null) {
                 request.setAttribute("errorMessage", "Không tìm thấy thông tin bệnh nhân!");
-                request.getRequestDispatcher("/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
                 return;
             }
             
@@ -131,12 +131,12 @@ public class PatientAppointmentsServlet extends HttpServlet {
             request.setAttribute("specialties", specialties);
             
             // Forward đến JSP
-            request.getRequestDispatcher("/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
             
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/patient/user_datlich_bacsi.jsp").forward(request, response);
         }
     }
 

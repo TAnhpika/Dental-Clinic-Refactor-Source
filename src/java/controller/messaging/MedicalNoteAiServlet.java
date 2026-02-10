@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.GeminiAiService;
 import dao.MedicineDAO;
-import model.entity.Medicine;
+import model.Medicine;
 
 /**
  * Servlet để cải thiện ghi chú y tế bằng AI

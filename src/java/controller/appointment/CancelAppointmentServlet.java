@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.EmailService;
-import model.entity.Doctors;
+import model.Doctors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +71,10 @@ public class CancelAppointmentServlet extends HttpServlet {
         }
         try {
             // Lấy danh sách lịch hẹn từ DAO với thông tin chi tiết
-            List<model.entity.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
+            List<model.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
             System.out.println("[DEBUG] appointments size: " + (appointments != null ? appointments.size() : "null"));
             if (appointments != null) {
-                for (model.entity.Appointment ap : appointments) {
+                for (model.Appointment ap : appointments) {
                     System.out.println("[DEBUG] Appointment: id=" + ap.getAppointmentId() + ", status=" + ap.getStatus() + ", doctorId=" + ap.getDoctorId());
                 }
             }
@@ -102,7 +102,7 @@ public class CancelAppointmentServlet extends HttpServlet {
         }
         
         // Forward sang JSP
-        request.getRequestDispatcher("/jsp/staff/staff_quanlylichhen.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/view/jsp/admin/staff_quanlylichhen.jsp").forward(request, response);
     } 
 
     /**
@@ -126,14 +126,14 @@ public class CancelAppointmentServlet extends HttpServlet {
             java.time.LocalDate today = java.time.LocalDate.now();
             java.time.LocalTime now = java.time.LocalTime.now();
             // Lấy slot trống bằng TimeSlotDAO (tái sử dụng code)
-            java.util.List<model.entity.TimeSlot> availableSlots = dao.TimeSlotDAO.getAvailableSlotsByDoctorAndDate(doctorId, workDate);
+            java.util.List<model.TimeSlot> availableSlots = dao.TimeSlotDAO.getAvailableSlotsByDoctorAndDate(doctorId, workDate);
             System.out.println("[DEBUG] availableSlots: " + (availableSlots != null ? availableSlots.size() : "null"));
             java.util.List<Integer> bookedSlotIds = dao.AppointmentDAO.getBookedSlots(doctorId, localDate);
             System.out.println("[DEBUG] bookedSlotIds: " + bookedSlotIds);
             StringBuilder json = new StringBuilder();
             json.append("[");
             for (int i = 0; i < availableSlots.size(); i++) {
-                model.entity.TimeSlot slot = availableSlots.get(i);
+                model.TimeSlot slot = availableSlots.get(i);
                 boolean isBooked = bookedSlotIds.contains(slot.getSlotId());
                 boolean isPast = localDate.equals(today) && slot.getStartTime().plusMinutes(10).isBefore(now); // xử lý thêm + thêm 10p để render ra lịch 
                 if (i > 0) json.append(",");
@@ -192,7 +192,7 @@ public class CancelAppointmentServlet extends HttpServlet {
                     String cancelNote = request.getParameter("cancelNote");
                     success = dao.AppointmentDAO.updateAppointmentStatusStatic(appointmentId, dao.AppointmentDAO.STATUS_CANCELLED);
                     if (success) {
-                        model.entity.Appointment ap = dao.AppointmentDAO.getAppointmentWithPatientInfo(appointmentId);
+                        model.Appointment ap = dao.AppointmentDAO.getAppointmentWithPatientInfo(appointmentId);
                         String[] emails = dao.AppointmentDAO.getEmailsFromAppointment(appointmentId);
                         String patientEmail = emails[0];
                         String patientName = ap != null && ap.getPatientName() != null ? ap.getPatientName() : "Khách hàng";

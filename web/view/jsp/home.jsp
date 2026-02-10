@@ -8,11 +8,11 @@
     <title>HAPPY Smile - Phòng khám nha khoa tư nhân chuyên nghiệp</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/view/assets/css/home.css">
+          href="${pageContext.request.contextPath}/view/assets/view/assets/css/home.css">
 </head>
 
 <body>
-<%@ include file="/includes/header.jsp" %>
+<%@ include file="/view/layout/header.jsp" %>
 
 <section class="hero" id="hero">
     <div class="hero-content">
@@ -38,7 +38,7 @@
                 trong một không gian thoải mái, thân thiện và chuyên nghiệp.</p>
         </div>
         <div class="about-image">
-            <img src="${pageContext.request.contextPath}/img/bacsii.png" alt="Phòng khám HAPPY Smile">
+            <img src="${pageContext.request.contextPath}/view/assets/img/bacsii.png" alt="Phòng khám HAPPY Smile">
         </div>
     </div>
 </section>
@@ -48,44 +48,44 @@
     <div class="service-container">
         <div class="service-row">
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon1.jpg" alt="Khám tổng quát"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon1.jpg" alt="Khám tổng quát"
                      class="service-icon">
                 <p data-lang="service-general-checkup">Khám tổng quát</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon2.jpg" alt="Trám răng"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon2.jpg" alt="Trám răng"
                      class="service-icon">
                 <p data-lang="service-filling">Trám răng</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon3.jpg" alt="Tẩy trắng răng"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon3.jpg" alt="Tẩy trắng răng"
                      class="service-icon">
                 <p data-lang="service-whitening">Tẩy trắng răng</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon4.jpg" alt="Bọc răng sứ"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon4.jpg" alt="Bọc răng sứ"
                      class="service-icon">
                 <p data-lang="service-veneers">Bọc răng sứ</p>
             </div>
         </div>
         <div class="service-row">
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon5.jpg" alt="Niềng răng"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon5.jpg" alt="Niềng răng"
                      class="service-icon">
                 <p data-lang="service-braces">Niềng răng</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon6.jpg" alt="Nhổ răng"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon6.jpg" alt="Nhổ răng"
                      class="service-icon">
                 <p data-lang="service-extraction">Nhổ răng</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon7.jpg" alt="Cấy ghép implant"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon7.jpg" alt="Cấy ghép implant"
                      class="service-icon">
                 <p data-lang="service-implant">Cấy ghép implant</p>
             </div>
             <div class="service-item">
-                <img src="${pageContext.request.contextPath}/img/icon8.jpg" alt="Điều trị nha chu"
+                <img src="${pageContext.request.contextPath}/view/assets/img/icon8.jpg" alt="Điều trị nha chu"
                      class="service-icon">
                 <p data-lang="service-periodontal">Điều trị nha chu</p>
             </div>
@@ -98,7 +98,7 @@
     <div class="team-slider">
         <div class="doctor-card">
             <div class="doctor-image">
-                <img src="${pageContext.request.contextPath}/img/bacsi1.png" alt="Bác sĩ Nguyễn Văn A">
+                <img src="${pageContext.request.contextPath}/view/assets/img/bacsi1.png" alt="Bác sĩ Nguyễn Văn A">
             </div>
             <div class="doctor-info">
                 <h4>Bs. Nguyễn Văn A</h4>
@@ -107,7 +107,7 @@
         </div>
         <div class="doctor-card">
             <div class="doctor-image">
-                <img src="${pageContext.request.contextPath}/img/bacsi2.png" alt="Bác sĩ Trần Thị B">
+                <img src="${pageContext.request.contextPath}/view/assets/img/bacsi2.png" alt="Bác sĩ Trần Thị B">
             </div>
             <div class="doctor-info">
                 <h4>Bs. Trần Thị B</h4>
@@ -116,7 +116,7 @@
         </div>
         <div class="doctor-card">
             <div class="doctor-image">
-                <img src="${pageContext.request.contextPath}/img/bacsi3.png" alt="Bác sĩ Lê Văn C">
+                <img src="${pageContext.request.contextPath}/view/assets/img/bacsi3.png" alt="Bác sĩ Lê Văn C">
             </div>
             <div class="doctor-info">
                 <h4>Bs. Lê Văn C</h4>
@@ -125,7 +125,7 @@
         </div>
         <div class="doctor-card">
             <div class="doctor-image">
-                <img src="${pageContext.request.contextPath}/img/bacsi4.png" alt="Bác sĩ Phạm Thị D">
+                <img src="${pageContext.request.contextPath}/view/assets/img/bacsi4.png" alt="Bác sĩ Phạm Thị D">
             </div>
             <div class="doctor-info">
                 <h4>Bs. Phạm Thị D</h4>
@@ -179,7 +179,7 @@
     <div class="news-grid">
         <div class="news-card">
             <div class="news-image">
-                <img src="${pageContext.request.contextPath}/img/tintuc1.png"
+                <img src="${pageContext.request.contextPath}/view/assets/img/tintuc1.png"
                      alt="Cách chăm sóc răng miệng">
             </div>
             <div class="news-content">
@@ -194,7 +194,7 @@
         </div>
         <div class="news-card">
             <div class="news-image">
-                <img src="${pageContext.request.contextPath}/img/tintuc2.jpg" alt="Niềng răng trong suốt">
+                <img src="${pageContext.request.contextPath}/view/assets/img/tintuc2.jpg" alt="Niềng răng trong suốt">
             </div>
             <div class="news-content">
                 <div class="news-date">10/05/2025</div>
@@ -208,7 +208,7 @@
         </div>
         <div class="news-card">
             <div class="news-image">
-                <img src="${pageContext.request.contextPath}/img/tintuc3.png" alt="Phòng ngừa sâu răng">
+                <img src="${pageContext.request.contextPath}/view/assets/img/tintuc3.png" alt="Phòng ngừa sâu răng">
             </div>
             <div class="news-content">
                 <div class="news-date">05/05/2025</div>
@@ -274,13 +274,13 @@
     </div>
 </section>
 
-<%@ include file="/includes/footer.jsp" %>
+<%@ include file="/view/layout/footer.jsp" %>
 <%
     String _lang = (String) session.getAttribute("language");
     if (_lang == null) _lang = "vi";
 %>
 <script>window.__INIT_LANG__ = '<%= _lang %>';</script>
-<script src="${pageContext.request.contextPath}/view/assets/js/home.js"></script>
+<script src="${pageContext.request.contextPath}/view/assets/view/assets/js/home.js"></script>
 </body>
 
 </html>

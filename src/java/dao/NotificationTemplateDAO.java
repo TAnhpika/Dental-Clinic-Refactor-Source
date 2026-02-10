@@ -1,6 +1,6 @@
 package dao;
 
-import model.entity.NotificationTemplate;
+import model.NotificationTemplate;
 import util.DBContext;
 
 import java.sql.*;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import model.entity.Notification;
+import model.Notification;
 
 public class NotificationTemplateDAO {
     

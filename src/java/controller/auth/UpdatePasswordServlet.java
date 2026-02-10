@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import dao.UserDAO;
-import model.entity.User;
+import model.User;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class UpdatePasswordServlet extends HttpServlet {
         // Kiểm tra phiên làm việc
         if (email == null || otpVerified == null || !otpVerified) {
             request.setAttribute("error", "Phiên làm việc không hợp lệ. Vui lòng thực hiện lại quá trình reset mật khẩu.");
-            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
         
@@ -73,7 +73,7 @@ public class UpdatePasswordServlet extends HttpServlet {
             User user =UserDAO.getUserByEmail(email);
             if (user == null) {
                 request.setAttribute("error", "Email không tồn tại trong hệ thống.");
-                request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/forgot-password.jsp").forward(request, response);
                 return;
             }
             
@@ -88,7 +88,7 @@ public class UpdatePasswordServlet extends HttpServlet {
                 
                 // Thông báo thành công
                 request.setAttribute("success", "🎉 Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 
             } else {
                 request.setAttribute("error", "Không thể cập nhật mật khẩu. Vui lòng thử lại.");
@@ -114,7 +114,7 @@ public class UpdatePasswordServlet extends HttpServlet {
         
         if (otpVerified == null || !otpVerified) {
             request.setAttribute("error", "Bạn cần xác thực OTP trước khi đặt lại mật khẩu.");
-            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
         

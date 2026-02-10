@@ -2,7 +2,7 @@ package controller.profile;
 
 import dao.PatientDAO;
 import jakarta.servlet.RequestDispatcher;
-import model.entity.Patients;
+import model.Patients;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.*;

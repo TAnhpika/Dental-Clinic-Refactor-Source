@@ -2,8 +2,8 @@ package controller.schedule;
 
 import dao.StaffScheduleDAO;
 import dao.DoctorScheduleDAO;
-import model.entity.StaffSchedule;
-import model.entity.DoctorSchedule;
+import model.StaffSchedule;
+import model.DoctorSchedule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -45,7 +45,7 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         
         if (!"MANAGER".equals(role)) {
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         try {
@@ -55,7 +55,7 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
             for (StaffSchedule s : pendingStaffRequests) {
                 if (s.getEmploymentType() == null || s.getEmploymentType().isEmpty()) {
                     dao.StaffDAO staffDAO = new dao.StaffDAO();
-                    model.entity.Staff staff = staffDAO.getStaffById(s.getStaffId());
+                    model.Staff staff = staffDAO.getStaffById(s.getStaffId());
                     if (staff != null) {
                         s.setEmploymentType(staff.getEmploymentType());
                     }
@@ -67,11 +67,11 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
             request.setAttribute("pendingStaffRequests", pendingStaffRequests);
             request.setAttribute("pendingDoctorSchedules", pendingDoctorSchedules);
             // Forward đến JSP
-            request.getRequestDispatcher("/jsp/manager/manager_phancong.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/manager_phancong.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/manager/manager_phancong.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/manager_phancong.jsp").forward(request, response);
         }
     }
 
@@ -87,7 +87,7 @@ public class ManagerApprovalStaffScheduleServlet extends HttpServlet {
                                                                                                                                                                                                         // check phân quyền 
         if (!"MANAGER".equals(role) || managerId == null) {
             System.out.println("[ERROR] Không có quyền hoặc chưa đăng nhập, chuyển về login.jsp");
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         

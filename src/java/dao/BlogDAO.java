@@ -4,7 +4,7 @@
  */
 package dao;
 
-import model.entity.BlogPost;
+import model.BlogPost;
 
 import java.sql.*;
 import java.util.ArrayList;

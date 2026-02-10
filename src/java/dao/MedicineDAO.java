@@ -4,9 +4,9 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.entity.MedicalReport;
-import model.entity.Medicine;
-import model.entity.Prescription;
+import model.MedicalReport;
+import model.Medicine;
+import model.Prescription;
 import util.DBContext;
 import static util.DBContext.getConnection;
 

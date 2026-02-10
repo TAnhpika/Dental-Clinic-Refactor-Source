@@ -1,6 +1,6 @@
 package dao;
 
-import model.entity.PaymentInstallment;
+import model.PaymentInstallment;
 import util.DBContext;
 
 import java.sql.*;

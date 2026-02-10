@@ -1,7 +1,7 @@
 package controller.appointment;
 
 import dao.AppointmentDAO;
-import model.entity.Appointment;
+import model.Appointment;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +27,7 @@ public class ViewAllAppointmentsServlet extends HttpServlet {
         List<AppointmentDetail> allAppointments = getAllAppointmentsWithDetails();
         
         request.setAttribute("allAppointments", allAppointments);
-        request.getRequestDispatcher("/jsp/admin/view_all_appointments.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/admin/view_all_appointments.jsp").forward(request, response);
     }
 
     @Override

@@ -17,10 +17,10 @@ import jakarta.servlet.http.HttpSession;
 import dao.MedicineDAO;
 import dao.BillDAO;
 import dao.ServiceDAO; 
-import model.entity.Medicine;
-import model.entity.Bill;
-import model.entity.User;
-import model.entity.Service;
+import model.Medicine;
+import model.Bill;
+import model.User;
+import model.Service;
 
 /**
  * Servlet bán thuốc với UI thực tế
@@ -55,7 +55,7 @@ public class StaffSellMedicineServlet extends HttpServlet {
             request.setAttribute("medicines", medicines);
             
             // Forward tới JSP
-            String jspPath = "/jsp/staff/staff_toathuoc.jsp";
+            String jspPath = "/view/view/jsp/admin/staff_toathuoc.jsp";
             request.getRequestDispatcher(jspPath).forward(request, response);
             
         }catch (Exception e) {

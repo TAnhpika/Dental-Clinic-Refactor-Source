@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.entity.DoctorSchedule;
-import model.entity.TimeSlot;
+import model.DoctorSchedule;
+import model.TimeSlot;
 import util.DBContext;
 import java.time.LocalTime;
 import java.sql.Time;
@@ -386,8 +386,8 @@ public class DoctorScheduleDAO {
         return list;
     }
 
-    public static List<model.entity.Doctors> getDoctorsByWorkDate(String workDate) {
-        List<model.entity.Doctors> list = new ArrayList<>();
+    public static List<model.Doctors> getDoctorsByWorkDate(String workDate) {
+        List<model.Doctors> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -398,7 +398,7 @@ public class DoctorScheduleDAO {
             ps.setDate(1, java.sql.Date.valueOf(workDate));
             rs = ps.executeQuery();
             while (rs.next()) {
-                model.entity.Doctors doctor = new model.entity.Doctors();
+                model.Doctors doctor = new model.Doctors();
                 doctor.setDoctor_id(rs.getLong("doctor_id"));
                 doctor.setFull_name(rs.getString("full_name"));
                 doctor.setSpecialty(rs.getString("specialty"));

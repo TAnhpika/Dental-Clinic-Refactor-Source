@@ -1,10 +1,10 @@
 package controller.appointment;
 
-import model.entity.Appointment;
+import model.Appointment;
 import dao.DoctorDAO;
 import dao.AppointmentDAO;
-import model.entity.User;
-import model.entity.Doctors;
+import model.User;
+import model.Doctors;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -119,7 +119,7 @@ public class DoctorAppointmentsServlet extends HttpServlet {
             request.setAttribute("selectedDateDisplay", dateDisplay);
             request.setAttribute("isToday", selectedDate.equals(LocalDate.now()));
             
-            request.getRequestDispatcher("/jsp/doctor/doctor_trongngay.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_trongngay.jsp").forward(request, response);
 
         } catch (Exception e) {
             System.err.println("General Error: " + e.getMessage());
@@ -133,7 +133,7 @@ public class DoctorAppointmentsServlet extends HttpServlet {
             request.setAttribute("selectedDateDisplay", dateDisplay);
             request.setAttribute("isToday", selectedDate.equals(LocalDate.now()));
             
-            request.getRequestDispatcher("/jsp/doctor/doctor_trongngay.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_trongngay.jsp").forward(request, response);
         }
         // Đặt thông báo lỗi vào request attribute
 // Vẫn forward tới JSP để hiển thị lỗi

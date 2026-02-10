@@ -1,10 +1,10 @@
 package controller.appointment;
 
-import model.entity.Appointment;
+import model.Appointment;
 import dao.AppointmentDAO;
 import dao.DoctorDAO;
-import model.entity.Doctors;
-import model.entity.User;
+import model.Doctors;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,14 +29,14 @@ public class CompletedAppointmentsServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null) {
             System.out.println("No session found, redirecting to login");
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         // Lấy thông tin user từ session
         User user = (User) session.getAttribute("user");
         if (user == null) {
             System.out.println("User object not found in session");
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         System.out.println("Found user: " + user.getEmail());
@@ -46,7 +46,7 @@ public class CompletedAppointmentsServlet extends HttpServlet {
         if (doctor == null) {
             System.out.println("❌ Không tìm thấy doctor cho userId: " + user.getId());
             request.setAttribute("error", "Không tìm thấy thông tin bác sĩ");
-            request.getRequestDispatcher("/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
             return;
         }
         System.out.println("Found doctor: " + doctor.getFull_name());
@@ -84,7 +84,7 @@ public class CompletedAppointmentsServlet extends HttpServlet {
             request.setAttribute("selectedDateDisplay", dateDisplay);
             request.setAttribute("isToday", selectedDate.equals(LocalDate.now()));
 
-            request.getRequestDispatcher("/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -97,7 +97,7 @@ public class CompletedAppointmentsServlet extends HttpServlet {
             request.setAttribute("selectedDate", dateStr);
             request.setAttribute("selectedDateDisplay", dateDisplay);
             request.setAttribute("isToday", selectedDate.equals(LocalDate.now()));
-            request.getRequestDispatcher("/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_ketqua.jsp").forward(request, response);
         }
     }
     

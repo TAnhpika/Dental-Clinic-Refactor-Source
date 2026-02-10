@@ -4,9 +4,9 @@
  */
 package controller.treatment;
 
-import model.entity.MedicalReport;
+import model.MedicalReport;
 import dao.MedicineDAO;
-import model.entity.Prescription;
+import model.Prescription;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import model.entity.DoctorSchedule;
+import model.DoctorSchedule;
 
 
 /**
@@ -112,14 +112,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
     String page = request.getParameter("page");
     if ("calendar".equals(page)) {
-        request.getRequestDispatcher("/jsp/doctor/doctor_lichtrongthang.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/doctor/doctor_lichtrongthang.jsp").forward(request, response);
         return;
     }
     if ("confirmed".equals(page)) {
-        request.getRequestDispatcher("/jsp/doctor/doctor_lichdaxacnhan.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/doctor/doctor_lichdaxacnhan.jsp").forward(request, response);
         return;
     }
-    request.getRequestDispatcher("/jsp/doctor/doctor_dangkilich.jsp").forward(request, response);
+    request.getRequestDispatcher("/view/jsp/doctor/doctor_dangkilich.jsp").forward(request, response);
 }
 
      @Override

@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.entity.MedicalReport;
-import model.entity.Prescription;
+import model.MedicalReport;
+import model.Prescription;
 
 /**
  *
@@ -82,7 +82,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         request.setAttribute("report", report);
         request.setAttribute("prescriptions", prescriptions);
 
-        request.getRequestDispatcher("/jsp/patient/user_medicalreport.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/patient/user_medicalreport.jsp").forward(request, response);
 
     } catch (NumberFormatException e) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "appointmentId không hợp lệ");

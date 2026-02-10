@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import dao.StaffDAO;
 import dao.DoctorDAO;
 import java.io.IOException;
-import model.entity.Staff;
-import model.entity.Doctors;
+import model.Staff;
+import model.Doctors;
 
 @WebServlet("/AddStaffServlet")
 public class AddStaffServlet extends HttpServlet {
@@ -35,7 +35,7 @@ public class AddStaffServlet extends HttpServlet {
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         if (!"MANAGER".equals(role)) {
             LOGGER.warning("Unauthorized access attempt by role: " + role);
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
@@ -64,7 +64,7 @@ public class AddStaffServlet extends HttpServlet {
                     ", staffPosition=" + staffPosition + ", employmentType=" + employmentType);
             request.setAttribute("error", "invalid_input");
             request.setAttribute("errorMessage", "Thiếu hoặc thông tin rỗng!");
-            request.getRequestDispatcher("/jsp/manager/manager_danhsach.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/manager_danhsach.jsp").forward(request, response);
             return;
         }
 
@@ -73,7 +73,7 @@ public class AddStaffServlet extends HttpServlet {
             LOGGER.severe("Invalid email format: " + email);
             request.setAttribute("error", "invalid_input");
             request.setAttribute("errorMessage", "Định dạng email không hợp lệ!");
-            request.getRequestDispatcher("/jsp/manager/manager_danhsach.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/manager_danhsach.jsp").forward(request, response);
             return;
         }
 
@@ -82,7 +82,7 @@ public class AddStaffServlet extends HttpServlet {
             LOGGER.severe("Invalid phone number format: " + phone);
             request.setAttribute("error", "invalid_input");
             request.setAttribute("errorMessage", "Số điện thoại phải có 10 chữ số!");
-            request.getRequestDispatcher("/jsp/manager/manager_danhsach.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/manager_danhsach.jsp").forward(request, response);
             return;
         }
 
@@ -114,13 +114,13 @@ public class AddStaffServlet extends HttpServlet {
             LOGGER.log(Level.SEVERE, "SQL Error occurred: ", e);
             request.setAttribute("error", "staff_creation_failed");
             request.setAttribute("errorMessage", "Lỗi khi tạo nhân viên: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/manager/success.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/success.jsp").forward(request, response);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected error occurred: ", e);
             request.setAttribute("error", "unexpected_error");
             request.setAttribute("errorMessage",
                     "Lỗi không mong muốn: " + e.getMessage() + "\nStack Trace: " + getStackTrace(e));
-            request.getRequestDispatcher("/jsp/manager/success.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/success.jsp").forward(request, response);
         }
     }
 

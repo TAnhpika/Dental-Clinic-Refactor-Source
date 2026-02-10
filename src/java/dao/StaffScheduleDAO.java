@@ -4,7 +4,7 @@ import java.sql.*;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import model.entity.StaffSchedule;
+import model.StaffSchedule;
 import util.DBContext;
 
 /**
@@ -51,7 +51,7 @@ public class StaffScheduleDAO {
                 Integer slotId = schedule.getSlotId();
                 if (slotId != null) {
                     dao.TimeSlotDAO timeSlotDAO = new dao.TimeSlotDAO();
-                    model.entity.TimeSlot slot = timeSlotDAO.getTimeSlotById(slotId);
+                    model.TimeSlot slot = timeSlotDAO.getTimeSlotById(slotId);
                     if (slot != null) {
                         schedule.setSlotName(slot.getSlotName());
                         schedule.setSlotTime(slot.getDisplayTime());
@@ -105,7 +105,7 @@ public class StaffScheduleDAO {
                 Integer slotId = schedule.getSlotId();
                 if (slotId != null) {
                     dao.TimeSlotDAO timeSlotDAO = new dao.TimeSlotDAO();
-                    model.entity.TimeSlot slot = timeSlotDAO.getTimeSlotById(slotId);
+                    model.TimeSlot slot = timeSlotDAO.getTimeSlotById(slotId);
                     if (slot != null) {
                         schedule.setSlotName(slot.getSlotName());
                         schedule.setSlotTime(slot.getDisplayTime());

@@ -12,11 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import model.entity.Patients;
+import model.Patients;
 import java.util.List;
-import model.entity.Appointment;
-import model.entity.BlogPost;
-import model.entity.Doctors;
+import model.Appointment;
+import model.BlogPost;
+import model.Doctors;
 
 // @WebServlet annotation removed - using web.xml mapping instead
 public class UserHompageServlet extends HttpServlet {
@@ -33,7 +33,7 @@ public class UserHompageServlet extends HttpServlet {
 
         // ❌ Nếu chưa có session → về trang login
         if (session == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
@@ -50,7 +50,7 @@ public class UserHompageServlet extends HttpServlet {
             List<BlogPost> latestBlogs = BlogDAO.getLatest(2);
             request.setAttribute("latestBlogs", latestBlogs);
 
-            request.getRequestDispatcher("/jsp/patient/user_homepage.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/patient/user_homepage.jsp").forward(request, response);
             return;
         }
 
@@ -67,7 +67,7 @@ public class UserHompageServlet extends HttpServlet {
         request.setAttribute("latestBlogs", latestBlogs);
 
         // Chuyển đến user_homepage.jsp
-        request.getRequestDispatcher("/jsp/patient/user_homepage.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/patient/user_homepage.jsp").forward(request, response);
     }
 
     @Override

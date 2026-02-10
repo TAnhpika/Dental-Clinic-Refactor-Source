@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.entity.BlogPost;
+import model.BlogPost;
 
 /**
  *
@@ -66,7 +66,7 @@ public class LandingPageServlet extends HttpServlet {
 
         request.setAttribute("latestBlogs", latestBlogs);
         // Tạm thời dùng lại đường dẫn JSP cũ để tránh lỗi 404 khi Tomcat chưa deploy thư mục /view
-        request.getRequestDispatcher("/public/home.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/home.jsp").forward(request, response);
     }
 
     /**

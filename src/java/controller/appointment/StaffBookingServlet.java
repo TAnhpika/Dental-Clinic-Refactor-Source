@@ -13,12 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.entity.Appointment;
-import model.entity.Doctors;
-import model.entity.Patients;
-import model.entity.Service;
-import model.entity.TimeSlot;
-import model.entity.User;
+import model.Appointment;
+import model.Doctors;
+import model.Patients;
+import model.Service;
+import model.TimeSlot;
+import model.User;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -51,7 +51,7 @@ public class StaffBookingServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/staff/staff_datlich.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_datlich.jsp").forward(request, response);
         }
     }
 
@@ -153,13 +153,13 @@ public class StaffBookingServlet extends HttpServlet {
             request.setAttribute("todayAppointments", todayAppointments);
 
             // Forward to JSP
-            request.getRequestDispatcher("/jsp/staff/staff_datlich.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_datlich.jsp").forward(request, response);
 
         } catch (Exception e) {
             System.err.println("CRITICAL ERROR in loadInitialData: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Lỗi hệ thống: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/staff/staff_datlich.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/view/jsp/admin/staff_datlich.jsp").forward(request, response);
         }
     }
 

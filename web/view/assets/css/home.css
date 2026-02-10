@@ -1,4 +1,4 @@
-::root {
+:root {
     --bg-color: #f0f7ff;
     --header-bg: #fff;
     --text-color: #333;
@@ -896,6 +896,3 @@ body {
 
     .map iframe {
         height: 400px;
-    }
-}
-

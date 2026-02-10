@@ -5,7 +5,7 @@
 package controller.appointment;
 
 import dao.AppointmentDAO;
-import model.entity.Patients;
+import model.Patients;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -101,7 +101,7 @@ public class ConfirmServlet extends HttpServlet {
                     doctorIdStr == null || doctorIdStr.isEmpty()) {
                 System.out.println("ERROR: Missing required parameters!");
                 request.setAttribute("message", "Vui lòng điền đầy đủ thông tin!");
-                request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
                 return;
             }
             
@@ -112,11 +112,11 @@ public class ConfirmServlet extends HttpServlet {
             // Lấy thông tin bệnh nhân từ session (sửa để dùng User object)
             HttpSession session = request.getSession();
             System.out.println("Session ID tại servlet: " + session.getId());
-            model.entity.User user = (model.entity.User) session.getAttribute("user");
+            model.User user = (model.User) session.getAttribute("user");
             if (user == null) {
                 System.out.println("ERROR: Không tìm thấy user trong session");
                 request.setAttribute("message", "Vui lòng đăng nhập để đặt lịch!");
-                request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
                 return;
             }
             
@@ -124,11 +124,11 @@ public class ConfirmServlet extends HttpServlet {
             
             // Lấy patient_id từ bảng Patients dựa vào user_id
             dao.PatientDAO patientDAO = new dao.PatientDAO();
-            model.entity.Patients patient = dao.PatientDAO.getPatientByUserId(user.getId());
+            model.Patients patient = dao.PatientDAO.getPatientByUserId(user.getId());
             if (patient == null) {
                 System.out.println("ERROR: Không tìm thấy patient record cho user_id: " + user.getId());
                 request.setAttribute("message", "Không tìm thấy thông tin bệnh nhân. Vui lòng cập nhật thông tin cá nhân!");
-                request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
                 return;
             }
             
@@ -141,11 +141,11 @@ public class ConfirmServlet extends HttpServlet {
                 
                 // Lấy thông tin thời gian từ TimeSlot dựa vào slotId
                 dao.TimeSlotDAO timeSlotDAO = new dao.TimeSlotDAO();
-                model.entity.TimeSlot timeSlot = timeSlotDAO.getTimeSlotById(slotId);
+                model.TimeSlot timeSlot = timeSlotDAO.getTimeSlotById(slotId);
                 if (timeSlot == null) {
                     System.out.println("ERROR: TimeSlot not found for slotId: " + slotId);
                     request.setAttribute("message", "Ca khám không hợp lệ!");
-                    request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+                    request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
                     return;
                 }
                 LocalTime startTime = timeSlot.getStartTime();
@@ -156,7 +156,7 @@ public class ConfirmServlet extends HttpServlet {
                 if (AppointmentDAO.checkAppointmentExistsBySlotId(slotId, parsedWorkDate, startTime)) {
                     System.out.println("ERROR: Appointment already exists!");
                     request.setAttribute("message", "Lịch này đã được đặt. Vui lòng chọn lịch khác!");
-                    request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+                    request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
                     return;
                 }
                 
@@ -193,7 +193,7 @@ public class ConfirmServlet extends HttpServlet {
                 request.setAttribute("message", "Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại!");
             }
             
-            request.getRequestDispatcher("/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/patient/datlich-thanhcong.jsp").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ConfirmServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

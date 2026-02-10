@@ -7,8 +7,8 @@ package dao;
 import java.security.MessageDigest;
 import java.sql.*;
 import util.DBContext;
-import model.entity.Staff;
-import model.entity.User;
+import model.Staff;
+import model.User;
 import java.util.ArrayList;
 import java.util.List;
 

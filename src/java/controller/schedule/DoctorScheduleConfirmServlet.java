@@ -17,8 +17,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.entity.DoctorSchedule;
-import model.entity.Doctors;
+import model.DoctorSchedule;
+import model.Doctors;
 
 /**
  *
@@ -74,7 +74,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         request.setAttribute("doctor", doctor);
 
         // Forward sang trang JSP hiển thị lịch
-        request.getRequestDispatcher("/jsp/patient/user_datlich.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/patient/user_datlich.jsp").forward(request, response);
         
     }catch (NumberFormatException e) {
         // Trường hợp doctor_id không hợp lệ

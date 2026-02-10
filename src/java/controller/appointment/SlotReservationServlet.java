@@ -1,7 +1,7 @@
 package controller.appointment;
 
 import dao.AppointmentDAO;
-import model.entity.SlotReservation;
+import model.SlotReservation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.entity.User;
+import model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;

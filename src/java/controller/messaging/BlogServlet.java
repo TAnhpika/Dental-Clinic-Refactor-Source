@@ -17,7 +17,7 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
-import model.entity.BlogPost;
+import model.BlogPost;
 
 /**
  *
@@ -80,13 +80,13 @@ public class BlogServlet extends HttpServlet {
                 int blogId = Integer.parseInt(blogIdStr);
                 BlogPost post = BlogDAO.getPostById(blogId);
                 request.setAttribute("post", post);
-                request.getRequestDispatcher("/jsp/blog/blog_detail.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/blog/blog_detail.jsp").forward(request, response);
                 return;
             }
 
             List<BlogPost> posts = BlogDAO.getAllPosts();
             request.setAttribute("posts", posts);
-            request.getRequestDispatcher("/jsp/blog/blog.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/blog/blog.jsp").forward(request, response);
 
         } catch (Exception e) {
             throw new ServletException(e);

@@ -3,7 +3,7 @@ package controller.treatment;
 import dao.DoctorDAO;
 import dao.MedicineDAO;
 import dao.PatientDAO;
-import model.entity.*;
+import model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -32,7 +32,7 @@ public class ViewReportServlet extends HttpServlet {
 
             if (reportIdParam == null && appointmentIdParam == null) {
                 String contextPath = request.getContextPath();
-                response.sendRedirect(contextPath + "/jsp/doctor/doctor_trongngay.jsp?error=missing_params");
+                response.sendRedirect(contextPath + "/view/jsp/doctor/doctor_trongngay.jsp?error=missing_params");
                 return;
             }
 
@@ -55,7 +55,7 @@ public class ViewReportServlet extends HttpServlet {
             if (report == null) {
                 // Redirect đến trang "không có báo cáo" với appointmentId
                 String contextPath = request.getContextPath();
-                String redirectUrl = contextPath + "/jsp/doctor/doctor_no_report_found.jsp";
+                String redirectUrl = contextPath + "/view/jsp/doctor/doctor_no_report_found.jsp";
                 if (appointmentId != null) {
                     redirectUrl += "?appointmentId=" + appointmentId;
                 } else if (appointmentIdParam != null) {
@@ -100,17 +100,17 @@ public class ViewReportServlet extends HttpServlet {
 
             // Forward đến JSP
             String contextPath = request.getContextPath();
-            request.getRequestDispatcher("/jsp/doctor/doctor_viewMedicalReport.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_viewMedicalReport.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             // Lỗi parse số - redirect đến trang lỗi
             String contextPath = request.getContextPath();
-            response.sendRedirect(contextPath + "/jsp/doctor/error_page.jsp?error=invalid_id");
+            response.sendRedirect(contextPath + "/view/jsp/doctor/error_page.jsp?error=invalid_id");
         } catch (Exception e) {
             e.printStackTrace();
             // Lỗi hệ thống - redirect đến trang lỗi (dùng contextPath để không bị 404)
             String contextPath = request.getContextPath();
-            response.sendRedirect(contextPath + "/jsp/doctor/error_page.jsp?error=system_error");
+            response.sendRedirect(contextPath + "/view/jsp/doctor/error_page.jsp?error=system_error");
         }
     }
 

@@ -2,8 +2,8 @@ package controller.messaging;
 
 import dao.ServiceDAO;
 import dao.SpecialtyDAO;
-import model.entity.Service;
-import model.entity.Specialty;
+import model.Service;
+import model.Specialty;
 import com.google.gson.Gson;
 
 import jakarta.servlet.ServletException;

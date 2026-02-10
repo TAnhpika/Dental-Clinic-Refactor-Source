@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.entity.Patients;
-import model.entity.User;
+import model.Patients;
+import model.User;
 
 /**
  *
@@ -77,7 +77,7 @@ public class UserAccountServlet extends HttpServlet {
         // Nếu cần load thêm dữ liệu từ DB, bạn có thể làm ở đây
 
         // Forward về JSP
-        request.getRequestDispatcher("/jsp/patient/user_taikhoan.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/patient/user_taikhoan.jsp").forward(request, response);
     }
 
     /**

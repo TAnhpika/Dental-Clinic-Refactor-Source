@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import dao.StaffDAO;
 import dao.DoctorDAO;
-import model.entity.Staff;
-import model.entity.Doctors;
+import model.Staff;
+import model.Doctors;
 
 @WebServlet("/DeleteStaffServlet")
 public class DeleteStaffServlet extends HttpServlet {
@@ -34,7 +34,7 @@ public class DeleteStaffServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String role = (session != null) ? (String) session.getAttribute("role") : null;
         if (!"MANAGER".equals(role)) {
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
@@ -79,6 +79,6 @@ public class DeleteStaffServlet extends HttpServlet {
         }
 
         // Forward về trang danh sách
-        request.getRequestDispatcher("/jsp/manager/manager_danhsach.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/view/jsp/admin/manager_danhsach.jsp").forward(request, response);
     }
 }

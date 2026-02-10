@@ -11,7 +11,7 @@ import java.util.Random;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
-import model.entity.User;
+import model.User;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.logging.Level;

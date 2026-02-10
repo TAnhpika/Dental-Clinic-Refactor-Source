@@ -1,6 +1,6 @@
 package util;
 
-import model.entity.Bill;
+import model.Bill;
 import vn.payos.PayOS;
 import vn.payos.type.CheckoutResponseData;
 import vn.payos.type.ItemData;

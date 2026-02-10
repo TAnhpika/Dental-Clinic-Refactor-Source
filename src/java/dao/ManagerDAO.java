@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.*;
 import util.DBContext;
-import model.entity.Manager;
+import model.Manager;
 
 public class ManagerDAO {
     public static Connection getConnect() {

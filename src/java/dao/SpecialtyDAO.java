@@ -1,6 +1,6 @@
 package dao;
 
-import model.entity.Specialty;
+import model.Specialty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,7 +1,7 @@
 package controller.admin;
 
 import dao.PatientDAO;
-import model.entity.Patients;
+import model.Patients;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

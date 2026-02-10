@@ -1,7 +1,7 @@
 package controller.payment;
 
 import dao.BillDAO;
-import model.entity.Bill;
+import model.Bill;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

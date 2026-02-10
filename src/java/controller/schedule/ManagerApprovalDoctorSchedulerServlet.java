@@ -2,9 +2,9 @@ package controller.schedule;
 
 import dao.DoctorScheduleDAO;
 import dao.StaffScheduleDAO;
-import model.entity.DoctorSchedule;
-import model.entity.StaffSchedule;
-import model.entity.User;
+import model.DoctorSchedule;
+import model.StaffSchedule;
+import model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -65,7 +65,7 @@ public class ManagerApprovalDoctorSchedulerServlet extends HttpServlet {
                     // Lấy employmentType từ Staff nếu chưa có
                     // (Giả sử StaffDAO có hàm getStaffById)
                     dao.StaffDAO staffDao = new dao.StaffDAO();
-                    model.entity.Staff staff = staffDao.getStaffById(s.getStaffId());
+                    model.Staff staff = staffDao.getStaffById(s.getStaffId());
                     if (staff != null) {
                         s.setEmploymentType(staff.getEmploymentType());
                     }

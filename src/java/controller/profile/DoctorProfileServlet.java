@@ -1,8 +1,8 @@
 package controller.profile;
 
 import dao.DoctorDAO;
-import model.entity.Doctors;
-import model.entity.User;
+import model.Doctors;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,14 +22,14 @@ public class DoctorProfileServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = session != null ? (User) session.getAttribute("user") : null;
         if (user == null || !"DOCTOR".equals(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         Doctors doctor = DoctorDAO.getDoctorByUserId(user.getId());
         if (doctor != null) {
             request.setAttribute("doctor_trangcanhan", doctor);
         }
-        request.getRequestDispatcher("/jsp/doctor/doctor_trangcanhan.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/doctor/doctor_trangcanhan.jsp").forward(request, response);
     }
 
     @Override

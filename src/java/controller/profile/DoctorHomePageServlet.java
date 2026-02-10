@@ -2,10 +2,10 @@ package controller.profile;
 
 import dao.AppointmentDAO;
 import dao.PatientDAO;
-import model.entity.Appointment;
-import model.entity.Doctors;
-import model.entity.Patients;
-import model.entity.User;
+import model.Appointment;
+import model.Doctors;
+import model.Patients;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,13 +66,13 @@ public class DoctorHomePageServlet extends HttpServlet {
             prepareStatisticsData(request, loggedInDoctor, loggedInUser);
             
             // Forward đến JSP để hiển thị
-            request.getRequestDispatcher("/jsp/doctor/doctor_tongquan.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_tongquan.jsp").forward(request, response);
             
         } catch (Exception e) {
             System.err.println("Error in DoctorHomePageServlet: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("errorMessage", "Đã xảy ra lỗi khi tải dữ liệu: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/doctor/error_page.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/error_page.jsp").forward(request, response);
         }
     }
     

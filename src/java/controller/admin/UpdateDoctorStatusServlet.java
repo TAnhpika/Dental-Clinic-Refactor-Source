@@ -1,8 +1,8 @@
 package controller.admin;
 
 import dao.DoctorDAO;
-import model.entity.Doctors;
-import model.entity.User;
+import model.Doctors;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

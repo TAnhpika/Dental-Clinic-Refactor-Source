@@ -14,12 +14,12 @@ import dao.PatientDAO;
 import dao.ServicePriceDAO;
 import dao.SpecialtyDAO;
 import util.N8nWebhookService;
-import model.entity.Appointment;
-import model.entity.Doctors;
-import model.entity.Patients;
-import model.entity.Service;
-import model.entity.Specialty;
-import model.entity.TimeSlot;
+import model.Appointment;
+import model.Doctors;
+import model.Patients;
+import model.Service;
+import model.Specialty;
+import model.TimeSlot;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,8 +30,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
 import java.util.List;
-import model.entity.DoctorSchedule;
-import model.entity.User;
+import model.DoctorSchedule;
+import model.User;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -269,7 +269,7 @@ public class BookingPageServlet extends HttpServlet {
 
             // Không cần validate thông tin người thân ở doGet nữa - xử lý ở doPost
 
-            request.getRequestDispatcher("/jsp/patient/user_datlich.jsp").forward(request, response); // forward ra ở
+            request.getRequestDispatcher("/view/jsp/patient/user_datlich.jsp").forward(request, response); // forward ra ở
                                                                                                       // đây
 
         } catch (ServletException | IOException | NumberFormatException e) {

@@ -3,7 +3,7 @@ package util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import model.entity.Bill;
+import model.Bill;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

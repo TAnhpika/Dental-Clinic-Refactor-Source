@@ -4,8 +4,8 @@ import dao.DoctorDAO;
 import dao.PatientDAO;
 import dao.MedicineDAO;
 import dao.AppointmentDAO;
-import model.entity.Doctors;
-import model.entity.Patients;
+import model.Doctors;
+import model.Patients;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -162,7 +162,7 @@ public class MedicalReportServlet extends HttpServlet {
                 }
             }
 
-            response.sendRedirect(request.getContextPath() + "/jsp/doctor/success.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/doctor/success.jsp");
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

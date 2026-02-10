@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import model.entity.TimeSlot;
+import model.TimeSlot;
 
 @WebServlet(name = "GetAvailableSlotsServlet", urlPatterns = {"/GetAvailableSlotsServlet"})
 public class GetAvailableSlotsServlet extends HttpServlet {

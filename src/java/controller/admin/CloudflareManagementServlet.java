@@ -148,7 +148,7 @@ public class CloudflareManagementServlet extends HttpServlet {
         }
         
         request.setAttribute("dashboardData", dashboardData);
-        request.getRequestDispatcher("/jsp/manager/cloudflare_dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/view/jsp/admin/cloudflare_dashboard.jsp").forward(request, response);
     }
     
     /**

@@ -7,11 +7,11 @@ import dao.DoctorDAO;
 import dao.ServiceDAO;
 import dao.TimeSlotDAO;
 import dao.UserDAO;
-import model.entity.Service;
-import model.entity.Patients;
-import model.entity.User;
-import model.entity.Bill;
-import model.entity.SlotReservation;
+import model.Service;
+import model.Patients;
+import model.User;
+import model.Bill;
+import model.SlotReservation;
 import util.PayOSConfig;
 
 import jakarta.servlet.ServletException;
@@ -35,7 +35,7 @@ import java.io.PrintWriter;
 import util.N8nWebhookService;
 import dao.RelativesDAO;
 import dao.ServicePriceDAO;
-import model.entity.TimeSlot;
+import model.TimeSlot;
 
 /**
  * Servlet xử lý thanh toán PayOS với QR code + tích hợp đặt lịch appointment
@@ -132,7 +132,7 @@ public class PayOSServlet extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/jsp/auth/login.jsp");
+                response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
                 return;
             }
 
@@ -728,7 +728,7 @@ public class PayOSServlet extends HttpServlet {
             session.removeAttribute("selectedService");
             System.out.println("🔄 Đã xóa selectedService khỏi session sau thanh toán thành công");
 
-            request.getRequestDispatcher("/payment/payment-success.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/payment/payment-success.jsp").forward(request, response);
 
             // ✅ Xóa session KHÔNG CẦN THIẾT vì user có thể F5 trang success
             // session.removeAttribute("paymentInfo");
@@ -742,7 +742,7 @@ public class PayOSServlet extends HttpServlet {
             // Vẫn hiển thị success page nhưng log lỗi
             request.setAttribute("paymentInfo", paymentInfo);
             request.setAttribute("appointmentCreated", false);
-            request.getRequestDispatcher("/payment/payment-success.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/payment/payment-success.jsp").forward(request, response);
         }
     }
 
@@ -872,7 +872,7 @@ public class PayOSServlet extends HttpServlet {
         // 5. Forward tới trang cancel với thông báo slot đã được trả về
         request.setAttribute("slotReleased", activeReservation != null);
         request.setAttribute("reservationInfo", activeReservation);
-        request.getRequestDispatcher("/payment/payment-cancel.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/jsp/payment/payment-cancel.jsp").forward(request, response);
     }
 
     /**

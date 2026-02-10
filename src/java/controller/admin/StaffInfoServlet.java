@@ -1,7 +1,7 @@
 package controller.admin;
 
 import dao.StaffDAO;
-import model.entity.Staff;
+import model.Staff;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;

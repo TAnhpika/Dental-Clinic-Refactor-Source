@@ -1,6 +1,6 @@
 package dao;
 
-import model.entity.Doctors;
+import model.Doctors;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import model.entity.Appointment;
-import model.entity.DoctorSchedule;
-import model.entity.MedicalReport;
-import model.entity.PrescriptionDetail;
-import model.entity.TimeSlot;
+import model.Appointment;
+import model.DoctorSchedule;
+import model.MedicalReport;
+import model.PrescriptionDetail;
+import model.TimeSlot;
 import util.DBContext;
 
 public class DoctorDAO {

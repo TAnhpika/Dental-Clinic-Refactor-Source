@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import util.PayOSUtil;
 import dao.BillDAO;
-import model.entity.Bill;
+import model.Bill;
 import java.math.BigDecimal;
 
 /**
@@ -104,7 +104,7 @@ public class StaffPayOSServlet extends HttpServlet {
                 request.setAttribute("quantity", quantity);
                 request.setAttribute("price", price);
                 request.setAttribute("total", total);
-                request.getRequestDispatcher("/jsp/staff/bill_qr.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/view/jsp/admin/bill_qr.jsp").forward(request, response);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();

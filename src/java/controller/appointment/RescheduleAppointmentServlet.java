@@ -13,7 +13,7 @@ public class RescheduleAppointmentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Lấy danh sách lịch hẹn cho staff (có thể lọc theo trạng thái)
-        java.util.List<model.entity.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
+        java.util.List<model.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
         request.setAttribute("appointments", appointments);
         request.getRequestDispatcher("jsp/staff/staff_doilich.jsp").forward(request, response);
     }
@@ -42,7 +42,7 @@ public class RescheduleAppointmentServlet extends HttpServlet {
         }
         request.setAttribute("message", message);
         // Load lại danh sách lịch hẹn
-        java.util.List<model.entity.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
+        java.util.List<model.Appointment> appointments = new dao.AppointmentDAO().getAllAppointmentsWithDetails();
         request.setAttribute("appointments", appointments);
         request.getRequestDispatcher("jsp/staff/staff_doilich.jsp").forward(request, response);
     }

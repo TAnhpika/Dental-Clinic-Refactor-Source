@@ -19,8 +19,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ColoredLogger;
-import model.entity.Staff;
-import model.entity.User;
+import model.Staff;
+import model.User;
 
 /**
  *
@@ -61,14 +61,14 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
             return;
         }
         
-        String jspPath = "/jsp/staff/staff_dangkilich.jsp"; // Default JSP path
+        String jspPath = "/view/view/jsp/admin/staff_dangkilich.jsp"; // Default JSP path
         
         try {
             Staff staff = staffDAO.getStaffByUserId(user.getId());
             if (staff == null) {
                 ColoredLogger.logError("StaffRegisterSecheduleServlet", "Staff not found for user ID: " + user.getId());
                 request.setAttribute("error", "Không tìm thấy thông tin nhân viên!");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
             
@@ -85,7 +85,7 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
             // Forward to appropriate page based on employment type
             if ("fulltime".equals(staff.getEmploymentType())) {
                 ColoredLogger.logInfo("StaffRegisterSecheduleServlet", "Setting up data for full-time staff");
-                jspPath = "/jsp/staff/staff_xinnghi.jsp";
+                jspPath = "/view/view/jsp/admin/staff_xinnghi.jsp";
                 
                 // Tính số ngày nghỉ đã sử dụng trong tháng
                 int usedDays = scheduleDAO.getApprovedLeaveDaysInMonth((int) staff.getStaffId(), currentMonth, currentYear);
@@ -98,7 +98,7 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
                 request.setAttribute("remainingDays", remainingDays);
                 
                 // Lấy lịch sử yêu cầu nghỉ phép
-                java.util.List<model.entity.StaffSchedule> scheduleRequests = scheduleDAO.getStaffSchedulesByMonth((int) staff.getStaffId(), currentMonth, currentYear);
+                java.util.List<model.StaffSchedule> scheduleRequests = scheduleDAO.getStaffSchedulesByMonth((int) staff.getStaffId(), currentMonth, currentYear);
                 request.setAttribute("scheduleRequests", scheduleRequests);
                 
                 ColoredLogger.logInfo("StaffRegisterSecheduleServlet", "Set leave data: used=" + usedDays + ", max=" + maxDays + ", remaining=" + remainingDays);
@@ -106,13 +106,13 @@ public class StaffRegisterSecheduleServlet extends HttpServlet {
                 ColoredLogger.logInfo("StaffRegisterSecheduleServlet", "Setting up data for part-time staff");
                 
                 // Lấy lịch làm việc đã đăng ký
-                java.util.List<model.entity.StaffSchedule> scheduleRequests = scheduleDAO.getStaffSchedulesByMonth((int) staff.getStaffId(), currentMonth, currentYear);
+                java.util.List<model.StaffSchedule> scheduleRequests = scheduleDAO.getStaffSchedulesByMonth((int) staff.getStaffId(), currentMonth, currentYear);
                 request.setAttribute("scheduleRequests", scheduleRequests);
                 
                 // Lấy danh sách 3 ca làm việc chính (slotId 1,2,3) cho parttime
                 dao.TimeSlotDAO timeSlotDAO = new dao.TimeSlotDAO();
                 // Lấy 3 ca chính
-                java.util.List<model.entity.TimeSlot> timeSlots = timeSlotDAO.getMainTimeSlots();
+                java.util.List<model.TimeSlot> timeSlots = timeSlotDAO.getMainTimeSlots();
                 request.setAttribute("timeSlots", timeSlots);
             }
             

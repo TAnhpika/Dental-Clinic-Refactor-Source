@@ -1,8 +1,8 @@
 package controller.admin;
 
 import dao.DoctorDAO;
-import model.entity.Doctors;
-import model.entity.User;
+import model.Doctors;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (session == null) {
                 System.out.println("DEBUG: Session is null");
                 request.setAttribute("errorMessage", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -33,7 +33,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user == null) {
                 System.out.println("DEBUG: User is null in session");
                 request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -41,7 +41,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user.getId() <= 0) {
                 System.out.println("DEBUG: User ID is invalid: " + user.getId());
                 request.setAttribute("errorMessage", "Thông tin người dùng không hợp lệ");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -52,7 +52,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (doctorInfo == null) {
                 System.out.println("DEBUG: Doctor info is null for user ID: " + user.getId());
                 request.setAttribute("errorMessage", "Không tìm thấy thông tin bác sĩ");
-                request.getRequestDispatcher("/jsp/doctor/error_page.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/doctor/error_page.jsp").forward(request, response);
                 return;
             }
 
@@ -67,14 +67,14 @@ public class EditDoctorServlet extends HttpServlet {
             // Đặt thông tin bác sĩ vào request để hiển thị trên form
             request.setAttribute("doctor", doctorInfo);
             request.setAttribute("pageTitle", "Chỉnh sửa thông tin bác sĩ");
-            request.getRequestDispatcher("/jsp/doctor/doctor_caidat.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_caidat.jsp").forward(request, response);
             
         } catch (Exception e) {
             System.out.println("DEBUG: Exception in doGet: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             try {
-                request.getRequestDispatcher("/jsp/doctor/error_page.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/doctor/error_page.jsp").forward(request, response);
             } catch (Exception ex) {
                 // Nếu forward thất bại, chỉ ghi log
                 System.out.println("Failed to forward to error page: " + ex.getMessage());
@@ -90,7 +90,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (session == null) {
                 System.out.println("DEBUG POST: Session is null");
                 request.setAttribute("errorMessage", "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -99,7 +99,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user == null) {
                 System.out.println("DEBUG POST: User is null in session");
                 request.setAttribute("errorMessage", "Bạn cần đăng nhập với vai trò bác sĩ");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -107,7 +107,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (user.getId() <= 0) {
                 System.out.println("DEBUG: User ID is invalid: " + user.getId());
                 request.setAttribute("errorMessage", "Thông tin người dùng không hợp lệ");
-                request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
                 return;
             }
 
@@ -116,7 +116,7 @@ public class EditDoctorServlet extends HttpServlet {
             if (currentDoctor == null) {
                 System.out.println("DEBUG POST: Current doctor is null for user ID: " + user.getId());
                 request.setAttribute("errorMessage", "Không tìm thấy thông tin bác sĩ");
-                request.getRequestDispatcher("/jsp/doctor/error_page.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/doctor/error_page.jsp").forward(request, response);
                 return;
             }
 
@@ -146,7 +146,7 @@ public class EditDoctorServlet extends HttpServlet {
                 } catch (ParseException e) {
                     request.setAttribute("errorMessage", "Định dạng ngày sinh không hợp lệ");
                     request.setAttribute("doctor", currentDoctor);
-                    request.getRequestDispatcher("/jsp/doctor/doctor_caidat.jsp").forward(request, response);
+                    request.getRequestDispatcher("/view/jsp/doctor/doctor_caidat.jsp").forward(request, response);
                     return;
                 }
             }
@@ -178,13 +178,13 @@ public class EditDoctorServlet extends HttpServlet {
             } else {
                 request.setAttribute("errorMessage", "Không thể cập nhật thông tin bác sĩ");
                 request.setAttribute("doctor", doctor);
-                request.getRequestDispatcher("/jsp/doctor/doctor_caidat.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/jsp/doctor/doctor_caidat.jsp").forward(request, response);
             }
         } catch (Exception e) {
             System.out.println("DEBUG POST: Exception: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/doctor/doctor_caidat.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jsp/doctor/doctor_caidat.jsp").forward(request, response);
         }
     }
 

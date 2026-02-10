@@ -1,6 +1,6 @@
 package dao;
 
-import model.entity.Bill;
+import model.Bill;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package util;
 
-import model.entity.Bill;
+import model.Bill;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
