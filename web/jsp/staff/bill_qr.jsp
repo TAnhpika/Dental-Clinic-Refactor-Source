@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.math.BigDecimal" %>
-<%@page import="model.entity.Bill" %>
+<%@page import="model.Bill" %>
 <%
     Bill bill = (Bill) request.getAttribute("bill");
     String medicineName = (String) request.getAttribute("medicineName");

@@ -1,6 +1,6 @@
-<%@page import="model.entity.User" %>
+<%@page import="model.User" %>
     <%@page import="dao.MedicineDAO" %>
-        <%@page import="model.entity.Medicine" %>
+        <%@page import="model.Medicine" %>
             <%@page import="java.util.List" %>
                 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 

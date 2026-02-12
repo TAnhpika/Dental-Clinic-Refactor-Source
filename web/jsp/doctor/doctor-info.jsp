@@ -1,5 +1,5 @@
-<%@page import="model.entity.Doctors"%>
-<%@page import="model.entity.User"%>
+<%@page import="model.Doctors"%>
+<%@page import="model.User"%>
 <%@page import="dao.DoctorDAO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 

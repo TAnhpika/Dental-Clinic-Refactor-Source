@@ -4,8 +4,8 @@
             <%@page import="java.math.BigDecimal" %>
                 <%@page import="dao.MedicineDAO" %>
                     <%@page import="dao.BillDAO" %>
-                        <%@page import="model.entity.Medicine" %>
-                            <%@page import="model.entity.User" %>
+                        <%@page import="model.Medicine" %>
+                            <%@page import="model.User" %>
 
 <%
     String error = null;

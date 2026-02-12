@@ -1,5 +1,5 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dao.StaffDAO, dao.DoctorDAO, model.entity.Staff, model.entity.Doctors, model.entity.User, java.util.List, java.util.logging.Logger, java.util.logging.Level" %>
+<%@ page import="dao.StaffDAO, dao.DoctorDAO, model.Staff, model.Doctors, model.User, java.util.List, java.util.logging.Logger, java.util.logging.Level" %>
 <%! private static final Logger LOGGER = Logger.getLogger("manager_danhsach.jsp");%>
 
 <%

@@ -25,7 +25,7 @@
 <!DOCTYPE html>
 <html lang="vi">
     <head>
-    <%@ include file="/includes/dashboard_head.jsp" %>
+    <%@ include file="/view/layout/dashboard_head.jsp" %>
     <title>Trang chủ - Happy Smile</title>
     </head>
     <body>
@@ -280,6 +280,6 @@
         </main>
         </div>
     
-    <%@ include file="/includes/dashboard_scripts.jsp" %>
+    <%@ include file="/view/layout/dashboard_scripts.jsp" %>
     </body>
 </html>

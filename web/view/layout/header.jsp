@@ -7,7 +7,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <!-- Font local DejaVu Sans - Inject contextPath động -->
-            <%@ include file="/includes/font-loader.jsp" %>
+            <%@ include file="/view/layout/font-loader.jsp" %>
                 <style>
                     :root {
                         --bg-color: #f0f7ff;
@@ -389,7 +389,7 @@
                             <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp"
                                class="auth-btn login"
                                data-lang="login">Đăng nhập</a>
-                            <a href="${pageContext.request.contextPath}/jsp/auth/signup.jsp"
+                            <a href="${pageContext.request.contextPath}/jsp/auth/register.jsp"
                                class="auth-btn register"
                                data-lang="register">Đăng ký</a>
                         </div>

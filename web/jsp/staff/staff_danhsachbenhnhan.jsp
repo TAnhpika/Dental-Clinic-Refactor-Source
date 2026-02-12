@@ -1,7 +1,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="dao.PatientDAO" %>
-<%@ page import="model.entity.Patients" %>
-<%@ page import="model.entity.User" %>
+<%@ page import="model.Patients" %>
+<%@ page import="model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 

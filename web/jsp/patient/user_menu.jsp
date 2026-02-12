@@ -1,3 +1,3 @@
-<%-- Patient Sidebar Wrapper: chỉ việc include component chung --%>
-<%@ include file="/includes/components/sidebar_patient.jsp" %>
+<%-- Patient Sidebar Wrapper: include component sidebar mới trong view/layout --%>
+<%@ include file="/view/layout/components/sidebar_patient.jsp" %>
 

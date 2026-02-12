@@ -1,7 +1,7 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="dao.AppointmentDAO" %>
-<%@page import="model.entity.Appointment" %>
-<%@page import="model.entity.User" %>
+<%@page import="model.Appointment" %>
+<%@page import="model.User" %>
 <%@page import="java.util.List" %>
 
 <%

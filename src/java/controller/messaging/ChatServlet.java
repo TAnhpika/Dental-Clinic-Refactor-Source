@@ -69,8 +69,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         return;
     }
 
-    // Nếu đã đăng nhập, chuyển đến chat.jsp
-    request.getRequestDispatcher("/public/chat.jsp").forward(request, response);
+    // Nếu đã đăng nhập, chuyển đến trang chat của bệnh nhân
+    request.getRequestDispatcher("/jsp/patient/chat.jsp").forward(request, response);
 }
 
 

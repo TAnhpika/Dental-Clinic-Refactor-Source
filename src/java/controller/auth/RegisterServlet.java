@@ -77,7 +77,8 @@ public class RegisterServlet extends HttpServlet {
         Integer id = (session != null) ? (Integer) session.getAttribute("id") : null;
 
         if (id == null) {
-            response.sendRedirect("auth/login.jsp");
+            // Chưa có ID trong session → quay lại trang đăng nhập mới trong /jsp/auth
+            response.sendRedirect("jsp/auth/login.jsp");
             return;
         }
 
@@ -93,9 +94,11 @@ public class RegisterServlet extends HttpServlet {
         // Không sử dụng trang information.jsp nữa.
         // Nếu lỗi, quay lại trang đăng ký với thông báo lỗi đơn giản.
         if (success) {
-            response.sendRedirect("auth/login.jsp");
+            // Lưu info thành công → quay lại màn login
+            response.sendRedirect("jsp/auth/login.jsp");
         } else {
-            response.sendRedirect("auth/signup.jsp?error=save_failed");
+            // Lỗi lưu info → quay lại trang register.jsp với error
+            response.sendRedirect("jsp/auth/register.jsp?error=save_failed");
         }
     }
 

@@ -110,7 +110,8 @@ public class InputMedicalReportServlet extends HttpServlet {
                 }
             }
 
-            response.sendRedirect("public/success.jsp");
+            // Sau khi lưu báo cáo, chuyển đến trang thành công của bác sĩ
+            response.sendRedirect(request.getContextPath() + "/jsp/doctor/success.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();

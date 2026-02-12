@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.*, model.entity.BlogPost" %>
+<%@ page import="java.util.*, model.BlogPost" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%

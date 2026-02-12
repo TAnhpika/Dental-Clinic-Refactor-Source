@@ -1,8 +1,8 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
-<%@ page import="model.entity.Doctors" %>
-<%@ page import="model.entity.User" %>
-<%@ page import="model.entity.Appointment" %>
+<%@ page import="model.Doctors" %>
+<%@ page import="model.User" %>
+<%@ page import="model.Appointment" %>
 <%@ page import="controller.profile.DoctorHomePageServlet" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.List" %>

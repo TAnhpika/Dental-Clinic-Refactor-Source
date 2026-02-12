@@ -115,8 +115,8 @@ public class CreateMedicalReportServlet extends HttpServlet {
             request.setAttribute("appointment", appointment);
             request.setAttribute("patient", patient);
             
-            // Forward đến trang phiếu khám
-            request.getRequestDispatcher("/public/phieukham.jsp").forward(request, response);
+            // Forward đến trang phiếu khám (giao diện doctor mới)
+            request.getRequestDispatcher("/jsp/doctor/doctor_phieukham.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             request.setAttribute("error", "ID cuộc hẹn không hợp lệ");

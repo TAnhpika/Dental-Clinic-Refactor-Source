@@ -1,8 +1,8 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="dao.ManagerDAO" %>
 <%@ page import="dao.UserDAO" %>
-<%@ page import="model.entity.Manager" %>
-<%@ page import="model.entity.User" %>
+<%@ page import="model.Manager" %>
+<%@ page import="model.User" %>
 
 <%
     User user = (User) session.getAttribute("user");

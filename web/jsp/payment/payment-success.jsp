@@ -671,7 +671,7 @@
 
                     if (timeLeft <= 0) {
                         clearInterval(interval);
-                        window.location.href = '${pageContext.request.contextPath}/public/home.jsp';
+                        window.location.href = '${pageContext.request.contextPath}/view/jsp/home.jsp';
                     }
                 }, 1000);
 

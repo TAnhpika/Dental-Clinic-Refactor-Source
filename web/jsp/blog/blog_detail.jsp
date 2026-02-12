@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="model.entity.BlogPost" %>
+<%@ page import="model.BlogPost" %>
 
 <%
     BlogPost post = (BlogPost) request.getAttribute("post");

@@ -3,9 +3,9 @@
 <%@page import="dao.AppointmentDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-<%@page import="model.entity.Doctors"%>
-<%@page import="model.entity.Patients"%>
-<%@page import="model.entity.Appointment"%>
+<%@page import="model.Doctors"%>
+<%@page import="model.Patients"%>
+<%@page import="model.Appointment"%>
 
 <%
             String appointmentIdParam = request.getParameter("appointmentId");

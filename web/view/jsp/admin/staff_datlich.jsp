@@ -3,8 +3,8 @@
                     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
                         <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
                             <%@ page import="dao.ServiceDAO" %>
-                                <%@ page import="model.entity.Service" %>
-<%@ page import="model.entity.User" %>
+                                <%@ page import="model.Service" %>
+<%@ page import="model.User" %>
                                     <%@ page import="java.util.List" %>
 
 <%

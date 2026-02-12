@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.entity.User" %>
-<%@ page import="model.entity.Appointment" %>
+<%@ page import="model.User" %>
+<%@ page import="model.Appointment" %>
 <%@ page import="java.util.List" %>
 
 <%

@@ -84,13 +84,14 @@ public class SignUpServlet extends HttpServlet {
 
         // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp không
         if (!password.equals(confirmPassword)) {
-            response.sendRedirect("auth/signup.jsp?error=nomatch");
+            // Đường dẫn mới dùng register.jsp (nằm trong /jsp/auth)
+            response.sendRedirect("jsp/auth/register.jsp?error=nomatch");
             return;
         }
 
         // Kiểm tra email đã tồn tại chưa (thay vì username)
         if (UserDAO.isEmailExists(email)) {
-            response.sendRedirect("auth/signup.jsp?error=email_exists");
+            response.sendRedirect("jsp/auth/register.jsp?error=email_exists");
             return;
         }
 
@@ -101,9 +102,10 @@ public class SignUpServlet extends HttpServlet {
         if (id > 0) {
             HttpSession session = request.getSession();
             session.setAttribute("id", id);
-            response.sendRedirect("auth/signup.jsp?success=true");
+            // Đăng ký thành công → vẫn ở lại trang register.jsp nhưng có tham số success
+            response.sendRedirect("jsp/auth/register.jsp?success=true");
         } else {
-            response.sendRedirect("auth/signup.jsp?error=db");
+            response.sendRedirect("jsp/auth/register.jsp?error=db");
         }
     }
 

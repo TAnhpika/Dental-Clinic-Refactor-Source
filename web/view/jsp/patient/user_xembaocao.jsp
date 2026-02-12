@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, model.entity.MedicalReport, model.entity.Prescription" %>
+<%@ page import="java.util.*, model.MedicalReport, model.Prescription" %>
 <%
     MedicalReport report = (MedicalReport) request.getAttribute("report");
     List<Prescription> prescriptions = (List<Prescription>) request.getAttribute("prescriptions");

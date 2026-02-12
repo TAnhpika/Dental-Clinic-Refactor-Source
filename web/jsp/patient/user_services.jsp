@@ -1,8 +1,8 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@page import="model.entity.User" %>
-<%@page import="model.entity.Service" %>
+<%@page import="model.User" %>
+<%@page import="model.Service" %>
 <%@page import="java.util.List" %>
 <%@page import="dao.ServiceDAO" %>
 

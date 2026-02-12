@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@page import="model.entity.User" %>
-        <%@page import="model.entity.Doctors" %>
+    <%@page import="model.User" %>
+        <%@page import="model.Doctors" %>
             <%-- Doctor Header Component - Bootstrap Version Unified UI/UX Dashboard Header --%>
 
                 <% User currentUser=(User) session.getAttribute("user"); Doctors currentDoctor=(Doctors)

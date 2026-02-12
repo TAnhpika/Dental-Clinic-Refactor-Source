@@ -195,7 +195,7 @@
 
                             <p class="text-center mt-3">Đã có tài khoản? <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp">Đăng nhập</a></p>
                             <p class="text-center mt-4">
-                                <a href="<%= request.getContextPath()%>/public/home.jsp" style="color: blue;">Trang Chủ</a>
+                                <a href="<%= request.getContextPath()%>/view/jsp/home.jsp" style="color: blue;">Trang Chủ</a>
                             </p>
         </div>
     </body>
