@@ -6,7 +6,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/view/assets/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Sử dụng đúng CDN Bootstrap 5 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
             body {
@@ -287,7 +288,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password_hash" name="password_hash" class="form-control" placeholder="Your Password"
+                    <!-- type phải là password mới đúng chuẩn HTML -->
+                    <input type="password" name="password_hash" class="form-control" placeholder="Your Password"
                            required>
                 </div>
                 <% if (request.getParameter("error") != null) {
@@ -336,7 +338,8 @@
 
         </div>
                 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/view/assets/js/bootstrap.bundle.min.js"></script>
+        <!-- Script Bootstrap đúng đường dẫn -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
             <!-- Ghi chú: Script kiểm tra form trước khi gửi -->
         <script>
             document.querySelector("form").addEventListener("submit", function (e) {

@@ -1,8 +1,9 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="model.entity.Appointment" %>
-<%@page import="model.entity.Doctors" %>
-<%@page import="model.entity.Patients" %>
-<%@page import="model.entity.BlogPost" %>
+<%@page import="model.Appointment" %>
+<%@page import="model.Doctors" %>
+<%@page import="model.Patients" %>
+<%@page import="model.BlogPost" %>
+<%@page import="model.User" %>
 <%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.Date" %>
 <%@page import="java.util.List" %>

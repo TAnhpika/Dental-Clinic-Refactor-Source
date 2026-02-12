@@ -367,7 +367,7 @@
             <header class="header">
                 <div class="header-top">
                     <div class="logo">
-                        <img src="img/logo.png" alt="HAPPY Smile Logo">
+                        <img src="${pageContext.request.contextPath}/view/assets/img/logo.png" alt="HAPPY Smile Logo">
                         <h1>HAPPY <span>Smile</span></h1>
                     </div>
 
@@ -385,10 +385,13 @@
 
                     <div class="header-right">
                         <div class="auth-buttons">
-                            <a href="${pageContext.request.contextPath}/view/jsp/auth/login.jsp" class="auth-btn login"
-                                data-lang="login">Đăng nhập</a>
-                            <a href="${pageContext.request.contextPath}/view/jsp/auth/signup.jsp" class="auth-btn register"
-                                data-lang="register">Đăng ký</a>
+                            <!-- Điều hướng về cấu trúc JSP giống project mẫu: /jsp/auth/... -->
+                            <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp"
+                               class="auth-btn login"
+                               data-lang="login">Đăng nhập</a>
+                            <a href="${pageContext.request.contextPath}/jsp/auth/signup.jsp"
+                               class="auth-btn register"
+                               data-lang="register">Đăng ký</a>
                         </div>
                         <div class="controls">
                             <button class="theme-toggle" id="theme-toggle">🌙</button>

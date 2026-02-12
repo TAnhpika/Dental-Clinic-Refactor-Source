@@ -287,7 +287,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password_hash" name="password_hash" class="form-control" placeholder="Your Password"
+                    <!-- type="password" để input ẩn ký tự đúng chuẩn HTML -->
+                    <input type="password" name="password_hash" class="form-control" placeholder="Your Password"
                            required>
                 </div>
                 <% if (request.getParameter("error") != null) {
