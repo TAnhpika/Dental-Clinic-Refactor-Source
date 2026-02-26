@@ -101,7 +101,7 @@ public class BookingPageServlet extends HttpServlet {
 
         // Kiểm tra session và role
         if (session == null || patient == null) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 

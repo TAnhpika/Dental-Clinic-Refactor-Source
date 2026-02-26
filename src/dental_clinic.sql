@@ -1,16 +1,20 @@
-select * from users
-select * from Patients
-select * from Doctors
-select * from Staff
-select * from Services
-select * from Medicine
-select * from TimeSlot
+-- select * from users
+-- select * from Patients
+-- select * from Doctors
+-- select * from Staff
+-- select * from Services
+-- select * from Medicine
+-- select * from TimeSlot
 
--- lệnh tui xoá data để tui test 
-DELETE FROM PaymentInstallments WHERE bill_id IN (SELECT bill_id FROM Bills);
-DELETE FROM Bills;
+-- -- lệnh tui xoá data để tui test 
+-- DELETE FROM PaymentInstallments WHERE bill_id IN (SELECT bill_id FROM Bills);
+-- DELETE FROM Bills;
 
+CREATE DATABASE PRJ301_ASSIGNMENT_DENTAL_CLINIC
+GO
 
+USE PRJ301_ASSIGNMENT_DENTAL_CLINIC
+GO
 
 CREATE TABLE [dbo].[Appointment] (
     [appointment_id]          INT            IDENTITY (1, 1) NOT NULL,

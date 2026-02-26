@@ -18,7 +18,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     try (PrintWriter out = response.getWriter()) {
         // Nếu không có id hoặc id = 0 thì chuyển về trang đăng nhập
         if (idParam == null || idParam.equals("0")) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
         long userId = Long.parseLong(idParam);

@@ -88,7 +88,7 @@ public class UpdatePasswordServlet extends HttpServlet {
                 
                 // Thông báo thành công
                 request.setAttribute("success", "🎉 Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.");
-                request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
+                request.getRequestDispatcher(request.getContextPath() + "/view/jsp/auth/login.jsp").forward(request, response);
                 
             } else {
                 request.setAttribute("error", "Không thể cập nhật mật khẩu. Vui lòng thử lại.");

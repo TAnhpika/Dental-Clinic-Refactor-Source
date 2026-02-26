@@ -33,7 +33,7 @@ public class CreateMedicalReportServlet extends HttpServlet {
         Doctors doctor = (Doctors) session.getAttribute("doctor");
         
         if (doctor == null) {
-            response.sendRedirect("auth/login.jsp?error=session_expired");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=session_expired");
             return;
         }
 

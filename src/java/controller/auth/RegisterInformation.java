@@ -77,7 +77,7 @@ public class RegisterInformation extends HttpServlet {
         Integer id = (session != null) ? (Integer) session.getAttribute("id") : null;
 
         if (id == null) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
@@ -92,9 +92,9 @@ public class RegisterInformation extends HttpServlet {
 
         // Không dùng trang information.jsp nữa; nếu lỗi quay về login với flag.
         if (success) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
         } else {
-            response.sendRedirect("auth/login.jsp?error=save_failed");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=save_failed");
         }
     }
 

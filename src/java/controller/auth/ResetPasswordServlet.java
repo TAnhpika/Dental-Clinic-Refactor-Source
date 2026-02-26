@@ -38,7 +38,7 @@ public class ResetPasswordServlet extends HttpServlet {
             User user = (User) session.getAttribute("user");
             
             if (user == null) {
-                response.sendRedirect("auth/login.jsp?error=session_expired");
+                response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=session_expired");
                 return;
             }
             
@@ -142,7 +142,7 @@ public class ResetPasswordServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("auth/login.jsp?error=session_expired");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp?error=session_expired");
             return;
         }
         
@@ -465,7 +465,7 @@ public class ResetPasswordServlet extends HttpServlet {
                     } else {
                         // Từ quên mật khẩu - về trang login
                         request.setAttribute("success", "🎉 Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.");
-                        request.getRequestDispatcher("/view/jsp/auth/login.jsp").forward(request, response);
+                        request.getRequestDispatcher(request.getContextPath() + "/view/jsp/auth/login.jsp").forward(request, response);
                     }
                     
                 } else {

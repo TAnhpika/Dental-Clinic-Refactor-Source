@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-    <!DOCTYPE html>
-    <html lang="vi">
+<!DOCTYPE html>
+<html lang="vi">
 
     <head>
         <meta charset="UTF-8">
@@ -11,7 +11,7 @@
         <style>
             body {
                 /* Ghi chú: Đặt nền ảnh, căn giữa, cố định và phủ toàn màn hình */
-                background: url('${pageContext.request.contextPath}/img/nen1.jpg') no-repeat center center fixed;
+                background: url('${pageContext.request.contextPath}/view/assets/img/nen1.jpg') no-repeat center center fixed;
                 background-size: cover;
                 margin: 0;
                 padding: 0;
@@ -155,48 +155,48 @@
         <div class="login-container">
             <h3 class="text-center">Vui lòng tạo tài khoản mới</h3>
 
-            <% if (request.getParameter("error") !=null) { %>
-                <div class="alert alert-danger">Email đã tồn tại!</div>
-                <% } %>
-                    <% if (request.getParameter("success") !=null) { %>
-                        <div class="alert alert-success">
-                            Đăng ký thành công!
-                            <form action="${pageContext.request.contextPath}/jsp/auth/information.jsp" method="post" class="mt-2">
-                                <button type="submit" class="btn btn-success w-100">Tiếp tục hoàn tất thông tin</button>
-                            </form>
-                        </div>
-                        <% }%>
+            <% if (request.getParameter("error") != null) { %>
+            <div class="alert alert-danger">Email đã tồn tại!</div>
+            <% } %>
+            <% if (request.getParameter("success") != null) { %>
+            <div class="alert alert-success">
+                Đăng ký thành công!
+                <form action="${pageContext.request.contextPath}/jsp/auth/information.jsp" method="post" class="mt-2">
+                    <button type="submit" class="btn btn-success w-100">Tiếp tục hoàn tất thông tin</button>
+                </form>
+            </div>
+            <% }%>
 
-                            <form action="${pageContext.request.contextPath}/SignUpServlet" method="post">
-                                <div class="mb-3">
-                                    <label class="form-label">Tên đăng nhập</label>
-                                    <input type="text" name="username" class="form-control" required>
-                                    <label class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Mật khẩu</label>
-                                    <input type="password" name="passwordHash" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Xác nhận mật khẩu</label>
-                                    <input type="password" name="confirmPassword" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
-                            </form>
+            <form action="${pageContext.request.contextPath}/SignUpServlet" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" name="username" class="form-control" required>
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" name="passwordHash" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Xác nhận mật khẩu</label>
+                    <input type="password" name="confirmPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
+            </form>
 
-                            <div style="margin-top: 20px">
-                                <a class="google-btn w-100 text-decoration-none"
-                                    href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/TestFull/LoginGG/LoginGoogleHandler&response_type=code&client_id=560611814939-bfr1rtiahhq41h0d6fd3lcg876lc3ve.apps.googleusercontent.com&approval_prompt=force">
-                                    <img src="https://www.google.com/favicon.ico" alt="Google">
-                                    Sign in with Google
-                                </a>
-                            </div>
+            <div style="margin-top: 20px">
+                <a class="google-btn w-100 text-decoration-none"
+                   href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/TestFull/LoginGG/LoginGoogleHandler&response_type=code&client_id=560611814939-bfr1rtiahhq41h0d6fd3lcg876lc3ve.apps.googleusercontent.com&approval_prompt=force">
+                    <img src="https://www.google.com/favicon.ico" alt="Google">
+                    Sign in with Google
+                </a>
+            </div>
 
-                            <p class="text-center mt-3">Đã có tài khoản? <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp">Đăng nhập</a></p>
-                            <p class="text-center mt-4">
-                                <a href="<%= request.getContextPath()%>/view/jsp/home.jsp" style="color: blue;">Trang Chủ</a>
-                            </p>
+            <p class="text-center mt-3">Đã có tài khoản? <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp">Đăng nhập</a></p>
+            <p class="text-center mt-4">
+                <a href="<%= request.getContextPath()%>/view/jsp/home.jsp" style="color: blue;">Trang Chủ</a>
+            </p>
         </div>
     </body>
 
@@ -212,4 +212,4 @@
         });
     </script>
 
-    </html>
+</html>

@@ -65,7 +65,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     // Kiểm tra nếu người dùng chưa đăng nhập
     User user = (session != null) ? (User) session.getAttribute("user") : null;
     if (user == null) {
-        response.sendRedirect("auth/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
         return;
     }
 

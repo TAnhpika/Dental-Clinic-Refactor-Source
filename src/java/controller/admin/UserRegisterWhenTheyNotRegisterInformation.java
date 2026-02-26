@@ -42,7 +42,7 @@ public class UserRegisterWhenTheyNotRegisterInformation extends HttpServlet {
         
         // Nếu vẫn không có, chuyển về login
         if (userId == null) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 

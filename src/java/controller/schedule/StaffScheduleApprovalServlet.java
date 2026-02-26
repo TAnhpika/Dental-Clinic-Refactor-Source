@@ -41,7 +41,7 @@ public class StaffScheduleApprovalServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null || !"MANAGER".equals(user.getRole())) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
@@ -71,7 +71,7 @@ public class StaffScheduleApprovalServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null || !"MANAGER".equals(user.getRole())) {
-            response.sendRedirect("auth/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/jsp/auth/login.jsp");
             return;
         }
 
